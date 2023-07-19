@@ -79,10 +79,6 @@ const props = defineProps({
                                     <Link href="/dashboard/financeiro/pagamentos" class="nav-link"
                                         :class="{ 'text-primary': pagina == 'pagamentos' }">Pagamentos</Link>
                                 </li>
-                                <li>
-                                    <Link href="#" class="nav-link">Fluxo de
-                                    caixa</Link>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -180,7 +176,7 @@ const props = defineProps({
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix"
                             :class="{ 'collapsed': categoriaPagina != 'dre' }">
-                            <i class="fa-solid fa-briefcase me-2"></i>DRE
+                            <i class="fa-solid fa-folder-open me-2"></i>DRE
                         </button>
                     </h2>
                     <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample"
@@ -188,12 +184,12 @@ const props = defineProps({
                         <div class="accordion-body">
                             <ul class="btn-toggle-nav list-unstyled fw-normal mb-0 ms-4">
                                 <li>
-                                    <Link href="#" class="nav-link" :class="{ 'text-primary': pagina == 'dre-mensal' }">
+                                    <Link href="/dashboard/dre/mensal" class="nav-link" :class="{ 'text-primary': pagina == 'dre-mensal' }">
                                     DRE Mensal
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="#" class="nav-link" :class="{ 'text-primary': pagina == 'dre-anual' }">
+                                    <Link href="/dashboard/dre/anual" class="nav-link" :class="{ 'text-primary': pagina == 'dre-anual' }">
                                     DRE Anual
                                     </Link>
                                 </li>
@@ -206,7 +202,7 @@ const props = defineProps({
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven"
                             :class="{ 'collapsed': categoriaPagina != 'administracao' }">
-                            <i class="fa-solid fa-briefcase me-2"></i>ADMINISTRAÇÃO
+                            <i class="fa-solid fa-wrench me-2"></i>ADMINISTRAÇÃO
                         </button>
                     </h2>
                     <div id="flush-collapseSeven" class="accordion-collapse collapse"

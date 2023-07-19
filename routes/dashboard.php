@@ -4,6 +4,8 @@ use App\Http\Controllers\AnalisesController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\Dashboard\ContaController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\DRE\DREAnualController;
+use App\Http\Controllers\Dashboard\DRE\DREMensalController;
 use App\Http\Controllers\Dashboard\FaturaController;
 use App\Http\Controllers\Dashboard\Financeiro\CategoriaController;
 use App\Http\Controllers\Dashboard\Financeiro\PagamentoController;
@@ -117,6 +119,12 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
         Route::get('servicos/faturamento', [RelatorioController::class, 'servicosFaturamento'])->name('.servicos.faturamento');
         Route::get('analise-financeira', [RelatorioController::class, 'analiseFinanceira'])->name('.analiseFinanceira');
     });
+
+    Route::prefix('dre')->name('.dre')->group(function () {
+            Route::get('mensal', [DREMensalController::class, 'home'])->name('.mensal');
+            Route::get('anual', [DREAnualController::class, 'home'])->name('.anual');
+        }
+    );;
 
 
     Route::get('/conta', [ContaController::class, 'home'])->name('.conta');
