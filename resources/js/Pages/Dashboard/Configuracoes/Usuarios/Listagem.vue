@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import Editar from './Componentes/Editar.vue';
 import Novo from './Componentes/Novo.vue';

@@ -43,8 +43,8 @@ function closeModal() {
                 <form @submit.prevent="submitNovaDespesa">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Nome</label>
-                            <input type="text" class="form-control" v-model="form.nome" required>
+                            <label for="nome" class="form-label">Nome</label>
+                            <input id="nome" type="text" class="form-control" v-model="form.nome" required>
                             <FormError :error="form.errors.nome" />
                         </div>
                     </div>

@@ -7,13 +7,13 @@ import AnaliseFinanceiraHeader from './Componentes/AnaliseFinanceiraHeader.vue'
     <AnaliseFinanceiraHeader>
         <div class="input-group mb-3">
             <div>
-                <label for="basic-url" class="form-label">A partir de:</label>
-                <input type="date" id="basic-url" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                <label for="inicio" class="form-label">A partir de:</label>
+                <input type="date" id="inicio" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
                     aria-describedby="button-addon2">
             </div>
             <div class="ms-2">
-                <label for="basic-url2" class="form-label">Até:</label>
-                <input type="date" id="basic-url2" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                <label for="ate" class="form-label">Até:</label>
+                <input type="date" id="ate" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
                     aria-describedby="button-addon2">
             </div>
         </div>

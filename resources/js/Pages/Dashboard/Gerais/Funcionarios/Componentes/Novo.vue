@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import FormError from '@/Componentes/Forms/FormError.vue';
 import Mask from '@/Componentes/Helper/InputMask';
@@ -58,33 +58,33 @@ function closeModal() {
                 <form @submit.prevent="submitNovoFuncionario">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="inputUsername" class="form-label">Nome</label>
-                            <input type="text" class="form-control" v-model="form.nome" id="inputUsername"
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" v-model="form.nome" id="nome"
                                 aria-describedby="emailHelp" required>
                             <FormError :error="form.errors.nome" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputTipoUsuario" class="form-label">CPF</label>
-                            <input ref="elCPF" type="text" class="form-control" v-model="form.cpf" id="inputUsername"
+                            <label for="cpf" class="form-label">CPF</label>
+                            <input ref="elCPF" type="text" class="form-control" v-model="form.cpf" id="cpf"
                                 aria-describedby="emailHelp" required>
 
                             <FormError :error="form.errors.cpf" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputSenha" class="form-label">Cargo</label>
-                            <input type="text" class="form-control" v-model="form.cargo" id="inputSenha" required>
+                            <label for="cargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control" v-model="form.cargo" id="cargo" required>
                             <FormError :error="form.errors.cargo" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputSenhaConfirmacao" class="form-label">Valor Vencimento</label>
+                            <label for="valro_vencimento" class="form-label">Valor Vencimento</label>
                             <input ref="elValorVencimento" type="text" class="form-control" v-model="form.valor_vencimento"
-                                id="inputSenhaConfirmacao" required>
+                                id="valro_vencimento" required>
                             <FormError :error="form.errors.valor_vencimento" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputSenhaConfirmacao" class="form-label">Encargos</label>
+                            <label for="encargos" class="form-label">Encargos</label>
                             <input ref="elEncargos" type="text" class="form-control" v-model="form.encargos"
-                                id="inputSenhaConfirmacao" required>
+                                id="encargos" required>
                             <FormError :error="form.errors.encargos" />
                         </div>
                     </div>

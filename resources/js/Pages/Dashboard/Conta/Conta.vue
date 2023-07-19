@@ -27,19 +27,19 @@ function submitEditarConta() {
             <form @submit.prevent="submitEditarConta">
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Username</label>
-                        <input type="email" disabled class="form-control" id="exampleInputEmail1"
+                        <label for="username" class="form-label">Username</label>
+                        <input type="email" disabled class="form-control" id="username"
                             aria-describedby="emailHelp" :value="usuario.username">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Nova senha</label>
-                        <input type="password" v-model="form.senha" class="form-control" id="exampleInputPassword1">
+                        <label for="nova_senha" class="form-label">Nova senha</label>
+                        <input type="password" v-model="form.senha" class="form-control" id="nova_senha">
                         <FormError :error="form.errors.senha" />
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Confirme sua nova senha</label>
+                        <label for="nova_senha_confirmacao" class="form-label">Confirme sua nova senha</label>
                         <input type="password" v-model="form.senha_confirmation" class="form-control"
-                            id="exampleInputPassword1">
+                            id="nova_senha_confirmacao">
                         <FormError :error="form.errors.senha_confirmation" />
                     </div>
 

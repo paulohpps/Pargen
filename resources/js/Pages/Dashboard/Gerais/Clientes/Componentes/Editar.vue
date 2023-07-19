@@ -2,7 +2,7 @@
 
 import { useForm } from '@inertiajs/vue3';
 import { Modal } from 'bootstrap';
-import { defineProps, ref, onMounted, getCurrentInstance } from 'vue';
+import { ref, onMounted, getCurrentInstance } from 'vue';
 
 const props = defineProps({
     cliente: Object,
@@ -54,8 +54,8 @@ function closeModal() {
                 <form @submit.prevent="submitEditar">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Nome</label>
-                            <input type="text" class="form-control" :value="cliente.name" disabled>
+                            <label for="nome" class="form-label">Nome</label>
+                            <input id="nome" type="text" class="form-control" :value="cliente.name" disabled>
                         </div>
 
                         <div class="mb-3">

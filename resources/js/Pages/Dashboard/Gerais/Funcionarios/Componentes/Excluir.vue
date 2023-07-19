@@ -1,5 +1,5 @@
 <script setup >
-import { defineProps, ref, onMounted, getCurrentInstance } from 'vue';
+import { ref, onMounted, getCurrentInstance } from 'vue';
 import { Modal } from 'bootstrap';
 import { router } from '@inertiajs/vue3'
 
