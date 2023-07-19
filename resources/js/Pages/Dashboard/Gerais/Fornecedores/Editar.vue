@@ -30,36 +30,36 @@ function salvarFuncionario() {
             <form @submit.prevent="salvarFuncionario">
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="inputUsername" class="form-label">Razão Social</label>
-                        <input type="text" class="form-control" v-model="form.razao_social" id="inputUsername"
+                        <label for="razao_social" class="form-label">Razão Social</label>
+                        <input type="text" class="form-control" v-model="form.razao_social" id="razao_social"
                             aria-describedby="emailHelp" required>
                         <FormError :error="form.errors.razao_social" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputTipoUsuario" class="form-label">Telefone</label>
-                        <input type="text" class="form-control" v-model="form.telefone" id="inputUsername"
+                        <label for="telefone" class="form-label">Telefone</label>
+                        <input type="text" class="form-control" v-model="form.telefone" id="telefone"
                             aria-describedby="emailHelp" required>
                         <FormError :error="form.errors.telefone" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputTipoUsuario" class="form-label">Contato</label>
-                        <input type="text" class="form-control" v-model="form.contato" id="inputUsername"
+                        <label for="contato" class="form-label">Contato</label>
+                        <input type="text" class="form-control" v-model="form.contato" id="contato"
                             aria-describedby="emailHelp" required>
                         <FormError :error="form.errors.contato" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputSenha" class="form-label">Email</label>
-                        <input type="email" class="form-control" v-model="form.email" id="inputSenha" required>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" v-model="form.email" id="email" required>
                         <FormError :error="form.errors.email" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputSenhaConfirmacao" class="form-label">CNPJ</label>
-                        <input type="text" class="form-control" v-model="form.cnpj" id="inputSenhaConfirmacao" required>
+                        <label for="cnpj" class="form-label">CNPJ</label>
+                        <input type="text" class="form-control" v-model="form.cnpj" id="cnpj" required>
                         <FormError :error="form.errors.cnpj" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputSenhaConfirmacao" class="form-label">Endereço</label>
-                        <input type="text" class="form-control" v-model="form.endereco" id="inputSenhaConfirmacao" required>
+                        <label for="endereco" class="form-label">Endereço</label>
+                        <input type="text" class="form-control" v-model="form.endereco" id="endereco" required>
                         <FormError :error="form.errors.endereco" />
                     </div>
                 </div>

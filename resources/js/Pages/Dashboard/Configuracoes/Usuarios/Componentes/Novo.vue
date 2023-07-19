@@ -32,14 +32,14 @@ function submitNovoUsuario() {
                 <form @submit.prevent="submitNovoUsuario">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="inputUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" v-model="form.username" id="inputUsername"
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" v-model="form.username" id="username"
                                 aria-describedby="emailHelp" required>
                             <FormError :error="form.errors.nome" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputTipoUsuario" class="form-label">Tipo de Usuario</label>
-                            <select v-model="form.tipo_usuario" class="form-select" id="inputTipoUsuario" required>
+                            <label for="tipo_usuario" class="form-label">Tipo de Usuario</label>
+                            <select v-model="form.tipo_usuario" class="form-select" id="tipo_usuario" required>
                                 <option v-for="(tipoUsuario, index) in tiposUsuario" :key="index" :value="index">{{
                                     tipoUsuario }}</option>
                             </select>
@@ -47,14 +47,14 @@ function submitNovoUsuario() {
                             <FormError :error="form.errors.tipo_usuario" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputSenha" class="form-label">Senha</label>
-                            <input type="password" class="form-control" v-model="form.password" id="inputSenha" required>
+                            <label for="senha" class="form-label">Senha</label>
+                            <input type="password" class="form-control" v-model="form.password" id="senha" required>
                             <FormError :error="form.errors.password" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputSenhaConfirmacao" class="form-label">Confirme a senha</label>
+                            <label for="senha_confirmacao" class="form-label">Confirme a senha</label>
                             <input type="password" class="form-control" v-model="form.password_confirmation"
-                                id="inputSenhaConfirmacao" required>
+                                id="senha_confirmacao" required>
                             <FormError :error="form.errors.password_confirmation" />
                         </div>
                     </div>

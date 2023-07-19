@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import { router, useForm } from '@inertiajs/vue3';
 import '../../../../../css/Dashboard/funcionarios/form.css';
@@ -45,32 +45,32 @@ function submitEditarFuncionario() {
             <form @submit.prevent="submitEditarFuncionario()">
                 <div class="card-body FuncionarioForm">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" v-model="form.nome" name="nome" id="floatingInput"
-                            placeholder="name@example.com">
-                        <label for="floatingInput">Nome</label>
+                        <input type="text" class="form-control" v-model="form.nome" name="nome" id="nome"
+                            placeholder="Pedro Henrique">
+                        <label for="nome">Nome</label>
                         <FormError :error="form.errors.nome" />
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" ref="elCPF" class="form-control" disabled v-model="form.cpf" name="cpf"
-                            id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">CPF</label>
+                            id="cpf" placeholder="000.000.000-00">
+                        <label for="cpf">CPF</label>
                         <FormError :error="form.errors.cpf" />
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" v-model="form.cargo" name="cargo" id="floatingInput"
-                            placeholder="name@example.com">
-                        <label for="floatingInput">Cargo</label>
+                        <input type="text" class="form-control" v-model="form.cargo" name="cargo" id="cargo"
+                            placeholder="Recepcionista">
+                        <label for="cargo">Cargo</label>
                         <FormError :error="form.errors.cargo" />
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" ref="elValorVencimento" class="form-control" v-model="form.valor_vencimento"
-                            name="valorVencimento" id="floatingInput" placeholder="name@example.com">
+                            name="valorVencimento" id="floatingInput" placeholder="2000,00">
                         <label for="floatingInput">Valor Vencimento</label>
                         <FormError :error="form.errors.valor_vencimento" />
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" ref="elEncargos" class="form-control" v-model="form.encargos" name="encargos"
-                            id="floatingInput" placeholder="name@example.com">
+                            id="floatingInput" placeholder="500,00">
                         <label for="floatingInput">Encargos</label>
                         <FormError :error="form.errors.encargos" />
                     </div>

@@ -20,13 +20,13 @@ function submit() {
                 <div class="login-body shadow">
                     <h3 class="login-title">Login</h3>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" v-model="form.username" name="username" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Username</label>
+                        <input type="text" class="form-control" v-model="form.username" name="username" id="username" placeholder="name@example.com">
+                        <label for="username">Username</label>
                         <FormError :message="form.errors.username" />
                     </div>
                     <div class="form-floating">
-                        <input type="password" class="form-control mb-3" v-model="form.password" name="senha" id="floatingPassword" placeholder="Password">
-                        <label for="floatingPassword">Senha</label>
+                        <input type="password" class="form-control mb-3" v-model="form.password" name="senha" id="senha" placeholder="Password">
+                        <label for="senha">Senha</label>
                         <FormError :message="form.errors.password" />
                     </div>
                     <input class="btn btn-primary" type="submit" value="Login">

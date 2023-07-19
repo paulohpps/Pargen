@@ -133,37 +133,37 @@ function resetParcelas() {
                         </div>
                         <div class="w-50 ms-2">
                             <div class="mb-3">
-                                <label for="inputSenhaConfirmacao" class="form-label">Valor</label>
-                                <input type="text" class="form-control" v-model="form.valor" id="inputSenhaConfirmacao"
+                                <label for="valor" class="form-label">Valor</label>
+                                <input type="text" class="form-control" v-model="form.valor" id="valor"
                                     required>
                                 <FormError :error="form.errors.cnpj" />
                             </div>
                             <div class="mb-3">
-                                <label for="inputSenhaConfirmacao" class="form-label">Vencimento</label>
-                                <input type="date" class="form-control" v-model="form.vencimento" id="inputSenhaConfirmacao"
+                                <label for="vencimento" class="form-label">Vencimento</label>
+                                <input type="date" class="form-control" v-model="form.vencimento" id="vencimento"
                                     required>
                                 <FormError :error="form.errors.endereco" />
                             </div>
                             <div class="mb-3">
-                                <label for="inputSenhaConfirmacao" class="form-label">Status</label>
-                                <select class="form-select" v-model="form.status">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" v-model="form.status">
                                     <option value="1">Aberto</option>
                                     <option value="2">Pago</option>
                                 </select>
                                 <FormError :error="form.errors.endereco" />
                             </div>
                             <div class="mb-3">
-                                <label for="inputSenhaConfirmacao" class="form-label">Repetir Parcelas?</label>
-                                <select class="form-select" @change="resetParcelas" v-model="form.repetir_parcelas">
+                                <label for="repetir_parcelas" class="form-label">Repetir Parcelas?</label>
+                                <select class="form-select" id="repetir_parcelas" @change="resetParcelas" v-model="form.repetir_parcelas">
                                     <option :value="false">Não</option>
                                     <option :value="true">Sim</option>
                                 </select>
                                 <FormError :error="form.errors.endereco" />
                             </div>
                             <div class="mb-3" v-if="form.repetir_parcelas">
-                                <label for="inputSenhaConfirmacao" class="form-label">Quantidade de Parcelas</label>
+                                <label for="quantidade_parcelas" class="form-label">Quantidade de Parcelas</label>
                                 <input type="number" class="form-control" v-model="form.numero_parcelas"
-                                    id="inputSenhaConfirmacao" required>
+                                    id="quantidade_parcelas" required>
                                 <FormError :error="form.errors.numero_parcelas" />
                             </div>
                         </div>

@@ -1,7 +1,6 @@
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-import { Link } from '@inertiajs/vue3';
 import Paginacao from '../../../../Componentes/Paginacao.vue';
 import Categoria from './Componentes/Categoria.vue';
 

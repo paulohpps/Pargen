@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
     categoriaPagina: String,
@@ -79,10 +79,6 @@ const props = defineProps({
                                     <Link href="/dashboard/financeiro/pagamentos" class="nav-link"
                                         :class="{ 'text-primary': pagina == 'pagamentos' }">Pagamentos</Link>
                                 </li>
-                                <li>
-                                    <Link href="#" class="nav-link">Fluxo de
-                                    caixa</Link>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -135,7 +131,7 @@ const props = defineProps({
                                 </li>
                                 <li>
                                     <Link href="/dashboard/fatura/baixar" class="nav-link"
-                                    :class="{ 'text-primary': pagina == 'Baixa de faturas' }">
+                                        :class="{ 'text-primary': pagina == 'Baixa de faturas' }">
                                     Baixa de faturas
                                     </Link>
                                 </li>
@@ -179,28 +175,48 @@ const props = defineProps({
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix"
-                            :class="{ 'collapsed': categoriaPagina != 'administracao' }">
-                            <i class="fa-solid fa-briefcase me-2"></i>ADMINISTRAÇÃO
+                            :class="{ 'collapsed': categoriaPagina != 'dre' }">
+                            <i class="fa-solid fa-folder-open me-2"></i>DRE
                         </button>
                     </h2>
                     <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample"
-                        :class="{ 'show': categoriaPagina == 'administracao' }">
+                        :class="{ 'show': categoriaPagina == 'dre' }">
                         <div class="accordion-body">
                             <ul class="btn-toggle-nav list-unstyled fw-normal mb-0 ms-4">
                                 <li>
-                                    <Link href="/dashboard/usuarios" class="nav-link"
-                                        :class="{ 'text-primary': pagina == 'usuarios' }">Usuarios</Link>
+                                    <Link href="/dashboard/dre/mensal" class="nav-link" :class="{ 'text-primary': pagina == 'dre-mensal' }">
+                                    DRE Mensal
+                                    </Link>
                                 </li>
                                 <li>
-                                    <Link href="#" class="nav-link">
-                                    Configurações
+                                    <Link href="/dashboard/dre/anual" class="nav-link" :class="{ 'text-primary': pagina == 'dre-anual' }">
+                                    DRE Anual
                                     </Link>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-
+                <div class="accordion-item"  v-if="usePage().props.auth.user.tipo_usuario === 1">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven"
+                            :class="{ 'collapsed': categoriaPagina != 'administracao' }">
+                            <i class="fa-solid fa-wrench me-2"></i>ADMINISTRAÇÃO
+                        </button>
+                    </h2>
+                    <div id="flush-collapseSeven" class="accordion-collapse collapse"
+                        data-bs-parent="#accordionFlushExample" :class="{ 'show': categoriaPagina == 'administracao' }">
+                        <div class="accordion-body">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal mb-0 ms-4">
+                                <li>
+                                    <Link href="/dashboard/usuarios" class="nav-link"
+                                        :class="{ 'text-primary': pagina == 'usuarios' }">Usuarios</Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
