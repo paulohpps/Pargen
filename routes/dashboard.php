@@ -7,8 +7,6 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\FaturaController;
 use App\Http\Controllers\Dashboard\Financeiro\CategoriaController;
 use App\Http\Controllers\Dashboard\Financeiro\PagamentoController;
-use App\Http\Controllers\Dashboard\Financeiro\PagamentoFornecedorController;
-use App\Http\Controllers\Dashboard\Financeiro\PagamentoFuncionarioController;
 use App\Http\Controllers\Dashboard\Financeiro\ReceitaController;
 use App\Http\Controllers\Dashboard\Geral\FornecedorController;
 use App\Http\Controllers\Dashboard\Geral\FuncionarioController;
@@ -19,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(function () {
     Route::get('/home', [DashboardController::class, 'home'])->name('.home');
-    Route::prefix('usuarios')->name('.usuarios')->group(function () {
+    Route::prefix('usuarios')->middleware(['administrador'])->name('.usuarios')->group(function () {
         Route::get('', [DashboardController::class, 'usuarios'])->name('');
         Route::post('/criar', [DashboardController::class, 'criarUsuario'])->name('.criar');
         Route::get('/editar/{id}', [DashboardController::class, 'editarUsuario'])->name('.editar');
