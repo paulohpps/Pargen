@@ -1,0 +1,15 @@
+.navbar-layout {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    background-color: #EEEFF1;
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+.dropdown-user {
+    margin-top: 1.15rem !important;
+}

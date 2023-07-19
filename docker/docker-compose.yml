@@ -1,0 +1,26 @@
+version: '3'
+name: laboratorio
+services:
+    laboratorio:
+        image: laboratorio
+        container_name: laboratorio
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile
+        ports:
+            - 8010:8010
+        expose:
+            - 8010
+        volumes:
+            - ../:/var/www/html
+        networks:
+            - database
+        restart: always
+        entrypoint: './docker/docker_entrypoint_web.sh'
+        deploy:
+            resources:
+                limits:
+                    memory: 1G
+networks:
+    database:
+        name: database

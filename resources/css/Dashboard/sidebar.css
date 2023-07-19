@@ -1,0 +1,104 @@
+.sidebar {
+    width: 16rem;
+    height: 100vh;
+    border: none;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+    background-color: #f2f4f9;
+    font-weight: 600;
+    position: fixed;
+    margin-top: 60px;
+}
+
+.container-custom {
+    margin-left: 17rem !important;
+    margin-right: 1rem !important;
+    margin-top: 76px;
+
+}
+
+body {
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.accordion {
+    background-color: transparent !important;
+}
+
+.accordion-item {
+    background-color: transparent !important;
+}
+
+.accordion-header {
+    background-color: transparent !important;
+    color: inherit;
+}
+
+.accordion-button {
+    background-color: transparent !important;
+    color: inherit;
+}
+
+.accordion-button::after {
+    background-color: transparent !important;
+}
+
+.accordion-collapse {
+    background-color: transparent !important;
+}
+
+.accordion-body {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+.accordion-item,
+.accordion-item:focus,
+.accordion-item:active,
+.accordion-header,
+.accordion-header:focus,
+.accordion-header:active,
+.accordion-button,
+.accordion-button:focus,
+.accordion-button:active {
+    outline: none !important;
+}
+
+.accordion-button:focus {
+    box-shadow: none !important;
+    border-color: rgba(0, 0, 0, .125) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    box-shadow: none !important;
+}
+
+.accordion-item {
+    border: none !important;
+}
+
+.accordion .item .accordion-header button {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.accordion .item {
+    border: 0 !important;
+}
+
+.accordion-body {
+    padding: 0px 0px 0px 0px !important;
+    margin-left: 20px !important;
+}
+
+.accordeon-text-custom::after {
+    content: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+    border-right: 4px solid #1e9ff2 !important;
+    background-color: #e1e2e6 !important;
+}
+
+.accordion-button:is(.collapsed) {
+    border-right: 4px solid transparent !important;
+}
