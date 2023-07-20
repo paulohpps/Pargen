@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Dashboard\Lancamentos\LancamentoRequest;
 use App\Models\Lancamentos\Lancamento;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,6 +13,13 @@ class LancamentoController extends Controller
     public function home()
     {
         $lancamentos = Lancamento::with(['fornecedor', 'funcionario', 'pagamento'])->paginate(10);
+
+        foreach ($lancamentos as $lancamento) {
+            if($lancamento->vencimento->isPast() && $lancamento->status != "Pago" && $lancamento->status != "Cancelado") {
+                $lancamento->status = "Atrasado";
+                $lancamento->save();
+            }
+        }
 
         return Inertia::render('Dashboard/Lancamentos/Listagem', compact('lancamentos'));
     }
@@ -22,12 +30,16 @@ class LancamentoController extends Controller
             for ($i = 1; $i <= $request->numero_parcelas; $i++) {
                 $lancamento = Lancamento::create($request->all());
                 $lancamento->vencimento = $lancamento->vencimento->addMonth($i);
+                if($i > 1 && $request->status == "Pago")
+                {
+                    $lancamento->status = "Aberto";
+                }
                 $lancamento->save();
             }
         } else {
             $lancamento = Lancamento::create($request->all());
         }
-        return redirect()->route('dashboard.lancamentos');
+        return redirect()->back();
     }
 
     public function editar(int $id)
@@ -38,19 +50,19 @@ class LancamentoController extends Controller
         ]);
     }
 
-    public function salvar(LancamentoRequest $request, int $id)
+    public function salvar(Request $request, int $id)
     {
         $lancamento = Lancamento::find($id);
         $lancamento->update($request->all());
 
-        return redirect()->route('lancamentos');
+        return redirect()->route('dashboard.lancamentos');
     }
 
-    public function deletar(int $id)
+    public function excluir(int $id)
     {
         $lancamento = Lancamento::find($id);
         $lancamento->delete();
 
-        return redirect()->route('lancamentos');
+        return redirect()->back();
     }
 }

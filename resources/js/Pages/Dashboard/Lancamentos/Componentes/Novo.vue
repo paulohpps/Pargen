@@ -125,9 +125,9 @@ function resetParcelas() {
 
                             </div>
                             <div class="mb-3">
-                                <label for="inputSenha" class="form-label">Observação</label>
+                                <label for="inputObservacao" class="form-label">Observação (Opcional)</label>
                                 <textarea class="form-control" v-model="form.descricao" style="height: 124px;"
-                                    id="inputSenha" required />
+                                    id="inputObservacao" />
                                 <FormError :error="form.errors.email" />
                             </div>
                         </div>
@@ -147,8 +147,10 @@ function resetParcelas() {
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-select" id="status" v-model="form.status">
-                                    <option value="1">Aberto</option>
-                                    <option value="2">Pago</option>
+                                    <option value="Aberto">Aberto</option>
+                                    <option value="Pago">Pago</option>
+                                    <option value="Atrasado">Atrasado</option>
+                                    <option value="Cancelado">Cancelado</option>
                                 </select>
                                 <FormError :error="form.errors.endereco" />
                             </div>

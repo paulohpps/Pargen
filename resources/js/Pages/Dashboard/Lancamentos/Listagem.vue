@@ -2,6 +2,8 @@
 import { Link } from '@inertiajs/vue3';
 import DashboardLayout from '../../../Layouts/DashboardLayout.vue';
 import Novo from './Componentes/Novo.vue';
+import Paginacao from '../../../Componentes/Paginacao.vue';
+
 const props = defineProps({
     lancamentos: Array,
 });
@@ -50,11 +52,11 @@ function processarPagamento(lancamento) {
                             <td>{{ lancamento.descricao }}</td>
                             <td>R$ {{ lancamento.valor }}</td>
                             <td>{{ lancamento.vencimento }}</td>
-                            <td>{{ lancamento.status == 1 ? 'Aberto' : "Pago" }}</td>
+                            <td>{{ lancamento.status }}</td>
                             <td>
                                 <div class="d-flex">
-                                    <Link href="#" class="btn btn-primary ms-2"> Editar </Link>
-                                    <button type="button" class="btn btn-danger ms-2">Excluir</button>
+                                    <Link :href="`/dashboard/lancamentos/${lancamento.id}/editar`" class="btn btn-primary ms-2">Editar</Link>
+                                    <Link :href="`/dashboard/lancamentos/${lancamento.id}/excluir`" type="button" class="btn btn-danger ms-2">Excluir</Link>
                                 </div>
                             </td>
                         </tr>
@@ -64,6 +66,7 @@ function processarPagamento(lancamento) {
                     </tbody>
                 </table>
             </div>
+            <Paginacao :links="lancamentos.links" />
         </div>
         <Novo />
     </DashboardLayout>
