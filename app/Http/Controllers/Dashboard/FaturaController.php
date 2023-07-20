@@ -9,18 +9,18 @@ use App\Models\AnaliseServicos;
 use App\Models\Faturas\Fatura;
 use App\Models\Faturas\FaturaServico;
 use App\Models\Imports\Analises;
+use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class FaturaController extends Controller
 {
     public function home()
     {
-        $servicos = Servicos::with('analises')->paginate(10);
+        $servicos = Servicos::with(['analises', 'cliente', 'cliente.clienteCategoria'])->paginate(10);
         $analises = Analises::with('categoriaAnalise')->get();
         $categorias = CategoriaAnaliseEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Geracoes/Listagem', compact('servicos', 'analises', 'categorias'));
@@ -29,7 +29,6 @@ class FaturaController extends Controller
     public function faturas()
     {
         $faturas = Fatura::paginate(10);
-        //$faturas->append('servicos');
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
     }
@@ -45,7 +44,8 @@ class FaturaController extends Controller
 
     public function faturar()
     {
-        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar');
+        $clientes = Clientes::all();
+        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes'));
     }
 
     public function gerarFatura(Request $request)

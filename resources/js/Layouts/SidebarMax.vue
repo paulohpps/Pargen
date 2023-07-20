@@ -158,13 +158,13 @@ const props = defineProps({
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="#" class="nav-link"
+                                    <Link href="/dashboard/relatorios/evolucao-financeira" class="nav-link"
                                         :class="{ 'text-primary': pagina == 'evolucao_financeira' }">Evolução financeira
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="#" class="nav-link"
-                                        :class="{ 'text-primary': pagina == 'ranking_cliente' }">Ranking Cliente
+                                    <Link href="/dashboard/relatorios/ranking-clientes" class="nav-link"
+                                        :class="{ 'text-primary': pagina == 'ranking_cliente' }">Ranking Clientes
                                     </Link>
                                 </li>
                             </ul>
@@ -184,12 +184,14 @@ const props = defineProps({
                         <div class="accordion-body">
                             <ul class="btn-toggle-nav list-unstyled fw-normal mb-0 ms-4">
                                 <li>
-                                    <Link href="/dashboard/dre/mensal" class="nav-link" :class="{ 'text-primary': pagina == 'dre-mensal' }">
+                                    <Link href="/dashboard/dre/mensal" class="nav-link"
+                                        :class="{ 'text-primary': pagina == 'dre-mensal' }">
                                     DRE Mensal
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/dashboard/dre/anual" class="nav-link" :class="{ 'text-primary': pagina == 'dre-anual' }">
+                                    <Link href="/dashboard/dre/anual" class="nav-link"
+                                        :class="{ 'text-primary': pagina == 'dre-anual' }">
                                     DRE Anual
                                     </Link>
                                 </li>
@@ -197,7 +199,7 @@ const props = defineProps({
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item"  v-if="usePage().props.auth.user.tipo_usuario === 1">
+                <div class="accordion-item" v-if="usePage().props.auth.user.tipo_usuario === 1">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven"

@@ -118,6 +118,8 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
         Route::get('servicos', [RelatorioController::class, 'servicos'])->name('.servicos');
         Route::get('servicos/faturamento', [RelatorioController::class, 'servicosFaturamento'])->name('.servicos.faturamento');
         Route::get('analise-financeira', [RelatorioController::class, 'analiseFinanceira'])->name('.analiseFinanceira');
+        Route::get('evolucao-financeira', [RelatorioController::class, 'evolucaoFinanceira'])->name('.evolucaoFinanceira');
+        Route::get('ranking-clientes', [RelatorioController::class, 'rankingClientes'])->name('.rankingClientes');
     });
 
     Route::prefix('dre')->name('.dre')->group(function () {

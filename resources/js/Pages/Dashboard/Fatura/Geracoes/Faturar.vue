@@ -1,12 +1,22 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import SelectAjax from '@/Componentes/Forms/SelectAjax.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 
+const props = defineProps({
+    clientes: Array,
+});
 
 const form = useForm({
     servicos: [],
+});
+
+let cliente_id = ref(props.clientes[0].id);
+
+watch(() => cliente_id.value, (newValue) => {
+    form.servicos = [];
+    servicos.value = [];
 });
 
 function faturar() {
@@ -16,9 +26,7 @@ function faturar() {
 
 
 function selecionarServico(servico) {
-    console.log(servico);
     servicos.value.push(servico);
-    console.log(servicos.value);
 }
 
 function removerServico(id) {
@@ -36,8 +44,17 @@ const servicos = ref([]);
             </div>
             <div class="card-body">
                 <div class="mb-3">
+                    <label class="mb-2">Cliente</label>
+                    <select v-model="cliente_id" class="form-control">
+                        <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
+                            {{ cliente.name }}
+                        </option>
+
+                    </select>
+                </div>
+                <div class="mb-3">
                     <label class="mb-2">Pet - Tutor</label>
-                    <SelectAjax href="/dashboard/servicos/ajax" placeholder="Selecione um servico" :preBusca="true"
+                    <SelectAjax href="/dashboard/servicos/ajax" :cliente_id="cliente_id" placeholder="Selecione um servico" :preBusca="true"
                         @optionSelected="selecionarServico" :servicos="servicos"></SelectAjax>
                 </div>
                 <div class="d-flex row mt-3">
