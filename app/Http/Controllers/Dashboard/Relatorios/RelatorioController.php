@@ -17,6 +17,16 @@ class RelatorioController extends Controller
         return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira');
     }
 
+    public function evolucaoFinanceira()
+    {
+        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira');
+    }
+
+    public function rankingClientes()
+    {
+        return Inertia::render('Dashboard/Relatorios/RankingClientes');
+    }
+
     public function servicos()
     {
         $lastSixMonths = DB::connection('pgsql')->select("
