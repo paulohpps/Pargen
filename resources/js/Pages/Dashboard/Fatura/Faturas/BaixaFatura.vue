@@ -18,7 +18,6 @@ const props = defineProps({
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Data de Emissão</th>
                             <th scope="col">Data de Vencimento</th>
                             <th scope="col">Valor</th>
                             <th scope="col">Status</th>

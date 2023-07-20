@@ -2,6 +2,7 @@
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import Paginacao from '../../../../Componentes/Paginacao.vue';
+import Filtro from './Componentes/Filtro.vue';
 
 const props = defineProps({
     faturas: Array,
@@ -13,12 +14,12 @@ const props = defineProps({
         <div class="card tabela mt-3 w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h2 class="card-title">Faturas Emitidas</h2>
+                <Filtro></Filtro>
             </div>
             <div class="card-body">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Data de Emissão</th>
                             <th scope="col">Data de Vencimento</th>
                             <th scope="col">Cliente</th>
                             <th scope="col">Valor</th>
