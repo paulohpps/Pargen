@@ -5,55 +5,77 @@ import Chart from 'chart.js/auto';
 import { onMounted, ref } from 'vue';
 
 
-let values = [
-    {
-        "total": 95,
-        "month": "1",
-        "month_name": "january"
-    },
-    {
-        "total": 247,
-        "month": "2",
-        "month_name": "february"
-    },
-    {
-        "total": 311,
-        "month": "3",
-        "month_name": "march"
-    },
-    {
-        "total": 311,
-        "month": "4",
-        "month_name": "april"
-    },
-    {
-        "total": 295,
-        "month": "5",
-        "month_name": "may"
+const data = {
+    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+        'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    datasets: [
+        {
+            label: 'Análise Clínica em Pets',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            data: [10, 30, 20, 40, 25, 35, 15, 5, 25, 15, 35, 10],
+            fill: false,
+        },
+        {
+            label: 'Controle de Qualidade em Aviário',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            data: [5, 15, 25, 20, 30, 10, 35, 15, 5, 25, 15, 35],
+            fill: false,
+        },
+        {
+            label: 'Diagnóstico Molecular em Pets',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            data: [20, 10, 30, 15, 5, 25, 15, 35, 10, 30, 20, 40],
+            fill: false,
+        }
+    ]
+};
+
+const config = {
+    type: 'line',
+    data: data,
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Evolução financeira'
+            }
+        },
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Mês'
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Valores'
+                }
+            }
+        }
     }
-]
+};
 
 let chart = ref(null);
+let chart_2 = ref(null);
 
 onMounted(async () => {
-    new Chart(chart.value, {
-        type: 'line',
-        data: {
-            labels: values.map(item => item.month_name),
-            datasets: [
-                {
-                    label: "teste",
-                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                    data: values.map(item => item.total)
-                }
-            ]
-        }
-    });
+    new Chart(chart.value, config);
+    new Chart(chart_2.value, config);
 })
 </script>
 <template>
     <DashboardLayout titulo="Evolução financeira" categoriaPagina="relatorio" pagina="evolucao_financeira">
-        <p>Teste</p>
-        <canvas ref="chart"></canvas>
+
+        <canvas ref="chart" height="80"></canvas>
+        <canvas ref="chart_2" height="80"></canvas>
     </DashboardLayout>
 </template>
+<style></style>
