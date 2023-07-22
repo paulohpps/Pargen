@@ -12,11 +12,12 @@ const props = defineProps({
 <template>
     <DashboardLayout titulo="Faturas" categoriaPagina="fatura" pagina="faturas">
         <div class="card tabela mt-3 w-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between w-100 align-items-center">
                 <h2 class="card-title">Faturas Emitidas</h2>
-                <Filtro></Filtro>
             </div>
             <div class="card-body">
+                <div class="w-25">
+                </div>
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -29,7 +30,6 @@ const props = defineProps({
                     </thead>
                     <tbody>
                         <tr v-for="fatura in faturas.data">
-                            <td>{{ fatura.data_emissao }}</td>
                             <td>{{ fatura.data_vencimento }}</td>
                             <td>{{ fatura.servicos[0]?.cliente.name }}</td>
                             <td>R$ {{ fatura.valor }}</td>

@@ -34,7 +34,15 @@ class ClientesController extends Controller
             $clienteCategoria->categoria = $categoria;
             $clienteCategoria->save();
         }
-        
         return redirect()->back();
+    }
+
+    public function clienteJson(Request $request)
+    {
+        $cliente = Clientes::select('id', 'name as texto')
+            ->where('name', 'like', '%' . $request->input('termo') . '%')
+            ->get();
+
+        return response()->json($cliente);
     }
 }

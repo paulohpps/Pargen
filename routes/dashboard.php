@@ -31,6 +31,7 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
     Route::prefix('clientes')->name('.clientes')->group(function () {
         Route::get('', [ClientesController::class, 'clientes'])->name('');
         Route::post('/editar/categoria/', [ClientesController::class, 'editarCategoria'])->name('.editar.categoria');
+        Route::get('/pesquisar', [ClientesController::class, 'clienteJson'])->name('.pesquisar');
     });
 
     Route::prefix('servicos')->name('.servicos')->group(function () {
@@ -111,7 +112,8 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
         Route::get('baixar', [FaturaController::class, 'faturasBaixa'])->name('.faturas.baixar');
         Route::get('faturas/{id}/download', [FaturaController::class, 'fatura'])->name('.download');
         Route::get('faturas/{id}/servicos', [FaturaController::class, 'faturaServico'])->name('.faturas.servicos');
-        Route::get('faturas/{id}/baixa', [FaturaController::class, 'baixarFatura'])->name('.baixar');
+        Route::get('faturas/{id}/baixa', [FaturaController::class, 'baixarFatura'])->name('.baixa');
+        Route::post('faturas/baixar', [FaturaController::class, 'baixar'])->name('.baixar');
     });
 
     Route::prefix('relatorios')->name(".relatorios")->group(function () {

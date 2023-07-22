@@ -78,7 +78,9 @@ class FaturaController extends Controller
     {
         $fatura = Fatura::find($id);
         $fatura->append('servicos');
-        $analises_servicos = AnaliseServicos::with('analise')->where('petrequest_id', $fatura->fatura_servico[0]->servico->id)->get();
+        $analises_servicos = AnaliseServicos::with('analise')
+            ->where('petrequest_id', $fatura->fatura_servico[0]->servico->id)
+            ->get();
         $analises = Analises::with('categoriaAnalise')->get();
 
         return Inertia::render('Dashboard/Fatura/Faturas/Servicos', compact('fatura', 'analises_servicos', 'analises'));
@@ -87,10 +89,33 @@ class FaturaController extends Controller
     public function baixarFatura(int $id)
     {
         $fatura = Fatura::find($id);
-        $fatura->status = FaturaEnum::Paga;
-        $fatura->save();
+        $fatura->append('servicos');
+        $analises_servicos = AnaliseServicos::with('analise')
+            ->where('petrequest_id', $fatura->fatura_servico[0]->servico->id)
+            ->get();
 
-        return redirect()->back();
+        return Inertia::render('Dashboard/Fatura/Faturas/Baixa', compact('fatura', 'analises_servicos'));
+    }
+
+    public function baixar(Request $request)
+    {
+        $fatura = Fatura::find($request->fatura_id);
+        $valorRestante = ($fatura->valor - $fatura->valor_pago) - $request->valorBaixar;
+        if($valorRestante <= 0)
+        {
+            $fatura->status = FaturaEnum::Paga;
+            $fatura->data_baixa = Carbon::now();
+            $fatura->valor_pago += $request->valorBaixar;
+        }
+        else if($valorRestante > 0)
+        {
+            $fatura->status = FaturaEnum::Pago_Parcial;
+            $fatura->data_baixa = Carbon::now();
+            $fatura->valor_pago += $request->valorBaixar;
+        }
+
+        $fatura->save();
+        return redirect()->route('dashboard.fatura.faturas.baixar');
     }
 
     public function faturasBaixa()

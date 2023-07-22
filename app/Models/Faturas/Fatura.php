@@ -20,7 +20,10 @@ class Fatura extends Model
     protected $fillable = [
         'data_vencimento',
         'data_emissao',
+        'data_baixa',
+        'status',
         'valor',
+        'valor_pago',
     ];
 
     protected $appends = [
@@ -30,6 +33,7 @@ class Fatura extends Model
     protected $casts = [
         'data_vencimento' => 'date:d/m/Y',
         'data_emissao' => 'date:d/m/Y',
+        'data_baixa' => 'date:d/m/Y',
         'status' => FaturaEnum::class,
     ];
 
