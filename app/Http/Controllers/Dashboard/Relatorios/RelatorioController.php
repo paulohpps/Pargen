@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard\Relatorios;
 
+use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Http\Controllers\Controller;
-use App\Models\CategoriaAnalise;
 use App\Models\Faturas\Fatura;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -19,7 +17,37 @@ class RelatorioController extends Controller
 
     public function evolucaoFinanceira()
     {
-        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira');
+        $year = date('Y');
+        $month = date('m');
+
+        $query = Fatura::query()
+            ->whereYear('data_emissao', $year)
+            ->whereMonth('data_emissao', $month)
+            ->get();
+
+        $evolucao_receita = [];
+        foreach ($query as $fatura) {
+            foreach ($fatura->servicos as $servico) {
+                foreach ($servico->analises as $analise) {
+                    $category = $analise->categoriaAnalise->categoria;
+                    $month = $fatura->data_emissao->format('m');
+
+                    if (!isset($evolucao_receita[$category])) {
+                        $evolucao_receita[$category] = array_fill(1, 12, 0);
+                    }
+
+                    $evolucao_receita[$category][(int)$month] += $analise->price;
+                }
+            }
+        }
+
+        $categorias = CategoriaAnaliseEnum::toArray();
+       /* return response()->json([
+            'evolucao_receita' => $evolucao_receita,
+            'categorias' => $categorias
+        ]);*/
+
+        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias'));
     }
 
     public function rankingClientes()

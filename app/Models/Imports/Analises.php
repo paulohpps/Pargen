@@ -28,7 +28,7 @@ class Analises extends Model
 
     public function categoriaAnalise()
     {
-        return $this->hasMany(CategoriaAnalise::class, 'id_analise', 'id');
+        return $this->hasOne(CategoriaAnalise::class, 'id_analise', 'id');
     }
 
     public function analiseServico()
