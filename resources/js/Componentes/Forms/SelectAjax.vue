@@ -14,7 +14,6 @@ const props = defineProps({
     preBusca: Boolean,
     disabled: Boolean,
     servicos: Array,
-    cliente_id: Number,
 })
 
 const emit = defineEmits<{
@@ -74,7 +73,6 @@ async function atualizarOpcoes(search, loading) {
     let response = await axios.get(props.href, {
         params: {
             termo: search,
-            cliente_id: props.cliente_id,
         },
     })
     selectOptions.value = response.data

@@ -18,23 +18,29 @@ const props = defineProps({
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Data de Emissão</th>
                             <th scope="col">Data de Vencimento</th>
-                            <th scope="col">Valor</th>
+                            <th scope="col">Data de Baixa</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Valor Total</th>
+                            <th scope="col">Valor Pago</th>
                             <th scope="col">Status</th>
                             <th scope="col">Açoes</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="fatura in faturas.data">
-                            <td>{{ fatura.data_emissao }}</td>
                             <td>{{ fatura.data_vencimento }}</td>
+                            <td>{{ fatura.data_baixa ?? "Fatura Não Baixada"}}</td>
+                            <td>{{ fatura.servicos[0]?.cliente.name }}</td>
                             <td>R$ {{ fatura.valor }}</td>
+                            <td>R$ {{ fatura.valor_pago }}</td>
                             <td>{{ status[fatura.status] }}</td>
                             <td>
                                 <div class="d-flex">
-                                    <Link v-if="fatura.status === 0" :href="`/dashboard/fatura/faturas/${fatura.id}/baixa`"
-                                        class="btn btn-primary btn-sm">Baixa</Link>
+                                    <Link v-if="fatura.status !== 1" :href="`/dashboard/fatura/faturas/${fatura.id}/baixa`"
+                                        class="btn btn-primary btn-sm me-2">Baixa</Link>
+                                    <Link :href="`/dashboard/fatura/faturas/${fatura.id}/servicos`"
+                                        class="btn btn-primary btn-sm">Serviços</Link>
                                     <a :href="`/dashboard/fatura/faturas/${fatura.id}/download`"
                                         class="btn btn-primary btn-sm ms-2">Download</a>
                                 </div>
