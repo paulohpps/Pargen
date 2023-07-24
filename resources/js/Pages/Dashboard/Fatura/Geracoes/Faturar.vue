@@ -54,7 +54,7 @@ const servicos = ref([]);
                 </div>
                 <div class="mb-3">
                     <label class="mb-2">Pet - Tutor</label>
-                    <SelectAjax href="/dashboard/servicos/ajax" :cliente_id="cliente_id" placeholder="Selecione um servico" :preBusca="true"
+                    <SelectAjax :href="`/dashboard/servicos/ajax?cliente_id=${cliente_id}`" :cliente_id="cliente_id" placeholder="Selecione um servico" :preBusca="true"
                         @optionSelected="selecionarServico" :servicos="servicos"></SelectAjax>
                 </div>
                 <div class="d-flex row mt-3">

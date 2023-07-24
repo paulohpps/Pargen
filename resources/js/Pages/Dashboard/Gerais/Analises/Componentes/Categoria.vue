@@ -12,7 +12,7 @@ let modalEl = ref(null);
 let emit = null;
 
 const form = useForm({
-    categoria: props.analise.categoria_analise[0]?.categoria,
+    categoria: props.analise.categoria_analise?.categoria,
     analise_id: props.analise.id,
 });
 
