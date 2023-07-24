@@ -1,6 +1,9 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 
+const props = defineProps({
+    pagamentos: Object
+})
 
 </script>
 <template>
@@ -31,7 +34,7 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Pagamentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" value="35000">
+                            <input type="text" id="tipo" disabled class="form-control" :value="pagamentos.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Lucro Bruto </label>
@@ -46,13 +49,13 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                             <thead>
                                 <tr>
                                     <th scope="col">Categoria</th>
-                                    <th scope="col">Valor Total</th>
+                                    <th scope="col">Valor</th>
                                     <th scope="col">Impacto %</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Categoria legal</td>
+                                    <td>Categoria teste</td>
                                     <td>10000</td>
                                     <td>30%</td>
                                 </tr>
@@ -69,11 +72,17 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                                     <th scope="col">Impacto %</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody v-for="categoria in pagamentos.categorias">
                                 <tr>
-                                    <td>Categoria legal</td>
-                                    <td>10000</td>
-                                    <td>30%</td>
+                                    <td>{{ categoria.nome }}</td>
+                                    <td>R${{ categoria.total_categoria }}</td>
+                                    <td>{{ categoria.impacto }}%</td>
+                                </tr>
+                                <tr  v-for="sub in categoria.subcategorias">
+                                    <td class="sub-categoria">{{ sub.nome }}</td>
+                                    <td>R${{ sub.valor }}</td>
+                                    <td>{{ sub.impacto }}%</td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -83,3 +92,8 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
         </div>
     </DashboardLayout>
 </template>
+<style scoped>
+.sub-categoria {
+  padding-left: 40px !important;
+}
+</style>
