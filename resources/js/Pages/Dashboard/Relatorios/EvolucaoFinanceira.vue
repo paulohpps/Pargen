@@ -12,7 +12,7 @@ const props = defineProps({
 const dataLabels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function mapMesesValores(categoriaData) {
-    const valoresMeses = dataLabels.map((mes, index) => categoriaData[index+1] || 0);
+    const valoresMeses = dataLabels.map((mes, index) => categoriaData[index + 1] || 0);
     return valoresMeses;
 }
 
@@ -27,6 +27,14 @@ const datasets = Object.keys(props.evolucao_receita).map((categoria, index) => {
         fill: false,
     };
 });
+
+if (!datasets.length) {
+    datasets.push({
+        label: 'Sem dados',
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        fill: false,
+    })
+}
 
 const config = {
     type: 'line',
