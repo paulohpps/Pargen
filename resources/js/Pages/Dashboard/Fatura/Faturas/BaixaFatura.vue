@@ -32,8 +32,8 @@ const props = defineProps({
                             <td>{{ fatura.data_vencimento }}</td>
                             <td>{{ fatura.data_baixa ?? "Fatura Não Baixada"}}</td>
                             <td>{{ fatura.servicos[0]?.cliente.name }}</td>
-                            <td>R$ {{ fatura.valor }}</td>
-                            <td>R$ {{ fatura.valor_pago }}</td>
+                            <td>R${{ fatura.valor }}</td>
+                            <td>R${{ fatura.valor_pago ?? '0,00' }}</td>
                             <td>{{ status[fatura.status] }}</td>
                             <td>
                                 <div class="d-flex">

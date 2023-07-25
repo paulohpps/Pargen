@@ -4,50 +4,38 @@ namespace App\Http\Controllers\Dashboard\Relatorios;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Http\Controllers\Controller;
-use App\Models\Faturas\Fatura;
-use Illuminate\Support\Facades\DB;
+use App\Models\Imports\Servicos;
+use App\Services\RelatorioService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class RelatorioController extends Controller
 {
-    public function analiseFinanceira()
+    public function __construct(private RelatorioService $relatorioService)
     {
-        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira');
+    }
+    public function analiseFinanceira(Request $request)
+    {
+        $startDate = $request->query('inicio', date('Y-m-d', strtotime('first day of january')));
+        $endDate = $request->query('ate', date('Y-m-d', strtotime('last day of december')));
+
+        $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
+        $pagamentos = $this->relatorioService->getAnalisePagamentos($startDate, $endDate);
+
+        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos']));
     }
 
-    public function evolucaoFinanceira()
+    public function evolucaoFinanceira(Request $request)
     {
-        $year = date('Y');
-        $month = date('m');
+        $year = $request->query('ano', date('Y'));
 
-        $query = Fatura::query()
-            ->whereYear('data_emissao', $year)
-            ->whereMonth('data_emissao', $month)
-            ->get();
+        $evolucao_receita = $this->relatorioService->getEvolucaoReceita($year);
 
-        $evolucao_receita = [];
-        foreach ($query as $fatura) {
-            foreach ($fatura->servicos as $servico) {
-                foreach ($servico->analises as $analise) {
-                    $category = $analise->categoriaAnalise->categoria;
-                    $month = $fatura->data_emissao->format('m');
+        $categorias_analise = CategoriaAnaliseEnum::toArray();
 
-                    if (!isset($evolucao_receita[$category])) {
-                        $evolucao_receita[$category] = array_fill(1, 12, 0);
-                    }
+        $evolucao_pagamentos = $this->relatorioService->getEvolucaoPagamentos($year);
 
-                    $evolucao_receita[$category][(int)$month] += $analise->price;
-                }
-            }
-        }
-
-        $categorias = CategoriaAnaliseEnum::toArray();
-       /* return response()->json([
-            'evolucao_receita' => $evolucao_receita,
-            'categorias' => $categorias
-        ]);*/
-
-        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias'));
+        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias_analise', 'evolucao_pagamentos'));
     }
 
     public function rankingClientes()
@@ -57,33 +45,29 @@ class RelatorioController extends Controller
 
     public function servicos()
     {
-        $lastSixMonths = DB::connection('pgsql')->select("
-            select count(*) as total, extract(month from created_at) as month,
-                trim(to_char(created_at, 'month')) as month_name
-            from labs_petrequest
-            where created_at > now() - interval '6 months'
-            group by month, month_name
-            order by month asc");
+        $faturamentos = Servicos::selectRaw('count(*) as total')
+            ->selectRaw('extract(month from created_at) as month')
+            ->selectRaw("trim(to_char(created_at, 'month')) as month_name")
+            ->where('created_at', '>', now()->subMonths(6))
+            ->groupBy('month', 'month_name')
+            ->orderBy('month', 'asc')
+            ->get();
 
-        return response()->json($lastSixMonths);
+        return response()->json($faturamentos);
     }
 
     public function servicosFaturamento()
     {
-        $lastSixMonthsRevenue = DB::connection('pgsql')->select("
-            select
-                extract(month from pr.created_at) as month,
-                trim(to_char(pr.created_at, 'month')) as month_name,
-                sum(a.price) as total
-            from labs_petrequest pr
-            inner join labs_petrequest_analyse pra on pr.id = pra.petrequest_id
-            inner join labs_analyze a on pra.analyze_id = a.id
-            where
-                pr.created_at > now() - interval '6 months'
-            group by
-                month, month_name
-            order by
-                month asc");
+        $lastSixMonthsRevenue = Servicos::selectRaw('extract(month from labs_petrequest.created_at) as month')
+            ->selectRaw("trim(to_char(labs_petrequest.created_at, 'month')) as month_name")
+            ->selectRaw('sum(labs_analyze.price) as total')
+            ->join('labs_petrequest_analyse', 'labs_petrequest.id', '=', 'labs_petrequest_analyse.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyse.analyze_id', '=', 'labs_analyze.id')
+            ->where('labs_petrequest.created_at', '>', now()->subMonths(6))
+            ->groupBy('month', 'month_name')
+            ->orderBy('month', 'asc')
+            ->get();
+
         return response()->json($lastSixMonthsRevenue);
     }
 }

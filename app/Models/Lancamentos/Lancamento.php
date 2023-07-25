@@ -19,6 +19,7 @@ class Lancamento extends Model
         'pagamento_id',
         'fornecedor_id',
         'funcionario_id',
+        'pagamento_lancamento_id',
         'descricao',
         'valor',
         'vencimento',

@@ -1,85 +1,39 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-import Chart from 'chart.js/auto';
-import { onMounted, ref } from 'vue';
+import EvolucaoReceitas from './Components/EvolucaoReceitas.vue';
+import EvolucaoPagamentos from './Components/EvolucaoPagamentos.vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
     evolucao_receita: Object,
-    categorias: Object,
+    categorias_analise: Object,
+    evolucao_pagamentos: Object,
 })
 
 
-const dataLabels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+let route = new URL(document.location.href);
 
-function mapMesesValores(categoriaData) {
-    const valoresMeses = dataLabels.map((mes, index) => categoriaData[index+1] || 0);
-    return valoresMeses;
+let ano = route.searchParams.get('ano') ?? new Date().getFullYear();
+
+function filtrarAno() {
+    route.searchParams.set('ano', ano);
+    router.visit(route.href)
 }
 
-const datasets = Object.keys(props.evolucao_receita).map((categoria, index) => {
-    const categoriaData = props.evolucao_receita[categoria];
-
-    const data = mapMesesValores(categoriaData);
-    return {
-        label: props.categorias[categoria],
-
-        data: data,
-        fill: false,
-    };
-});
-
-const config = {
-    type: 'line',
-    data: {
-        labels: dataLabels,
-        datasets: datasets,
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Gráfico de Linhas com Três Categorias'
-            }
-        },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Mês'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Valores R$'
-                }
-            }
-        }
-    }
-};
-
-
-let chart = ref(null);
-let chart_2 = ref(null);
-
-onMounted(async () => {
-    new Chart(chart.value, config);
-    //new Chart(chart_2.value, config);
-})
 </script>
 <template>
     <DashboardLayout titulo="Evolução financeira" categoriaPagina="relatorio" pagina="evolucao_financeira">
         <div class="card w-100" style="background-color: transparent;">
             <div class="card-body">
                 <h5 class="card-title">Evolução financeira</h5>
-                <form style="width: 180px;">
-                    <input type="number" name="ano" required class="form-control" placeholder="Ano" min="2020" max="2030" />
+                <form @submit.prevent="filtrarAno" style="width: 180px;">
+                    <input type="number" v-model="ano" name="ano" required class="form-control" placeholder="Ano" min="2020"
+                        max="2030" />
                 </form>
             </div>
         </div>
-        <canvas ref="chart" height="80"></canvas>
-        <canvas ref="chart_2" height="80"></canvas>
+        <EvolucaoReceitas :evolucao_receita="evolucao_receita" :categorias="categorias_analise" />
+        <EvolucaoPagamentos :evolucao_pagamentos="evolucao_pagamentos" />
     </DashboardLayout>
 </template>
 <style></style>

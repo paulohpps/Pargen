@@ -25,14 +25,13 @@ class LoginRequest extends FormRequest
     {
         return [
             'username' => 'required|string',
-            'password' => 'required|string',
-            'manter_conectado' => 'nullable|boolean',
+            'password' => 'required|string'
         ];
     }
 
     public function autenticar(): void
     {
-        if (!Auth::attempt($this->only('username', 'password'), $this->boolean('manter_conectado'))) {
+        if (!Auth::attempt($this->only('username', 'password'), true)) {
             throw ValidationException::withMessages([
                 'username' => trans('auth.failed'),
             ]);
