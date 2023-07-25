@@ -1,10 +1,24 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
     pagamentos: Object,
     receitas: Object,
 })
+
+let route = new URL(document.location.href);
+
+function filtrarApartir(data) {
+    route.searchParams.set('inicio', data.target.value);
+    router.visit(route.href)
+}
+
+function filtrarAte(data) {
+    console.log(data.target.value);
+    route.searchParams.set('ate', data.target.value);
+    router.visit(route.href)
+}
 
 </script>
 <template>
@@ -19,12 +33,14 @@ const props = defineProps({
                     <div>
                         <div class="mb-2">
                             <label for="inicio" class="form-label">A partir de:</label>
-                            <input type="date" id="inicio" class="form-control" placeholder="Pesquisar"
-                                aria-label="Pesquisar" aria-describedby="button-addon2">
+                            <input @change="filtrarApartir" :value="route.searchParams.get('inicio')" type="date"
+                                id="inicio" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                                aria-describedby="button-addon2">
                         </div>
                         <div>
                             <label for="ate" class="form-label">Até:</label>
-                            <input type="date" id="ate" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                            <input @change="filtrarAte" :value="route.searchParams.get('ate')" type="date" id="ate"
+                                class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
                                 aria-describedby="button-addon2">
                         </div>
                     </div>
@@ -61,6 +77,9 @@ const props = defineProps({
                                     <td>R${{ categoria.total }}</td>
                                     <td>{{ categoria.impacto }}%</td>
                                 </tr>
+                                <tr v-if="!receitas.categorias">
+                                    <td colspan="3" class="text-center">Nenhum registro encontrado</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -84,7 +103,11 @@ const props = defineProps({
                                     <td class="sub-categoria">{{ sub.nome }}</td>
                                     <td>R${{ sub.valor }}</td>
                                     <td>{{ sub.impacto }}%</td>
-
+                                </tr>
+                            </tbody>
+                            <tbody v-if="pagamentos.categorias.length === 0">
+                                <tr>
+                                    <td colspan="3" class="text-center">Nenhum registro encontrado</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Dashboard\Relatorios;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Http\Controllers\Controller;
-use App\Models\CategoriaAnalise;
-use App\Models\Faturas\Fatura;
 use App\Models\Imports\Servicos;
-use App\Models\Lancamentos\Lancamento;
 use App\Services\RelatorioService;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class RelatorioController extends Controller
@@ -17,21 +14,20 @@ class RelatorioController extends Controller
     public function __construct(private RelatorioService $relatorioService)
     {
     }
-    public function analiseFinanceira()
+    public function analiseFinanceira(Request $request)
     {
-        $startDate = '2023-01-01';
-        $endDate = '2023-12-31';
+        $startDate = $request->query('inicio', date('Y-m-d', strtotime('first day of january')));
+        $endDate = $request->query('ate', date('Y-m-d', strtotime('last day of december')));
 
         $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
-
         $pagamentos = $this->relatorioService->getAnalisePagamentos($startDate, $endDate);
 
         return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos']));
     }
 
-    public function evolucaoFinanceira()
+    public function evolucaoFinanceira(Request $request)
     {
-        $year = date('Y');
+        $year = $request->query('ano', date('Y'));
 
         $evolucao_receita = $this->relatorioService->getEvolucaoReceita($year);
 

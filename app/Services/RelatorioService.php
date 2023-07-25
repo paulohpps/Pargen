@@ -26,11 +26,14 @@ class RelatorioService
                 $receitas['categorias'][$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
             }
         }
+        $totalRevenueAllCategories = 0;
+        if (isset($receitas['categorias'])) {
 
-        $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
-        foreach ($receitas['categorias'] as &$categoryData) {
-            $categoryData['impacto'] = ($categoryData['total'] / $totalRevenueAllCategories) * 100;
-            $categoryData['impacto'] = $categoryData['impacto'];
+            $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
+            foreach ($receitas['categorias'] as &$categoryData) {
+                $categoryData['impacto'] = round(($categoryData['total'] / $totalRevenueAllCategories) * 100, 2);
+                $categoryData['impacto'] = round($categoryData['impacto'], 2);
+            }
         }
         $receitas['total_geral'] = $totalRevenueAllCategories;
 
@@ -40,11 +43,13 @@ class RelatorioService
     public function getAnalisePagamentos($start, $end)
     {
         $pagamentos = Lancamento::with(['pagamento.subcategoria.categoria'])
-            ->select(
-                'categorias.nome as categoria',
-                'subcategorias.nome as subcategoria',
-                DB::raw('SUM(lancamentos.valor) as total_pago'),
-                DB::raw('SUM(lancamentos.valor) / (SELECT SUM(valor) FROM lancamentos WHERE status = "Pago" AND vencimento BETWEEN "' . $start . '" AND "' . $end . '") * 100 as impacto')
+            ->selectRaw(
+                'categorias.nome as categoria, subcategorias.nome as subcategoria,
+                SUM(lancamentos.valor) as total_pago,
+                SUM(lancamentos.valor) /
+                (SELECT SUM(valor) FROM lancamentos
+                WHERE status = "Pago" AND vencimento BETWEEN ? AND ?) * 100 as impacto',
+                [$start, $end]
             )
             ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
             ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
@@ -61,12 +66,12 @@ class RelatorioService
             $impacto = $items->sum('impacto');
 
             return [
-                'total_categoria' => $total_categoria,
+                'total_categoria' => number_format($total_categoria, 2, '.', ''),
                 'nome' => $categoria,
                 'subcategorias' => $items->map(function ($item) {
                     return [
                         'nome' =>  $item['subcategoria'],
-                        'valor' => $item['total_pago'],
+                        'valor' =>  $item['total_pago'],
                         'impacto' => round($item['impacto'], 2)
                     ];
                 }),
