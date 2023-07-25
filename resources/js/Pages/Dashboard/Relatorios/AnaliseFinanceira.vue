@@ -2,7 +2,8 @@
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 
 const props = defineProps({
-    pagamentos: Object
+    pagamentos: Object,
+    receitas: Object,
 })
 
 </script>
@@ -30,7 +31,7 @@ const props = defineProps({
                     <div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Recebimentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" value="35000">
+                            <input type="text" id="tipo" disabled class="form-control" :value="receitas.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Pagamentos</label>
@@ -38,7 +39,8 @@ const props = defineProps({
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Lucro Bruto </label>
-                            <input type="text" id="tipo" disabled class="form-control" value="35000">
+                            <input type="text" id="tipo" disabled class="form-control"
+                                :value="receitas.total_geral - pagamentos.total_geral">
                         </div>
                     </div>
                 </div>
@@ -54,10 +56,10 @@ const props = defineProps({
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Categoria teste</td>
-                                    <td>10000</td>
-                                    <td>30%</td>
+                                <tr v-for="categoria in receitas">
+                                    <td>{{ categoria.nome }}</td>
+                                    <td>R${{ categoria.total }}</td>
+                                    <td>{{ categoria.impacto }}%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -78,7 +80,7 @@ const props = defineProps({
                                     <td>R${{ categoria.total_categoria }}</td>
                                     <td>{{ categoria.impacto }}%</td>
                                 </tr>
-                                <tr  v-for="sub in categoria.subcategorias">
+                                <tr v-for="sub in categoria.subcategorias">
                                     <td class="sub-categoria">{{ sub.nome }}</td>
                                     <td>R${{ sub.valor }}</td>
                                     <td>{{ sub.impacto }}%</td>
@@ -94,6 +96,6 @@ const props = defineProps({
 </template>
 <style scoped>
 .sub-categoria {
-  padding-left: 40px !important;
+    padding-left: 40px !important;
 }
 </style>

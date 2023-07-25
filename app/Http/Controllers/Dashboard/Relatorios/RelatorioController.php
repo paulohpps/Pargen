@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Dashboard\Relatorios;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Http\Controllers\Controller;
+use App\Models\CategoriaAnalise;
 use App\Models\Faturas\Fatura;
+use App\Models\Imports\Servicos;
 use App\Models\Lancamentos\Lancamento;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -15,6 +17,40 @@ class RelatorioController extends Controller
     {
         $startDate = '2023-01-01';
         $endDate = '2023-07-31';
+
+        $receitas = [];
+
+        $faturas = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
+            ->get();
+
+        foreach ($faturas as $fatura) {
+            foreach ($fatura->servicos as $servico) {
+                foreach ($servico->analises as $analise) {
+                    if (!$analise->categoriaAnalise) {
+                        continue; // Skip if the analysis doesn't have a defined category
+                    }
+
+                    $categoryName = $analise->categoriaAnalise->categoria;
+                    $revenue = $analise->price;
+
+                    if (!isset($receitas[$categoryName]['total'])) {
+                        $receitas[$categoryName]['total'] = 0;
+                    }
+
+                    $receitas[$categoryName]['total'] += $revenue;
+                    $receitas[$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
+                }
+            }
+        }
+
+        $totalRevenueAllCategories = array_sum(array_column($receitas, 'total'));
+
+
+        foreach ($receitas as &$categoryData) {
+            $categoryData['impacto'] = ($categoryData['total'] / $totalRevenueAllCategories) * 100;
+            $categoryData['impacto'] = round($categoryData['impacto'], 2);
+        }
+        $receitas['total_geral'] = $totalRevenueAllCategories;
 
         $pagamentos = Lancamento::with(['pagamento.subcategoria.categoria'])
             ->select(
@@ -56,7 +92,7 @@ class RelatorioController extends Controller
             'total_geral' => $resultado->sum('total_categoria')
         ];
 
-        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact('pagamentos'));
+        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos', 'categorias_analise']));
     }
 
     public function evolucaoFinanceira()
@@ -92,9 +128,33 @@ class RelatorioController extends Controller
             }
         }
 
-        $categorias = CategoriaAnaliseEnum::toArray();
+        $categorias_analise = CategoriaAnaliseEnum::toArray();
 
-        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias'));
+        $evolucao_pagamentos = [];
+
+        foreach ($query as $fatura) {
+            foreach ($fatura->servicos as $servico) {
+                foreach ($servico->analises as $analise) {
+                    if (!$analise->categoriaAnalise) {
+                        continue;
+                    }
+
+                    $category = $analise->categoriaAnalise->categoria;
+                    $month = $fatura->data_emissao->format('m');
+                    $revenue = $analise->price;
+
+
+                    if (!isset($evolucao_pagamentos[$category][$month])) {
+                        $evolucao_pagamentos[$category]['nome'] = CategoriaAnaliseEnum::names()[$category];
+                        $evolucao_pagamentos[$category]['meses'][$month] = 0;
+                    }
+
+                    $evolucao_pagamentos[$category]['meses'][$month] += $revenue;
+                }
+            }
+        }
+
+        return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias_analise', 'evolucao_pagamentos'));
     }
 
     public function rankingClientes()
@@ -104,33 +164,29 @@ class RelatorioController extends Controller
 
     public function servicos()
     {
-        $lastSixMonths = DB::connection('pgsql')->select("
-            select count(*) as total, extract(month from created_at) as month,
-                trim(to_char(created_at, 'month')) as month_name
-            from labs_petrequest
-            where created_at > now() - interval '6 months'
-            group by month, month_name
-            order by month asc");
+        $faturamentos = Servicos::selectRaw('count(*) as total')
+            ->selectRaw('extract(month from created_at) as month')
+            ->selectRaw("trim(to_char(created_at, 'month')) as month_name")
+            ->where('created_at', '>', now()->subMonths(6))
+            ->groupBy('month', 'month_name')
+            ->orderBy('month', 'asc')
+            ->get();
 
-        return response()->json($lastSixMonths);
+        return response()->json($faturamentos);
     }
 
     public function servicosFaturamento()
     {
-        $lastSixMonthsRevenue = DB::connection('pgsql')->select("
-            select
-                extract(month from pr.created_at) as month,
-                trim(to_char(pr.created_at, 'month')) as month_name,
-                sum(a.price) as total
-            from labs_petrequest pr
-            inner join labs_petrequest_analyse pra on pr.id = pra.petrequest_id
-            inner join labs_analyze a on pra.analyze_id = a.id
-            where
-                pr.created_at > now() - interval '6 months'
-            group by
-                month, month_name
-            order by
-                month asc");
+        $lastSixMonthsRevenue = Servicos::selectRaw('extract(month from labs_petrequest.created_at) as month')
+            ->selectRaw("trim(to_char(labs_petrequest.created_at, 'month')) as month_name")
+            ->selectRaw('sum(labs_analyze.price) as total')
+            ->join('labs_petrequest_analyse', 'labs_petrequest.id', '=', 'labs_petrequest_analyse.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyse.analyze_id', '=', 'labs_analyze.id')
+            ->where('labs_petrequest.created_at', '>', now()->subMonths(6))
+            ->groupBy('month', 'month_name')
+            ->orderBy('month', 'asc')
+            ->get();
+
         return response()->json($lastSixMonthsRevenue);
     }
 }
