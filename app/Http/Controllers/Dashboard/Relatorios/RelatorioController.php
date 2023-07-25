@@ -20,7 +20,7 @@ class RelatorioController extends Controller
     public function analiseFinanceira()
     {
         $startDate = '2023-01-01';
-        $endDate = '2023-07-31';
+        $endDate = '2023-12-31';
 
         $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
 

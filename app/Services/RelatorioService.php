@@ -30,7 +30,7 @@ class RelatorioService
         $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
         foreach ($receitas['categorias'] as &$categoryData) {
             $categoryData['impacto'] = ($categoryData['total'] / $totalRevenueAllCategories) * 100;
-            $categoryData['impacto'] = round($categoryData['impacto'], 2);
+            $categoryData['impacto'] = $categoryData['impacto'];
         }
         $receitas['total_geral'] = $totalRevenueAllCategories;
 
@@ -66,7 +66,7 @@ class RelatorioService
                 'subcategorias' => $items->map(function ($item) {
                     return [
                         'nome' =>  $item['subcategoria'],
-                        'valor' => round($item['total_pago']),
+                        'valor' => $item['total_pago'],
                         'impacto' => round($item['impacto'], 2)
                     ];
                 }),
