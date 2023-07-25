@@ -8,26 +8,18 @@ const props = defineProps({
 
 const dataLabels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
-function mapMesesValores(categoriaData) {
-    const valoresMeses = dataLabels.map((mes, index) => categoriaData || 0);
-    return valoresMeses;
-}
+const datasets = props.evolucao_pagamentos.map((pagamento, index) => {
+    let dados = Array.from({ length: 12 }, (_, mes) => {
+        return pagamento.meses[mes] || 0;
+    });
 
-console.log(props.evolucao_pagamentos)
-
-const datasets = Object.keys(props.evolucao_pagamentos).map((pagamento, index) => {
-    const categoriaData = pagamento.meses
-
-    const data = mapMesesValores(categoriaData);
     return {
-        label: props.evolucao_pagamentos.map((categoria, index) => { return categoria.nome; }),
+        label: pagamento.nome,
 
-        data: props.evolucao_pagamentos.map((categoria, index) => { return categoria.meses[index]; }),
+        data: dados,
         fill: false,
     };
 });
-
-console.log(datasets[0].data)
 
 if (!datasets.length) {
     datasets.push({
@@ -48,7 +40,7 @@ const config = {
         plugins: {
             title: {
                 display: true,
-                text: 'Gráfico de Linhas com Três Categorias'
+                text: 'Evolução de Pagamentos por Categoria'
             }
         },
         scales: {
@@ -76,5 +68,5 @@ onMounted(async () => {
 })
 </script>
 <template>
-    <canvas ref="chart" height="80"></canvas>
+    <canvas ref="chart" height="70"></canvas>
 </template>

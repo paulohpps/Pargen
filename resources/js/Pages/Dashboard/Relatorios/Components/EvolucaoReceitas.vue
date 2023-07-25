@@ -46,7 +46,7 @@ const config = {
         plugins: {
             title: {
                 display: true,
-                text: 'Gráfico de Linhas com Três Categorias'
+                text: 'Evolução de Receitas por Categoria'
             }
         },
         scales: {
@@ -74,5 +74,5 @@ onMounted(async () => {
 })
 </script>
 <template>
-    <canvas ref="chart" height="80"></canvas>
+    <canvas ref="chart" height="70"></canvas>
 </template>

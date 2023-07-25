@@ -8,89 +8,23 @@ use App\Models\CategoriaAnalise;
 use App\Models\Faturas\Fatura;
 use App\Models\Imports\Servicos;
 use App\Models\Lancamentos\Lancamento;
+use App\Services\RelatorioService;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class RelatorioController extends Controller
 {
+    public function __construct(private RelatorioService $relatorioService)
+    {
+    }
     public function analiseFinanceira()
     {
         $startDate = '2023-01-01';
         $endDate = '2023-07-31';
 
-        $receitas = [];
+        $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
 
-        $faturas = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
-            ->get();
-
-        foreach ($faturas as $fatura) {
-            foreach ($fatura->servicos as $servico) {
-                foreach ($servico->analises as $analise) {
-                    if (!$analise->categoriaAnalise) {
-                        continue; // Skip if the analysis doesn't have a defined category
-                    }
-
-                    $categoryName = $analise->categoriaAnalise->categoria;
-                    $revenue = $analise->price;
-
-                    if (!isset($receitas['categorias'][$categoryName]['total'])) {
-                        $receitas['categorias'][$categoryName]['total'] = 0;
-                    }
-
-                    $receitas['categorias'][$categoryName]['total'] += $revenue;
-                    $receitas['categorias'][$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
-                }
-            }
-        }
-
-        $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
-
-
-        foreach ($receitas['categorias'] as &$categoryData) {
-            $categoryData['impacto'] = ($categoryData['total'] / $totalRevenueAllCategories) * 100;
-            $categoryData['impacto'] = round($categoryData['impacto'], 2);
-        }
-        $receitas['total_geral'] = $totalRevenueAllCategories;
-
-        $pagamentos = Lancamento::with(['pagamento.subcategoria.categoria'])
-            ->select(
-                'categorias.nome as categoria',
-                'subcategorias.nome as subcategoria',
-                DB::raw('SUM(lancamentos.valor) as total_pago'),
-                DB::raw('SUM(lancamentos.valor) / (SELECT SUM(valor) FROM lancamentos WHERE status = "Pago" AND vencimento BETWEEN "' . $startDate . '" AND "' . $endDate . '") * 100 as impacto')
-            )
-            ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
-            ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
-            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
-            ->where('lancamentos.status', 'Pago')
-            ->whereBetween('lancamentos.vencimento', [$startDate, $endDate])
-            ->groupBy('categorias.nome', 'subcategorias.nome')
-            ->orderBy('categorias.nome')
-            ->orderBy('subcategorias.nome')
-            ->get();
-
-        $resultado = $pagamentos->groupBy('categoria')->map(function ($items, $categoria) {
-            $total_categoria = $items->sum('total_pago');
-            $impacto = $items->sum('impacto');
-
-            return [
-                'total_categoria' => $total_categoria,
-                'nome' => $categoria,
-                'subcategorias' => $items->map(function ($item) {
-                    return [
-                        'nome' =>  $item['subcategoria'],
-                        'valor' => round($item['total_pago']),
-                        'impacto' => round($item['impacto'], 2)
-                    ];
-                }),
-                'impacto' => round($impacto, 2),
-            ];
-        });
-
-        $pagamentos = [
-            'categorias' => $resultado,
-            'total_geral' => $resultado->sum('total_categoria')
-        ];
+        $pagamentos = $this->relatorioService->getAnalisePagamentos($startDate, $endDate);
 
         return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos']));
     }
@@ -98,61 +32,12 @@ class RelatorioController extends Controller
     public function evolucaoFinanceira()
     {
         $year = date('Y');
-        $month = date('m');
 
-        $query = Fatura::query()
-            ->whereYear('data_emissao', $year)
-            ->whereMonth('data_emissao', $month)
-            ->get();
-
-        $evolucao_receita = [];
-        foreach ($query as $fatura) {
-            foreach ($fatura->servicos as $servico) {
-                foreach ($servico->analises as $analise) {
-                    if (!$analise->categoriaAnalise) {
-                        return redirect()->back()->with('mensagem', [
-                            'tipo' => 'error',
-                            'class' => 'text-danger',
-                            'conteudo' => 'Nem todas analises tem categoria definida!'
-                        ]);
-                    }
-                    $category = $analise->categoriaAnalise->categoria;
-                    $month = $fatura->data_emissao->format('m');
-
-                    if (!isset($evolucao_receita[$category])) {
-                        $evolucao_receita[$category] = array_fill(1, 12, 0);
-                    }
-
-                    $evolucao_receita[$category][(int)$month] += $analise->price;
-                }
-            }
-        }
+        $evolucao_receita = $this->relatorioService->getEvolucaoReceita($year);
 
         $categorias_analise = CategoriaAnaliseEnum::toArray();
 
-        $evolucao_pagamentos = [];
-
-        foreach ($query as $fatura) {
-            foreach ($fatura->servicos as $servico) {
-                foreach ($servico->analises as $analise) {
-                    if (!$analise->categoriaAnalise) {
-                        continue;
-                    }
-
-                    $category = $analise->categoriaAnalise->categoria;
-                    $month = $fatura->data_emissao->format('m');
-                    $revenue = $analise->price;
-
-
-                    if (!isset($evolucao_pagamentos[$category][$month])) {
-                        $evolucao_pagamentos[$category]['nome'] = CategoriaAnaliseEnum::names()[$category];
-                        $evolucao_pagamentos[$category]['meses'][$month] = 0;
-                    }
-
-                    $evolucao_pagamentos[$category]['meses'][$month] += $revenue;
-                }
-            }
-        }
+        $evolucao_pagamentos = $this->relatorioService->getEvolucaoPagamentos($year);
 
         return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias_analise', 'evolucao_pagamentos'));
     }
