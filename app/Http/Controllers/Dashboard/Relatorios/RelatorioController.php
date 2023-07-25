@@ -33,20 +33,20 @@ class RelatorioController extends Controller
                     $categoryName = $analise->categoriaAnalise->categoria;
                     $revenue = $analise->price;
 
-                    if (!isset($receitas[$categoryName]['total'])) {
-                        $receitas[$categoryName]['total'] = 0;
+                    if (!isset($receitas['categorias'][$categoryName]['total'])) {
+                        $receitas['categorias'][$categoryName]['total'] = 0;
                     }
 
-                    $receitas[$categoryName]['total'] += $revenue;
-                    $receitas[$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
+                    $receitas['categorias'][$categoryName]['total'] += $revenue;
+                    $receitas['categorias'][$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
                 }
             }
         }
 
-        $totalRevenueAllCategories = array_sum(array_column($receitas, 'total'));
+        $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
 
 
-        foreach ($receitas as &$categoryData) {
+        foreach ($receitas['categorias'] as &$categoryData) {
             $categoryData['impacto'] = ($categoryData['total'] / $totalRevenueAllCategories) * 100;
             $categoryData['impacto'] = round($categoryData['impacto'], 2);
         }
@@ -92,7 +92,7 @@ class RelatorioController extends Controller
             'total_geral' => $resultado->sum('total_categoria')
         ];
 
-        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos', 'categorias_analise']));
+        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos']));
     }
 
     public function evolucaoFinanceira()

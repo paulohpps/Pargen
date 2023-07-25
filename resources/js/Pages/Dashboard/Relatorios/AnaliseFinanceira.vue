@@ -56,7 +56,7 @@ const props = defineProps({
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="categoria in receitas">
+                                <tr v-for="categoria in receitas.categorias">
                                     <td>{{ categoria.nome }}</td>
                                     <td>R${{ categoria.total }}</td>
                                     <td>{{ categoria.impacto }}%</td>
