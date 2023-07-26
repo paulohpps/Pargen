@@ -15,7 +15,6 @@ function filtrarApartir(data) {
 }
 
 function filtrarAte(data) {
-    console.log(data.target.value);
     route.searchParams.set('ate', data.target.value);
     router.visit(route.href)
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Dashboard\Funcionarios;
 
-use App\Rules\Funcionario\CPF;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FuncionarioRequest extends FormRequest
@@ -24,7 +23,7 @@ class FuncionarioRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'string', 'min:10', 'max:120'],
-            'cpf' => ['required', 'bail', new CPF()],
+            'cpf' => ['required', 'bail'],
             'cargo' => 'required|string|min:6|max:40',
             'valor_vencimento' => 'required|numeric|min:0|max:999999.99',
             'encargos' => 'required|numeric|min:0|max:999999.99',

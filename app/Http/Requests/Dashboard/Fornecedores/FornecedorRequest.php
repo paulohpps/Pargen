@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Dashboard\Fornecedores;
 
-use App\Rules\Fornecedores\CNPJ;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FornecedorRequest extends FormRequest
@@ -26,7 +25,7 @@ class FornecedorRequest extends FormRequest
             'razao_social' => 'required|string|min:10|max:120',
             'telefone' => 'required|string',
             'email' => 'required|email|min:10|max:120',
-            'cnpj' => ['required', 'bail', new CNPJ()],
+            'cnpj' => ['required', 'bail'],
             'endereco' => 'required|string|min:8|max:120',
         ];
     }

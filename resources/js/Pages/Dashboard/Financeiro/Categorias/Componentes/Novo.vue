@@ -8,7 +8,7 @@ const form = useForm({
     nome: '',
 })
 
-function submitNovaDespesa() {
+function submitNovaCategoria() {
     form.post("/dashboard/financeiro/categorias/criar"
         , {
             preserveScroll: true,
@@ -41,7 +41,7 @@ function closeModal() {
                     <button type="button" class="btn-close" @click="form.reset()" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <form @submit.prevent="submitNovaDespesa">
+                <form @submit.prevent="submitNovaCategoria">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome</label>
