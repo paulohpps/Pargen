@@ -1,6 +1,12 @@
-
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+
+const props = defineProps({
+    categorias: Array
+})
+
+let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYear();
+
 </script>
 <template>
     <DashboardLayout titulo="DRE Anual" categoriaPagina="dre" pagina="dre-anual">
@@ -10,21 +16,33 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
             </div>
             <div class="card-body overflow-auto">
                 <div class="mb-3">
-                    <label for="ano" class="form-label">Ano:</label>
-                    <input type="number" min="2020" max="2030" id="ano" class="form-control" style="width: 260px;"
-                        placeholder="Digite o ano que deseja buscar">
+                    <form>
+                        <label for="ano" class="form-label">Ano:</label>
+                        <input type="number" min="2020" max="2030" :value="ano" id="ano" name="ano" class="form-control"
+                            style="width: 265px;" placeholder="Digite o ano que deseja buscar">
+                    </form>
                 </div>
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Descrição</th>
-                            <th scope="col" v-for="(a, index) in Array(12)">{{ index }}</th>
+                            <th scope="col" v-for="(a, index) in Array(12)">{{ index + 1 }}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-for="categoria in categorias">
                         <tr>
-                            <th class="text-nowrap" scope=" row">Categoria teste</th>
-                            <td class="text-nowrap" v-for="(a, index) in Array(12)">R${{ index * 300 }}</td>
+                            <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
+                            <td class="text-nowrap" v-for="valores in categoria.valores_por_mes">R${{ valores }}</td>
+                        </tr>
+                        <tr v-for="subcategoria in categoria.subcategorias">
+                            <th style="padding-left: 40px !important" class="text-nowrap" scope=" row">{{ subcategoria.nome
+                            }}</th>
+                            <td class="text-nowrap" v-for="valores in subcategoria.valores_por_mes">R${{ valores }}</td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="categorias.length === 0">
+                        <tr>
+                            <td colspan="13" class="text-center">Nenhum dado encontrado</td>
                         </tr>
                     </tbody>
                 </table>
