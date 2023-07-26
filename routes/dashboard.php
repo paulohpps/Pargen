@@ -114,7 +114,6 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
         Route::get('faturas/{id}/servicos', [FaturaController::class, 'faturaServico'])->name('.faturas.servicos');
         Route::get('faturas/{id}/baixa', [FaturaController::class, 'baixarFatura'])->name('.baixa');
         Route::post('faturas/baixar', [FaturaController::class, 'baixar'])->name('.baixar');
-        Route::post('faturas/filtrar', [FaturaController::class, 'filtrarFaturas'])->name('.filtrar');
     });
 
     Route::prefix('relatorios')->name(".relatorios")->group(function () {
