@@ -5,6 +5,8 @@ const props = defineProps({
     categorias: Array
 })
 
+let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYear();
+
 </script>
 <template>
     <DashboardLayout titulo="DRE Anual" categoriaPagina="dre" pagina="dre-anual">
@@ -16,7 +18,7 @@ const props = defineProps({
                 <div class="mb-3">
                     <form>
                         <label for="ano" class="form-label">Ano:</label>
-                        <input type="number" min="2020" max="2030" id="ano" name="ano" class="form-control"
+                        <input type="number" min="2020" max="2030" :value="ano" id="ano" name="ano" class="form-control"
                             style="width: 265px;" placeholder="Digite o ano que deseja buscar">
                     </form>
                 </div>
