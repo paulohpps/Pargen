@@ -78,8 +78,6 @@ class FaturaController extends Controller
 
         $fatura->valor = $valor;
         $fatura->save();
-
-        $this->faturas();
         return redirect()->route('dashboard.fatura.faturas');
     }
 

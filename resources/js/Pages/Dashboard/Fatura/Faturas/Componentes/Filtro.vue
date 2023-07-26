@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import SelectAjax from '@/Componentes/Forms/SelectAjax.vue';
 
