@@ -5,10 +5,10 @@ import SelectAjax from '@/Componentes/Forms/SelectAjax.vue';
 
 const form = useForm({
     cliente_id: 0,
-    status: 0,
+    status: parseInt(new URL(document.URL).searchParams.get('status') ?? 0),
 });
 
-const submitFiltrarFaturas = () => {
+function submitFiltrarFaturas() {
     form.get('/dashboard/fatura/faturas');
 }
 
@@ -18,28 +18,28 @@ function optionSelected(option) {
 
 </script>
 <template>
-        <form @submit.prevent="submitFiltrarFaturas">
-            <div class="d-flex">
-                <div class="m-2">
-                    <p>Cliente:</p>
-                    <SelectAjax @optionSelected="optionSelected" class="seletor" href="/dashboard/clientes/pesquisar" preBusca placeholder="Selecione um cliente" />
-                </div>
-                <div class="m-2">
-                    <p>Status:</p>
-                    <select v-model="form.status" class="form-control seletor2">
-                        <option :value="0" >Aberto</option>
-                        <option :value="1">Paga</option>
-                        <option :value="2">Cancelado</option>
-                        <option :value="3">Atrasada</option>
-                        <option :value="4">Parcialmente Paga</option>
-                    </select>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary m-2 mt-5" style="width: 150px;">Filtrar</button>
-                </div>
+    <form @submit.prevent="submitFiltrarFaturas">
+        <div class="d-flex">
+            <div class="m-2">
+                <p>Cliente:</p>
+                <SelectAjax @optionSelected="optionSelected" class="seletor" href="/dashboard/clientes/pesquisar" preBusca
+                    placeholder="Selecione um cliente" />
             </div>
-        </form>
-
+            <div class="m-2">
+                <p>Status:</p>
+                <select v-model="form.status" class="form-control seletor2">
+                    <option :value="0">Aberto</option>
+                    <option :value="1">Paga</option>
+                    <option :value="2">Cancelado</option>
+                    <option :value="3">Atrasada</option>
+                    <option :value="4">Parcialmente Paga</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary m-2 mt-5" style="width: 150px;">Filtrar</button>
+            </div>
+        </div>
+    </form>
 </template>
 
 <style scoped>
@@ -47,7 +47,7 @@ function optionSelected(option) {
     width: 450px;
 }
 
-.seletor2{
+.seletor2 {
     width: 200px;
 }
 </style>
