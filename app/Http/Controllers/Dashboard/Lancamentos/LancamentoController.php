@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard\Lancamentos;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\Lancamentos\LancamentoRequest;
 use App\Models\Lancamentos\Lancamento;
 use Carbon\Carbon;
@@ -15,7 +16,7 @@ class LancamentoController extends Controller
         $lancamentos = Lancamento::with(['fornecedor', 'funcionario', 'pagamento'])->paginate(10);
 
         foreach ($lancamentos as $lancamento) {
-            if($lancamento->vencimento->isPast() && $lancamento->status != "Pago" && $lancamento->status != "Cancelado") {
+            if ($lancamento->vencimento->isPast() && $lancamento->status != "Pago" && $lancamento->status != "Cancelado") {
                 $lancamento->status = "Atrasado";
                 $lancamento->save();
             }
@@ -30,8 +31,7 @@ class LancamentoController extends Controller
             for ($i = 1; $i <= $request->numero_parcelas; $i++) {
                 $lancamento = Lancamento::create($request->all());
                 $lancamento->vencimento = $lancamento->vencimento->addMonth($i);
-                if($i > 1 && $request->status == "Pago")
-                {
+                if ($i > 1 && $request->status == "Pago") {
                     $lancamento->status = "Aberto";
                 }
                 $lancamento->save();

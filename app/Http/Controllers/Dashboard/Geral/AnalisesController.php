@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard\Geral;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
+use App\Http\Controllers\Controller;
 use App\Models\CategoriaAnalise;
 use App\Models\Imports\Analises;
 use Illuminate\Http\Request;
