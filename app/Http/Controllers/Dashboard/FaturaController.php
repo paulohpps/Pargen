@@ -28,17 +28,17 @@ class FaturaController extends Controller
 
     public function faturas(Request $request)
     {
-        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])->paginate(10);
-
-        if($request->status || $request->cliente_id)
-        {
-            $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])
-                ->where('status', $request->status)
-                ->orWhere('cliente_id', $request->cliente_id)
-                ->paginate(10);
-        }
+        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])
+            ->when($request->status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->when($request->cliente_id, function ($query, $cliente_id) {
+                return $query->orWhere('cliente_id', $cliente_id);
+            })
+            ->paginate(10);
 
         $status = FaturaEnum::toArray();
+
         return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
     }
 
@@ -78,8 +78,6 @@ class FaturaController extends Controller
 
         $fatura->valor = $valor;
         $fatura->save();
-
-        $this->faturas();
         return redirect()->route('dashboard.fatura.faturas');
     }
 

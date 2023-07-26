@@ -12,7 +12,7 @@ class FuncionarioController extends Controller
 {
     public function funcionarios()
     {
-        $funcionarios = Funcionario::paginate(10);
+        $funcionarios = Funcionario::orderBy('nome')->paginate(10);
         return Inertia::render('Dashboard/Gerais/Funcionarios/Listagem', compact('funcionarios'));
     }
 

@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\AnalisesController;
-use App\Http\Controllers\ClientesController;
+
 use App\Http\Controllers\Dashboard\ContaController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\DRE\DREAnualController;
@@ -10,11 +9,13 @@ use App\Http\Controllers\Dashboard\FaturaController;
 use App\Http\Controllers\Dashboard\Financeiro\CategoriaController;
 use App\Http\Controllers\Dashboard\Financeiro\PagamentoController;
 use App\Http\Controllers\Dashboard\Financeiro\ReceitaController;
+use App\Http\Controllers\Dashboard\Geral\AnalisesController;
+use App\Http\Controllers\Dashboard\Geral\ClientesController;
 use App\Http\Controllers\Dashboard\Geral\FornecedorController;
 use App\Http\Controllers\Dashboard\Geral\FuncionarioController;
+use App\Http\Controllers\Dashboard\Lancamentos\LancamentoController;
+use App\Http\Controllers\Dashboard\Lancamentos\ServicosController;
 use App\Http\Controllers\Dashboard\Relatorios\RelatorioController;
-use App\Http\Controllers\LancamentoController;
-use App\Http\Controllers\ServicosController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(function () {

@@ -71,7 +71,8 @@ function resetParcelas() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="adicionarModalLabel">Novo Lançamento</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" @click="form.reset()" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <form @submit.prevent="submitNovoFornecedor">
                     <div class="modal-body d-flex justify-content-around">
@@ -134,14 +135,12 @@ function resetParcelas() {
                         <div class="w-50 ms-2">
                             <div class="mb-3">
                                 <label for="valor" class="form-label">Valor</label>
-                                <input type="text" class="form-control" v-model="form.valor" id="valor"
-                                    required>
+                                <input type="text" class="form-control" v-model="form.valor" id="valor" required>
                                 <FormError :error="form.errors.cnpj" />
                             </div>
                             <div class="mb-3">
                                 <label for="vencimento" class="form-label">Vencimento</label>
-                                <input type="date" class="form-control" v-model="form.vencimento" id="vencimento"
-                                    required>
+                                <input type="date" class="form-control" v-model="form.vencimento" id="vencimento" required>
                                 <FormError :error="form.errors.endereco" />
                             </div>
                             <div class="mb-3">
@@ -156,7 +155,8 @@ function resetParcelas() {
                             </div>
                             <div class="mb-3">
                                 <label for="repetir_parcelas" class="form-label">Repetir Parcelas?</label>
-                                <select class="form-select" id="repetir_parcelas" @change="resetParcelas" v-model="form.repetir_parcelas">
+                                <select class="form-select" id="repetir_parcelas" @change="resetParcelas"
+                                    v-model="form.repetir_parcelas">
                                     <option :value="false">Não</option>
                                     <option :value="true">Sim</option>
                                 </select>

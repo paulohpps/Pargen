@@ -100,8 +100,6 @@ function updateModelValue() {
 /*
 function filtrarOpcoes() {
     selectOptions.value = selectOptions.value.filter(servico => !props.servicos.includes(servicoSelecionado => servicoSelecionado.id === servico.id))
-    console.log(selectOptions.value);
-    console.log(props.servicos);
 }*/
 
 function getOpcaoSelecionada() {

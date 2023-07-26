@@ -13,7 +13,7 @@ class PagamentoController extends Controller
 {
     public function pagamentos()
     {
-        $pagamentos = Pagamento::with(['categoria', 'subcategoria'])->paginate(10);
+        $pagamentos = Pagamento::with(['categoria', 'subcategoria'])->orderBy('descricao')->paginate(10);
         $categorias = Categoria::with('subcategorias')->get();
 
         return Inertia::render('Dashboard/Financeiro/Pagamentos/Listagem', compact('pagamentos', 'categorias'));

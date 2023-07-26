@@ -53,7 +53,7 @@ function closeModal() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="adicionarModalLabel">Novo Funcionario</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" @click="form.reset()" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form @submit.prevent="submitNovoFuncionario">
                     <div class="modal-body">
@@ -89,8 +89,6 @@ function closeModal() {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                            @click="form.reset()">Fechar</button>
                         <button type="submit" class="btn btn-success">Salvar</button>
                     </div>
                 </form>

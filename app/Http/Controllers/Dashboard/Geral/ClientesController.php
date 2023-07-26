@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard\Geral;
 
 use App\Enums\Financeiro\ClienteCategoriaEnum;
+use App\Http\Controllers\Controller;
 use App\Models\ClienteCategoria;
 use App\Models\Imports\Clientes;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class ClientesController extends Controller
 {
     public function clientes()
     {
-        $clientes = Clientes::with(['ClienteCategoria'])->paginate(20);
+        $clientes = Clientes::with(['ClienteCategoria'])->orderBy('name')->paginate(20);
         $categorias = ClienteCategoriaEnum::toArray();
 
         return Inertia::render('Dashboard/Gerais/Clientes/Listagem', compact('clientes', 'categorias'));

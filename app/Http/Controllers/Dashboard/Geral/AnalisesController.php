@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard\Geral;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
+use App\Http\Controllers\Controller;
 use App\Models\CategoriaAnalise;
 use App\Models\Imports\Analises;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class AnalisesController extends Controller
 {
     public function listagem()
     {
-        $analises = Analises::with('categoriaAnalise')->paginate(10);
+        $analises = Analises::with('categoriaAnalise')->orderBy('name')->paginate(10);
         $categorias = CategoriaAnaliseEnum::toArray();
         return Inertia::render('Dashboard/Gerais/Analises/Listagem', compact('analises', 'categorias'));
     }

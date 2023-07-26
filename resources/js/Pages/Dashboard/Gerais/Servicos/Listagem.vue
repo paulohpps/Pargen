@@ -34,8 +34,9 @@ const props = defineProps({
                             <td>{{ servico.pet }}</td>
                             <td>{{ servico.analises.map(analise => analise.name).join(', ') }}</td>
                             <td>{{ servico.cliente.name }}</td>
-                            <td>{{ categorias[servico.cliente.cliente_categoria[0]?.categoria] }}</td>
-                            <td>R$ {{ servico.analises.reduce((accumulator, analise) => {
+                            <td>{{ categorias[servico.cliente.cliente_categoria[0]?.categoria] ?? 'Nenhum Tipo cadastrado'
+                            }}</td>
+                            <td>R${{ servico.analises.reduce((accumulator, analise) => {
                                 return accumulator + analise.price;
                             }, 0) }}</td>
                         </tr>
@@ -45,7 +46,7 @@ const props = defineProps({
                     </tbody>
                 </table>
             </div>
-            <Paginacao :links="servicos.links"/>
+            <Paginacao :links="servicos.links" />
         </div>
     </DashboardLayout>
 </template>

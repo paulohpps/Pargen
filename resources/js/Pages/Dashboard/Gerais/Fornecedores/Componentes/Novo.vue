@@ -43,7 +43,8 @@ function closeModal() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="adicionarModalLabel">Novo Fornecedor</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" @click="form.reset()" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <form @submit.prevent="submitNovoLancamento">
                     <div class="modal-body">
@@ -77,8 +78,7 @@ function closeModal() {
                         </div>
                         <div class="mb-3">
                             <label for="endereco" class="form-label">Endereço</label>
-                            <input type="text" class="form-control" v-model="form.endereco" id="endereco"
-                                required>
+                            <input type="text" class="form-control" v-model="form.endereco" id="endereco" required>
                             <FormError :error="form.errors.endereco" />
                         </div>
                     </div>
