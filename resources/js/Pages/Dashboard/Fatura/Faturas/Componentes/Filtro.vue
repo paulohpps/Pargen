@@ -9,18 +9,15 @@ const form = useForm({
 });
 
 const submitFiltrarFaturas = () => {
-    console.log(form.status);
-    form.post('/dashboard/fatura/faturas/filtrar');
+    form.get('/dashboard/fatura/faturas');
 }
 
 function optionSelected(option) {
     form.cliente_id = option.id;
 }
 
-
 </script>
 <template>
-
         <form @submit.prevent="submitFiltrarFaturas">
             <div class="d-flex">
                 <div class="m-2">

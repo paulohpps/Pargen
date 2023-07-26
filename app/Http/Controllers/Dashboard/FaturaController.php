@@ -26,9 +26,18 @@ class FaturaController extends Controller
         return Inertia::render('Dashboard/Fatura/Geracoes/Listagem', compact('servicos', 'analises', 'categorias'));
     }
 
-    public function faturas()
+    public function faturas(Request $request)
     {
-        $faturas = Fatura::paginate(10);
+        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])->paginate(10);
+
+        if($request->status || $request->cliente_id)
+        {
+            $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])
+                ->where('status', $request->status)
+                ->orWhere('cliente_id', $request->cliente_id)
+                ->paginate(10);
+        }
+
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
     }
@@ -53,16 +62,15 @@ class FaturaController extends Controller
         $fatura = Fatura::create([
             'data_vencimento' => Carbon::now()->addDays(10),
             'data_emissao' => Carbon::now(),
-            'valor' => 500.00,
+            'valor' => 0,
             'status' => FaturaEnum::Aberta,
-            'cliente_id' => 1,
+            'cliente_id' => $request->cliente_id,
         ]);
         $valor = 0;
         for ($i = 0; $i < count($request->servicos); $i++) {
             FaturaServico::create([
                 'fatura_id' => $fatura->id,
                 'servico_id' => $request->servicos[$i]['id'],
-                'cliente_id' => $request->servicos[$i]['customer_id'],
             ]);
             $servicos = Servicos::with('analises')->find($request->servicos[$i]['id']);
             $valor += $servicos->analises->sum('price');
@@ -125,13 +133,7 @@ class FaturaController extends Controller
 
     public function filtrarFaturas(Request $request)
     {
-        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])
-            ->where('status', $request->status)
-            ->get();
-
-            $faturas = $faturas->where('servicos.customer_id', $request->cliente_id);
-            return response()->json($faturas);
-        /*$status = FaturaEnum::toArray();
-        return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));*/
+        $status = FaturaEnum::toArray();
+        return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
     }
 }

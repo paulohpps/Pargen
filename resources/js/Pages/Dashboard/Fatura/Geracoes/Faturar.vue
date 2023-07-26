@@ -10,6 +10,7 @@ const props = defineProps({
 
 const form = useForm({
     servicos: [],
+    cliente_id: 0
 });
 
 let cliente_id = ref(props.clientes[0].id);
@@ -27,6 +28,7 @@ function faturar() {
 
 function selecionarServico(servico) {
     servicos.value.push(servico);
+    form.cliente_id = cliente_id.value;
 }
 
 function removerServico(id) {
