@@ -42,7 +42,7 @@ function submitEditarFuncionario() {
             <div class="card-header">
                 <h2>Editar Funcionario</h2>
             </div>
-            <form @submit.prevent="submitEditarFuncionario()">
+            <form @submit.prevent="submitEditarFuncionario">
                 <div class="card-body FuncionarioForm">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" v-model="form.nome" name="nome" id="nome"
