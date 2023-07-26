@@ -130,10 +130,4 @@ class FaturaController extends Controller
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }
-
-    public function filtrarFaturas(Request $request)
-    {
-        $status = FaturaEnum::toArray();
-        return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
-    }
 }

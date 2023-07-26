@@ -17,7 +17,6 @@ class FaturaServico extends Model
     protected $fillable = [
         'fatura_id',
         'servico_id',
-        'cliente_id',
     ];
 
     public function fatura()
