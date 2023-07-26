@@ -11,7 +11,7 @@ class FornecedorController extends Controller
 {
     public function fornecedores()
     {
-        $fornecedores = Fornecedor::paginate(10);
+        $fornecedores = Fornecedor::orderBy('razao_social')->paginate(10);
         return Inertia::render('Dashboard/Gerais/Fornecedores/Listagem', compact('fornecedores'));
     }
 

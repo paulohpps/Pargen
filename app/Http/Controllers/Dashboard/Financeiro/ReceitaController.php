@@ -13,7 +13,7 @@ class ReceitaController extends Controller
 {
     public function receitas()
     {
-        $receitas = Receita::with(['categoria', 'subcategoria'])->paginate(10);
+        $receitas = Receita::with(['categoria', 'subcategoria'])->orderBy('descricao')->paginate(10);
         $categorias = Categoria::with('subcategorias')->get();
 
         return Inertia::render('Dashboard/Financeiro/Receitas/Listagem', compact('receitas', 'categorias'));

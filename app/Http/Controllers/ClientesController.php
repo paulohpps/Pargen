@@ -12,7 +12,7 @@ class ClientesController extends Controller
 {
     public function clientes()
     {
-        $clientes = Clientes::with(['ClienteCategoria'])->paginate(20);
+        $clientes = Clientes::with(['ClienteCategoria'])->orderBy('name')->paginate(20);
         $categorias = ClienteCategoriaEnum::toArray();
 
         return Inertia::render('Dashboard/Gerais/Clientes/Listagem', compact('clientes', 'categorias'));

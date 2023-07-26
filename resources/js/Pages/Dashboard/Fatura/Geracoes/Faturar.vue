@@ -39,7 +39,7 @@ const servicos = ref([]);
 </script>
 
 <template>
-    <DashboardLayout titulo="Gerar Fatura" categoriaPagina="fatura" pagina="faturas">
+    <DashboardLayout titulo="Gerar Fatura" categoriaPagina="fatura" pagina="faturar">
         <div class="card tabela mt-3 w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h2 class="card-title">Faturar serviços</h2>

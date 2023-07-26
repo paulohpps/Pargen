@@ -71,8 +71,10 @@ function openModalNovaSubCategoria(id) {
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
-
                             </li>
+                            <div v-if="categoria.subcategorias.length === 0" class="alert alert-warning " role="alert">
+                                Nenhuma subcategoria cadastrada.
+                            </div>
                         </div>
                     </ul>
                 </div>
