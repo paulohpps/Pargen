@@ -21,6 +21,7 @@ class Fatura extends Model
         'data_vencimento',
         'data_emissao',
         'data_baixa',
+        'cliente_id',
         'status',
         'valor',
         'valor_pago',

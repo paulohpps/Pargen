@@ -1,20 +1,53 @@
 <script setup>
 import { defineProps } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import SelectAjax from '@/Componentes/Forms/SelectAjax.vue';
 
-const props = defineProps({
-    clientes: Array,
-    status: Array,
+const form = useForm({
+    cliente_id: 0,
+    status: 0,
 });
 
-let options = [
-    { value: 0, text: 'Todos' },
-    { value: 1, text: 'Aberto' },
-    { value: 2, text: 'Pago' },
-    { value: 3, text: 'Cancelado' },
-];
+const submitFiltrarFaturas = () => {
+    form.get('/dashboard/fatura/faturas');
+}
+
+function optionSelected(option) {
+    form.cliente_id = option.id;
+}
 
 </script>
 <template>
-    <SelectAjax href="/dashboard/clientes/pesquisar" pre placeholder="Selecione um cliente" />
+        <form @submit.prevent="submitFiltrarFaturas">
+            <div class="d-flex">
+                <div class="m-2">
+                    <p>Cliente:</p>
+                    <SelectAjax @optionSelected="optionSelected" class="seletor" href="/dashboard/clientes/pesquisar" preBusca placeholder="Selecione um cliente" />
+                </div>
+                <div class="m-2">
+                    <p>Status:</p>
+                    <select v-model="form.status" class="form-control seletor2">
+                        <option :value="0" >Aberto</option>
+                        <option :value="1">Paga</option>
+                        <option :value="2">Cancelado</option>
+                        <option :value="3">Atrasada</option>
+                        <option :value="4">Parcialmente Paga</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary m-2 mt-5" style="width: 150px;">Filtrar</button>
+                </div>
+            </div>
+        </form>
+
 </template>
+
+<style scoped>
+.seletor {
+    width: 450px;
+}
+
+.seletor2{
+    width: 200px;
+}
+</style>

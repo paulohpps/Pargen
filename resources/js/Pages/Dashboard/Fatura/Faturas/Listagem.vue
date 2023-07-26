@@ -11,12 +11,14 @@ const props = defineProps({
 </script>
 <template>
     <DashboardLayout titulo="Faturas" categoriaPagina="fatura" pagina="faturas">
+
         <div class="card tabela mt-3 w-100">
             <div class="card-header d-flex justify-content-between w-100 align-items-center">
                 <h2 class="card-title">Faturas Emitidas</h2>
             </div>
             <div class="card-body">
-                <div class="w-25">
+                <div class="d-flex">
+                    <Filtro></Filtro>
                 </div>
                 <table class="table table-hover">
                     <thead>
