@@ -24,7 +24,8 @@ const props = defineProps({
                             <th scope="col">Data de coleta</th>
                             <th scope="col">Paciente</th>
                             <th scope="col">Analise</th>
-                            <th scope="col">Categoria Receita</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Categoria Cliente</th>
                             <th scope="col">Valor</th>
                         </tr>
                     </thead>
@@ -33,7 +34,8 @@ const props = defineProps({
                             <td>{{ servico.collect_date }}</td>
                             <td>{{ servico.pet }}</td>
                             <td>{{ servico.analises.map(analise => analise.name).join(', ') }}</td>
-                            <td>{{ categorias[servico.cliente.cliente_categoria[0]?.categoria] }}</td>
+                            <td>{{ servico.cliente.name }}</td>
+                            <td>{{ categorias[servico.cliente.cliente_categoria[0]?.categoria] ?? 'Nenhuma categoria cadastrada' }}</td>
                             <td>{{ servico.analises.reduce((acumulador, analise) => acumulador + analise.price, 0) }}</td>
                         </tr>
                         <tr v-if="servicos.data.length === 0">

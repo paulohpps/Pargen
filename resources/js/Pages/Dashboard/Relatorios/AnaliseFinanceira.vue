@@ -1,6 +1,24 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import { router } from '@inertiajs/vue3';
 
+const props = defineProps({
+    pagamentos: Object,
+    receitas: Object,
+})
+
+let route = new URL(document.location.href);
+
+function filtrarApartir(data) {
+    route.searchParams.set('inicio', data.target.value);
+    router.visit(route.href)
+}
+
+function filtrarAte(data) {
+    console.log(data.target.value);
+    route.searchParams.set('ate', data.target.value);
+    router.visit(route.href)
+}
 
 </script>
 <template>
@@ -15,27 +33,30 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                     <div>
                         <div class="mb-2">
                             <label for="inicio" class="form-label">A partir de:</label>
-                            <input type="date" id="inicio" class="form-control" placeholder="Pesquisar"
-                                aria-label="Pesquisar" aria-describedby="button-addon2">
+                            <input @change="filtrarApartir" :value="route.searchParams.get('inicio')" type="date"
+                                id="inicio" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                                aria-describedby="button-addon2">
                         </div>
                         <div>
                             <label for="ate" class="form-label">Até:</label>
-                            <input type="date" id="ate" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                            <input @change="filtrarAte" :value="route.searchParams.get('ate')" type="date" id="ate"
+                                class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
                                 aria-describedby="button-addon2">
                         </div>
                     </div>
                     <div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Recebimentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" value="35000">
+                            <input type="text" id="tipo" disabled class="form-control" :value="receitas.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Pagamentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" value="35000">
+                            <input type="text" id="tipo" disabled class="form-control" :value="pagamentos.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Lucro Bruto </label>
-                            <input type="text" id="tipo" disabled class="form-control" value="35000">
+                            <input type="text" id="tipo" disabled class="form-control"
+                                :value="receitas.total_geral - pagamentos.total_geral">
                         </div>
                     </div>
                 </div>
@@ -46,15 +67,18 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                             <thead>
                                 <tr>
                                     <th scope="col">Categoria</th>
-                                    <th scope="col">Valor Total</th>
+                                    <th scope="col">Valor</th>
                                     <th scope="col">Impacto %</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Categoria legal</td>
-                                    <td>10000</td>
-                                    <td>30%</td>
+                                <tr v-for="categoria in receitas.categorias">
+                                    <td>{{ categoria.nome }}</td>
+                                    <td>R${{ categoria.total }}</td>
+                                    <td>{{ categoria.impacto }}%</td>
+                                </tr>
+                                <tr v-if="!receitas.categorias">
+                                    <td colspan="3" class="text-center">Nenhum registro encontrado</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -69,11 +93,21 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                                     <th scope="col">Impacto %</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody v-for="categoria in pagamentos.categorias">
                                 <tr>
-                                    <td>Categoria legal</td>
-                                    <td>10000</td>
-                                    <td>30%</td>
+                                    <td>{{ categoria.nome }}</td>
+                                    <td>R${{ categoria.total_categoria }}</td>
+                                    <td>{{ categoria.impacto }}%</td>
+                                </tr>
+                                <tr v-for="sub in categoria.subcategorias">
+                                    <td class="sub-categoria">{{ sub.nome }}</td>
+                                    <td>R${{ sub.valor }}</td>
+                                    <td>{{ sub.impacto }}%</td>
+                                </tr>
+                            </tbody>
+                            <tbody v-if="pagamentos.categorias.length === 0">
+                                <tr>
+                                    <td colspan="3" class="text-center">Nenhum registro encontrado</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -83,3 +117,8 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
         </div>
     </DashboardLayout>
 </template>
+<style scoped>
+.sub-categoria {
+    padding-left: 40px !important;
+}
+</style>

@@ -38,7 +38,7 @@ function editar(id) {
                         <tr v-for="analise in analises.data">
                             <td>{{ analise.name }}</td>
                             <td>R$ {{ analise.price }}</td>
-                            <td>{{ categorias[analise.categoria_analise[0]?.categoria] ?? 'Nenhuma Categoria Selecionada'
+                            <td>{{ categorias[analise.categoria_analise?.categoria] ?? 'Nenhuma Categoria Selecionada'
                             }}</td>
                             <td>
                                 <button class="btn btn-primary" @click="editar(analise.id)">

@@ -25,7 +25,8 @@ const props = defineProps({
                         <tr>
                             <th scope="col">Data de Vencimento</th>
                             <th scope="col">Cliente</th>
-                            <th scope="col">Valor</th>
+                            <th scope="col">Valor Total</th>
+                            <th scope="col">Valor Pago</th>
                             <th scope="col">Status</th>
                             <th scope="col">Açoes</th>
                         </tr>
@@ -34,7 +35,8 @@ const props = defineProps({
                         <tr v-for="fatura in faturas.data">
                             <td>{{ fatura.data_vencimento }}</td>
                             <td>{{ fatura.servicos[0]?.cliente.name }}</td>
-                            <td>R$ {{ fatura.valor }}</td>
+                            <td>R${{ fatura.valor }}</td>
+                            <td>R${{ fatura.valor_pago ?? '0,00' }}</td>
                             <td>{{ status[fatura.status] }}</td>
                             <td>
                                 <div class="d-flex">
