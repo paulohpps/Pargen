@@ -1,5 +1,12 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+
+const props = defineProps({
+    categorias: Array,
+    ano: Number,
+    mes: Number,
+})
+
 </script>
 <template>
     <DashboardLayout titulo="DRE Mensal" categoriaPagina="dre" pagina="dre-mensal">
@@ -8,17 +15,46 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
                 <h2 class="card-title">Análise financeira mensal</h2>
             </div>
             <div class="card-body overflow-auto">
+                <div class="mb-3">
+                    <form class="d-flex">
+                        <div class="me-3">
+                            <label for="ano" class="form-label">Mês:</label>
+                            <input type="number" min="1" max="12" required :value="mes" id="ano" name="mes"
+                                class="form-control" style="width: 265px;" placeholder="Digite o mês que deseja buscar">
+                        </div>
+                        <div>
+                            <label for="ano" class="form-label">Ano:</label>
+                            <input type="number" min="2020" max="2030" required :value="ano" name="ano" id="ano"
+                                class="form-control" style="width: 265px;" placeholder="Digite o ano que deseja buscar">
+                        </div>
+                        <div class="ms-3 mt-2">
+                            <button type="submit" class="btn btn-primary mt-4">Buscar</button>
+                        </div>
+                    </form>
+                </div>
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Descrição</th>
-                            <th scope="col" v-for="(a, index) in Array(30)">{{ index }}</th>
+                            <th scope="col" v-for="(a, index) in Array(31)">{{ index + 1 }}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-for="categoria in categorias">
                         <tr>
                             <th class="text-nowrap" scope=" row">Categoria teste</th>
-                            <td class="text-nowrap" v-for="(a, index) in Array(30)">R${{ index * 30 }}</td>
+                            <td class="text-nowrap" v-for="valores in categoria.valores_por_dia">R${{ valores }}</td>
+                        </tr>
+                        <tr v-for="subcategoria in categoria.subcategorias">
+                            <th class="text-nowrap" scope=" row"><i
+                                    class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
+                                        subcategoria.nome
+                                    }}</th>
+                            <td class="text-nowrap" v-for="valores in subcategoria.valores_por_dia">R${{ valores }}</td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="categorias.length === 0">
+                        <tr>
+                            <td colspan="32" class="text-center">Nenhum dado encontrado</td>
                         </tr>
                     </tbody>
                 </table>
