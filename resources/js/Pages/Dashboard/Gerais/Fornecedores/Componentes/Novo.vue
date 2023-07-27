@@ -57,28 +57,28 @@ function closeModal() {
                         <div class="mb-3">
                             <label for="telefone" class="form-label">Telefone</label>
                             <input type="text" class="form-control" v-model="form.telefone" id="telefone"
-                                aria-describedby="emailHelp" required>
+                                aria-describedby="emailHelp">
                             <FormError :error="form.errors.telefone" />
                         </div>
                         <div class="mb-3">
                             <label for="contato" class="form-label">Contato</label>
                             <input type="text" class="form-control" v-model="form.contato" id="contato"
-                                aria-describedby="emailHelp" required>
+                                aria-describedby="emailHelp">
                             <FormError :error="form.errors.contato" />
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" v-model="form.email" id="email" required>
+                            <input type="email" class="form-control" v-model="form.email" id="email">
                             <FormError :error="form.errors.email" />
                         </div>
                         <div class="mb-3">
                             <label for="cnpj" class="form-label">CNPJ</label>
-                            <input type="text" class="form-control" v-model="form.cnpj" id="cnpj" required>
+                            <input type="text" class="form-control" v-model="form.cnpj" id="cnpj">
                             <FormError :error="form.errors.cnpj" />
                         </div>
                         <div class="mb-3">
                             <label for="endereco" class="form-label">Endereço</label>
-                            <input type="text" class="form-control" v-model="form.endereco" id="endereco" required>
+                            <input type="text" class="form-control" v-model="form.endereco" id="endereco">
                             <FormError :error="form.errors.endereco" />
                         </div>
                     </div>

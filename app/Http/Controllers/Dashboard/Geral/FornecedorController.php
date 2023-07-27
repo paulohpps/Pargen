@@ -17,6 +17,7 @@ class FornecedorController extends Controller
 
     public function criarFornecedor(FornecedorRequest $request)
     {
+        $request->telefone = preg_replace('/\D/', '', $request->telefone);
         Fornecedor::create($request->all());
         return redirect()->route('dashboard.fornecedores')
             ->with('mensagem', [

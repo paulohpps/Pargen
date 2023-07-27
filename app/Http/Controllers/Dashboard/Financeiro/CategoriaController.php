@@ -41,6 +41,34 @@ class CategoriaController extends Controller
             ]);
     }
 
+    public function editarCategoria(Request $request, int $categoria_id)
+    {
+        $categoria = Categoria::find($categoria_id);
+        $categoria->nome = $request->nome;
+        $categoria->save();
+
+        return redirect()->back()
+            ->with('mensagem', [
+                'tipo' => 'success',
+                'class' => 'text-success',
+                'conteudo' => 'Categoria editada com sucesso!'
+            ]);
+    }
+
+    public function editarSubCategoria(Request $request, int $subcategoria_id)
+    {
+        $subcategoria = Subcategoria::find($subcategoria_id);
+        $subcategoria->nome = $request->nome;
+        $subcategoria->save();
+
+        return redirect()->back()
+            ->with('mensagem', [
+                'tipo' => 'success',
+                'class' => 'text-success',
+                'conteudo' => 'Subcategoria editada com sucesso!'
+            ]);
+    }
+
     public function excluirCategoria(?int $categoria_id)
     {
         $categoria = Categoria::find($categoria_id);

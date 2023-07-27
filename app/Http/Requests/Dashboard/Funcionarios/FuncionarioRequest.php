@@ -22,11 +22,9 @@ class FuncionarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'min:10', 'max:120'],
-            'cpf' => ['required', 'bail'],
-            'cargo' => 'required|string|min:6|max:40',
-            'valor_vencimento' => 'required|numeric|min:0|max:999999.99',
-            'encargos' => 'required|numeric|min:0|max:999999.99',
+            'nome' => ['required', 'string'],
+            'valor_vencimento' => 'numeric|min:0|max:999999.99',
+            'encargos' => 'numeric|min:0|max:999999.99',
         ];
     }
 

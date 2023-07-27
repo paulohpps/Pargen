@@ -28,14 +28,16 @@ class FaturaController extends Controller
 
     public function faturas(Request $request)
     {
-        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])
-            ->when($request->status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            ->when($request->cliente_id, function ($query, $cliente_id) {
-                return $query->orWhere('cliente_id', $cliente_id);
-            })
-            ->paginate(10);
+        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico']);
+
+        if($request->status != null){
+            $faturas->where('status', $request->status);
+        }
+        if($request->cliente_id ){
+            $faturas->where('cliente_id', $request->cliente_id);
+        }
+
+        $faturas = $faturas->paginate(10);
 
         $status = FaturaEnum::toArray();
 
@@ -60,9 +62,10 @@ class FaturaController extends Controller
     public function gerarFatura(Request $request)
     {
         $fatura = Fatura::create([
-            'data_vencimento' => Carbon::now()->addDays(10),
+            'data_vencimento' => $request->vencimento,
             'data_emissao' => Carbon::now(),
             'valor' => 0,
+            'chave_pix' => $request->chave_pix,
             'status' => FaturaEnum::Aberta,
             'cliente_id' => $request->cliente_id,
         ]);

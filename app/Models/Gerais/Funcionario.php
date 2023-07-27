@@ -49,6 +49,7 @@ class Funcionario extends Model
 
     public function getCpfAttribute($value)
     {
+        if(!$value) return null;
         return substr($value, 0, 3) . '.' . substr($value, 3, 3) . '.' . substr($value, 6, 3) . '-' . substr($value, 9, 2);
     }
 

@@ -71,11 +71,13 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
         Route::prefix('categorias')->name('.categorias')->group(function () {
             Route::get('', [CategoriaController::class, 'categorias'])->name('');
             Route::post('/criar', [CategoriaController::class, 'criarCategoria'])->name('.criar');
+            Route::post('/{id}/editar', [CategoriaController::class, 'editarCategoria'])->name('.editar');
             Route::post('/{categoria_id}/subcategorias/criar', [CategoriaController::class, 'criarSubcategoria'])->name('.subcategorias.criar');
             Route::get('/{id}/excluir', [CategoriaController::class, 'excluirCategoria'])->name('.excluir');
             Route::get('/{categoria_id}/subcategorias/{subcat_id}/excluir', [CategoriaController::class, 'excluirSubcategoria'])->name('.subcategorias.excluir');
             Route::get('/consultar', [CategoriaController::class, 'getCategorias'])->name('.editar');
             Route::get('/{categoria_id}/subcategorias', [CategoriaController::class, 'getSubcategorias'])->name('.subcategorias');
+            Route::post('/subcategorias/{subcategoria_id}/editar', [CategoriaController::class, 'editarSubCategoria'])->name('.subcategorias.editar');
         });
 
         Route::prefix('pagamentos')->name('.pagamentos')->group(function () {

@@ -22,11 +22,10 @@ class FornecedorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'razao_social' => 'required|string|min:10|max:120',
-            'telefone' => 'required|string',
-            'email' => 'required|email|min:10|max:120',
-            'cnpj' => ['required', 'bail'],
-            'endereco' => 'required|string|min:8|max:120',
+            'razao_social' => 'required|string',
+            'telefone' => 'string|nullable',
+            'email' => 'email|nullable',
+            'endereco' => 'string|nullable',
         ];
     }
 
@@ -36,7 +35,6 @@ class FornecedorRequest extends FormRequest
         if ($this->has('cnpj')) {
             $attributes['cnpj'] = preg_replace('/\D/', '', (string) $this->input('cnpj'));
         }
-
 
         $this->merge($attributes);
     }

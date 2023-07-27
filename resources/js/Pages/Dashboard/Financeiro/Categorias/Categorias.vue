@@ -6,16 +6,23 @@ import NovaSubcategoria from './Componentes/NovaSubcategoria.vue';
 import ExcluirCategoria from './Componentes/ExcluirCategoria.vue';
 import ExcluirSubcategoria from './Componentes/ExcluirSubcategoria.vue';
 import Paginacao from '@/Componentes/Paginacao.vue';
+import EditarCategoria from './Componentes/EditarCategoria.vue';
+import EditarSubCategoria from './Componentes/EditarSubCategoria.vue';
 
 const props = defineProps({
     categorias: Object,
 });
 
-let showModalExcluirCat = ref(false)
+
 let categoriaId = ref(null)
-let showModalExcluirSubcat = ref(false)
+let nomeCat = ref(null)
 let subcategoriaId = ref(null)
+
+let showModalEditarCat = ref(false)
+let showModalEditarSubcat = ref(false)
 let showNovaSubCategoria = ref(false)
+let showModalExcluirSubcat = ref(false)
+let showModalExcluirCat = ref(false)
 
 function openModalExcluirCat(id) {
     showModalExcluirCat.value = true
@@ -31,6 +38,18 @@ function openModalExcluirSubcat(catId, subcatId) {
 function openModalNovaSubCategoria(id) {
     categoriaId.value = id
     showNovaSubCategoria.value = true
+}
+
+function openModalEditarCat(id, nome) {
+    showModalEditarCat.value = true
+    categoriaId.value = id
+    nomeCat.value = nome
+}
+
+function openModalEditarSubcat(id, nome) {
+    showModalEditarSubcat.value = true
+    subcategoriaId.value = id
+    nomeCat.value = nome
 }
 
 </script>
@@ -52,6 +71,10 @@ function openModalNovaSubCategoria(id) {
                             data-bs-toggle="collapse" :data-bs-target="`#collapse` + categoria.id">
                             <h3>{{ categoria.nome }}</h3>
                             <div>
+                                <button type="button" class="btn btn-primary m-2"
+                                    @click="openModalEditarCat(categoria.id, categoria.nome)">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
                                 <button type="button" class="btn btn-primary"
                                     @click="openModalNovaSubCategoria(categoria.id)">
                                     <i class="fa-solid fa-plus"></i>
@@ -66,10 +89,16 @@ function openModalNovaSubCategoria(id) {
                             <li v-for="subcategoria in categoria.subcategorias" class="list-group-item ">
                                 <div class="d-flex justify-content-between align-items-center ms-4">
                                     <div>{{ subcategoria.nome }}</div>
-                                    <button type="button" class="btn btn-danger ms-2 "
-                                        @click="openModalExcluirSubcat(categoria.id, subcategoria.id)">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                    <div>
+                                        <button type="button" class="btn btn-primary"
+                                            @click="openModalEditarSubcat(subcategoria.id, subcategoria.nome)">
+                                            <i class="fa-regular fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger ms-2 "
+                                            @click="openModalExcluirSubcat(categoria.id, subcategoria.id)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
                             <div v-if="categoria.subcategorias.length === 0" class="alert alert-warning " role="alert">
@@ -86,6 +115,10 @@ function openModalNovaSubCategoria(id) {
                 </paginacao>
             </div>
             <Novo :categorias="categorias" />
+            <EditarCategoria :categoriaId="categoriaId" :nome="nomeCat" v-if="showModalEditarCat"
+                @close-modal="showModalEditarCat = false"/>
+            <EditarSubCategoria :subCategoriaId="subcategoriaId" :nome="nomeCat" v-if="showModalEditarSubcat"
+                @close-modal="showModalEditarSubcat = false"/>
             <ExcluirCategoria :categoriaId="categoriaId" v-if="showModalExcluirCat"
                 @close-modal="showModalExcluirCat = false" />
             <ExcluirSubcategoria :categoriaId="categoriaId" :subcategoriaId="subcategoriaId" v-if="showModalExcluirSubcat"
