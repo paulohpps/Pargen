@@ -17,7 +17,7 @@ function processarTipoPagamento(tipo) {
 function processarPagamento(lancamento) {
     if (lancamento.tipo_pagamento == 1) return lancamento.fornecedor?.razao_social;
     if (lancamento.tipo_pagamento == 2) return lancamento.funcionario?.nome;
-    if (lancamento.tipo_pagamento == 3) return lancamento.pagamento?.descricao;
+    if (lancamento.tipo_pagamento == 3) return lancamento.pago_para;
 }
 
 </script>

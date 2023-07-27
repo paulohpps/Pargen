@@ -15,7 +15,7 @@ const form = useForm({
     numero_parcelas: 0,
     fornecedor_id: 0,
     funcionario_id: 0,
-    pagamento_id: 0,
+    pago_para: "",
     pagamento_lancamento_id: 0,
 })
 
@@ -47,7 +47,6 @@ onMounted(async () => {
     funcionarios = await axios.get('/dashboard/funcionarios/consultar')
     pagamentos = await axios.get('/dashboard/financeiro/pagamentos/consultar')
 
-    form.pagamento_id = pagamentos.data[0]?.id;
     form.fornecedor_id = fornecedores.data[0]?.id;
     form.funcionario_id = funcionarios.data[0]?.id;
     form.pagamento_lancamento_id = pagamentos.data[0]?.id;
@@ -104,14 +103,8 @@ function resetParcelas() {
                                         }}
                                     </option>
                                 </select>
-                                <select v-else-if="form.tipo_pagamento === 3" class="form-select"
-                                    v-model="form.pagamento_id">
-                                    <option v-for="pagamento in pagamentos.data" :value="pagamento.id">
-                                        {{
-                                            pagamento.descricao
-                                        }}
-                                    </option>
-                                </select>
+                                <input v-else-if="form.tipo_pagamento === 3" class="form-control"
+                                    v-model="form.pago_para"/>
                                 <FormError :error="form.errors.nome" />
                             </div>
                             <div class="mb-3">
