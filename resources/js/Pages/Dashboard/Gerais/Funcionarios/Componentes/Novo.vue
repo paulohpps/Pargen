@@ -19,8 +19,8 @@ const form = useForm({
     nome: '',
     cpf: '',
     cargo: '',
-    valor_vencimento: '',
-    encargos: '',
+    valor_vencimento: 0,
+    encargos: 0,
 })
 
 function submitNovoFuncionario() {
@@ -66,25 +66,25 @@ function closeModal() {
                         <div class="mb-3">
                             <label for="cpf" class="form-label">CPF</label>
                             <input ref="elCPF" type="text" class="form-control" v-model="form.cpf" id="cpf"
-                                aria-describedby="emailHelp" required>
+                                aria-describedby="emailHelp">
 
                             <FormError :error="form.errors.cpf" />
                         </div>
                         <div class="mb-3">
                             <label for="cargo" class="form-label">Cargo</label>
-                            <input type="text" class="form-control" v-model="form.cargo" id="cargo" required>
+                            <input type="text" class="form-control" v-model="form.cargo" id="cargo">
                             <FormError :error="form.errors.cargo" />
                         </div>
                         <div class="mb-3">
                             <label for="valro_vencimento" class="form-label">Valor Vencimento</label>
                             <input ref="elValorVencimento" type="text" class="form-control" v-model="form.valor_vencimento"
-                                id="valro_vencimento" required>
+                                id="valro_vencimento">
                             <FormError :error="form.errors.valor_vencimento" />
                         </div>
                         <div class="mb-3">
                             <label for="encargos" class="form-label">Encargos</label>
                             <input ref="elEncargos" type="text" class="form-control" v-model="form.encargos"
-                                id="encargos" required>
+                                id="encargos">
                             <FormError :error="form.errors.encargos" />
                         </div>
                     </div>

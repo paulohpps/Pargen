@@ -50,7 +50,7 @@
                 </th>
             </tr>
             <tr class="bg-bege">
-                <td class="p-10 text-center">{{ $fatura->data_vencimento }}</td>
+                <td class="p-10 text-center">{{ $fatura->data_vencimento->format('d/m/Y') }}</td>
                 <td class="p-10 text-center">R$ {{ $fatura->valor }}</td>
             </tr>
             <tr>
@@ -58,7 +58,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="bg-bege p-10 text-center" colspan="2 ">27.755.310/0001-72
+                <td class="bg-bege p-10 text-center" colspan="2 ">{{ $fatura->chave_pix }}
                 </td>
             </tr>
         </table>

@@ -23,6 +23,7 @@ class Fatura extends Model
         'data_baixa',
         'cliente_id',
         'status',
+        'chave_pix',
         'valor',
         'valor_pago',
     ];

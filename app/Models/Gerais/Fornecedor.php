@@ -27,6 +27,7 @@ class Fornecedor extends Model
 
     public function getCnpjAttribute($value)
     {
+        if(!$value) return null;
         return substr($value, 0, 2) . '.' . substr($value, 2, 3) . '.' . substr($value, 5, 3) . '/' . substr($value, 8, 4) . '-' . substr($value, 12, 2);
     }
 }
