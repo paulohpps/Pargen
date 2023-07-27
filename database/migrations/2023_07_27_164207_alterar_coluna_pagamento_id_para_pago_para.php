@@ -24,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('lancamentos', function (Blueprint $table) {
             $table->unsignedBigInteger('pagamento_id')->nullable();
+            $table->dropColumn('pago_para');
         });
     }
 };
