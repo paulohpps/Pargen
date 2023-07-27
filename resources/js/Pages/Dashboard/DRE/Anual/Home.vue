@@ -2,7 +2,8 @@
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 
 const props = defineProps({
-    categorias: Array
+    categorias: Array,
+    ano: Number
 })
 
 let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYear();
@@ -35,9 +36,10 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_mes">R${{ valores }}</td>
                         </tr>
                         <tr v-for="subcategoria in categoria.subcategorias">
-                            <th class="text-nowrap" scope=" row"><i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
-                                subcategoria.nome
-                            }}</th>
+                            <th class="text-nowrap" scope=" row"><i
+                                    class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
+                                        subcategoria.nome
+                                    }}</th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_mes">R${{ valores }}</td>
                         </tr>
                     </tbody>

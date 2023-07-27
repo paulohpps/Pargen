@@ -12,10 +12,10 @@ class DREAnualController extends Controller
 {
     public function home(Request $request)
     {
-        $year = $request->ano ?? date('Y');
+        $ano = $request->ano ?? date('Y');
         $resultado = Lancamento::query()
             ->where('status', 'pago')
-            ->whereYear('vencimento', $year)
+            ->whereYear('vencimento', $ano)
             ->join('pagamentos', 'lancamentos.pagamento_id', '=', 'pagamentos.id')
             ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
             ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
@@ -67,6 +67,6 @@ class DREAnualController extends Controller
             $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '');
         }
 
-        return Inertia::render('Dashboard/DRE/Anual/Home', compact('categorias'));
+        return Inertia::render('Dashboard/DRE/Anual/Home', compact('categorias', 'ano'));
     }
 }
