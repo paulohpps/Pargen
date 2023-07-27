@@ -99,7 +99,7 @@ function filtrarAte(data) {
                                     <td>{{ categoria.impacto }}%</td>
                                 </tr>
                                 <tr v-for="sub in categoria.subcategorias">
-                                    <td class="sub-categoria">{{ sub.nome }}</td>
+                                    <td><i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{ sub.nome }}</td>
                                     <td>R${{ sub.valor }}</td>
                                     <td>{{ sub.impacto }}%</td>
                                 </tr>
@@ -116,8 +116,3 @@ function filtrarAte(data) {
         </div>
     </DashboardLayout>
 </template>
-<style scoped>
-.sub-categoria {
-    padding-left: 40px !important;
-}
-</style>

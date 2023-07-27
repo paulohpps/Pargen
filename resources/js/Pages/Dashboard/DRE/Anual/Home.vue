@@ -35,7 +35,8 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_mes">R${{ valores }}</td>
                         </tr>
                         <tr v-for="subcategoria in categoria.subcategorias">
-                            <th style="padding-left: 40px !important" class="text-nowrap" scope=" row">{{ subcategoria.nome
+                            <th class="text-nowrap" scope=" row"><i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
+                                subcategoria.nome
                             }}</th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_mes">R${{ valores }}</td>
                         </tr>
