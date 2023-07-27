@@ -22,6 +22,13 @@ onMounted(async () => {
                     data: response.data.map(item => item.total)
                 }
             ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    onClick: null
+                }
+            }
         }
     });
 })

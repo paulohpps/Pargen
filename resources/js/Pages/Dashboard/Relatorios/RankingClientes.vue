@@ -23,6 +23,13 @@ onMounted(async () => {
                     data: props.clientes.map(item => item.total)
                 }
             ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    onClick: null
+                }
+            }
         }
     });
 })
@@ -40,8 +47,8 @@ onMounted(async () => {
             <div class="ms-3">
                 <label for="ate" class="form-label">Ano:</label>
                 <div class="d-flex">
-                    <input type="number" name="ano" min="2022" max="2030" :value="ano" id="ate" class="form-control" required
-                        aria-label="Pesquisar" aria-describedby="button-addon2">
+                    <input type="number" name="ano" min="2022" max="2030" :value="ano" id="ate" class="form-control"
+                        required aria-label="Pesquisar" aria-describedby="button-addon2">
                     <button class="btn btn-primary ms-3">Pesquisar</button>
                 </div>
             </div>
