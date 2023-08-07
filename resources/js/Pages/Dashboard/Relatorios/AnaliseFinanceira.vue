@@ -5,6 +5,7 @@ import { router } from '@inertiajs/vue3';
 const props = defineProps({
     pagamentos: Object,
     receitas: Object,
+    lucro_total: String,
 })
 
 let route = new URL(document.location.href);
@@ -46,16 +47,16 @@ function filtrarAte(data) {
                     <div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Recebimentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" :value="receitas.total_geral">
+                            <input type="text" id="tipo" disabled class="form-control" :value="'R$' + receitas.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Pagamentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" :value="pagamentos.total_geral">
+                            <input type="text" id="tipo" disabled class="form-control"
+                                :value="'R$' + pagamentos.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Lucro Bruto </label>
-                            <input type="text" id="tipo" disabled class="form-control"
-                                :value="(receitas.total_geral - pagamentos.total_geral).toFixed(2)">
+                            <input type="text" id="tipo" disabled class="form-control" :value="'R$' + lucro_total">
                         </div>
                     </div>
                 </div>

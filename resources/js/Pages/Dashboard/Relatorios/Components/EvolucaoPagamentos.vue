@@ -10,9 +10,9 @@ const dataLabels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
 
 const datasets = props.evolucao_pagamentos.map((pagamento, index) => {
     let dados = Array.from({ length: 12 }, (_, mes) => {
-        return pagamento.meses[mes] || 0;
+        return pagamento.meses[mes + 1] || 0;
     });
-
+    
     return {
         label: pagamento.nome,
 

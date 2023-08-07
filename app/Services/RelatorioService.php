@@ -35,7 +35,7 @@ class RelatorioService
                 $categoryData['impacto'] = round($categoryData['impacto'], 2);
             }
         }
-        $receitas['total_geral'] = $totalRevenueAllCategories;
+        $receitas['total_geral'] = number_format($totalRevenueAllCategories, 2);
 
         return $receitas;
     }
@@ -81,7 +81,7 @@ class RelatorioService
 
         $pagamentos = [
             'categorias' => $resultado,
-            'total_geral' => $resultado->sum('total_categoria')
+            'total_geral' => number_format($resultado->sum('total_categoria'), 2)
         ];
         return $pagamentos;
     }

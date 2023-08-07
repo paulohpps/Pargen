@@ -8,15 +8,16 @@ const props = defineProps({
     evolucao_receita: Object,
     categorias_analise: Object,
     evolucao_pagamentos: Object,
+    ano: Number
 })
+
+let ano_param = props.ano
 
 
 let route = new URL(document.location.href);
 
-let ano = route.searchParams.get('ano') ?? new Date().getFullYear();
-
 function filtrarAno() {
-    route.searchParams.set('ano', ano);
+    route.searchParams.set('ano', ano_param);
     router.visit(route.href)
 }
 
@@ -27,7 +28,7 @@ function filtrarAno() {
             <div class="card-body">
                 <h5 class="card-title">Evolução financeira</h5>
                 <form @submit.prevent="filtrarAno" style="width: 180px;">
-                    <input type="number" v-model="ano" name="ano" required class="form-control" placeholder="Ano" min="2020"
+                    <input type="number" v-model="ano_param" name="ano" required class="form-control" placeholder="Ano" min="2020"
                         max="2030" />
                 </form>
             </div>
