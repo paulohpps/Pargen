@@ -22,10 +22,10 @@ function processarPagamento(lancamento) {
 
 </script>
 <template>
-    <DashboardLayout titulo="Lançamentos" categoriaPagina="lancamentos" pagina="lancamentos">
+    <DashboardLayout titulo="Pagamentos" categoriaPagina="lancamentos" pagina="pagamentos">
         <div class="card tabela mt-3 w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-title">Lançamentos</h2>
+                <h2 class="card-title">Pagamentos</h2>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adicionarModal">
                     Adicionar
                 </button>

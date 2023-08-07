@@ -97,7 +97,7 @@ const props = defineProps({
                             <ul class="btn-toggle-nav list-unstyled fw-normal mb-0 ms-4">
                                 <li>
                                     <Link href="/dashboard/lancamentos" class="nav-link"
-                                        :class="{ 'text-primary': pagina == 'lancamentos' }">Lancamentos</Link>
+                                        :class="{ 'text-primary': pagina == 'pagamentos' }">Pagamentos</Link>
                                 </li>
                                 <li>
                                     <Link href="/dashboard/servicos/" class="nav-link"

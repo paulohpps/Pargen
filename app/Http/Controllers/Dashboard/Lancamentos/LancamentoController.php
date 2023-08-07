@@ -13,7 +13,7 @@ class LancamentoController extends Controller
 {
     public function home()
     {
-        $lancamentos = Lancamento::with(['fornecedor', 'funcionario', 'pagamento'])->paginate(10);
+        $lancamentos = Lancamento::with(['fornecedor', 'funcionario', 'pagamento'])->orderBy('vencimento')->paginate(10);
 
         foreach ($lancamentos as $lancamento) {
             if ($lancamento->vencimento->isPast() && $lancamento->status != "Pago" && $lancamento->status != "Cancelado") {

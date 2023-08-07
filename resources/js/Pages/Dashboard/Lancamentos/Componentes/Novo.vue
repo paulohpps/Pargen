@@ -70,7 +70,7 @@ function resetParcelas() {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="adicionarModalLabel">Novo Lançamento</h1>
+                    <h1 class="modal-title fs-5" id="adicionarModalLabel">Novo Pagamentos</h1>
                     <button type="button" class="btn-close" @click="form.reset()" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>

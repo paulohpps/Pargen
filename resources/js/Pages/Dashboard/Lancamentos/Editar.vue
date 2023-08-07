@@ -32,12 +32,12 @@ function submitEditarLancamento() {
 </script>
 
 <template>
-    <DashboardLayout titulo="Editar Lançamento" categoriaPagina="lancamentos" pagina="lancamentos">
+    <DashboardLayout titulo="Editar Pagamentos" categoriaPagina="lancamentos" pagina="pagamentos">
         <button class="btn btn-primary m-2" @click="router.visit('/dashboard/lancamentos')">
             <i class="fa-solid fa-arrow-left fa-sm me-1"></i>Voltar</button>
         <div class="card shadow mt-1 m-2">
             <div class="card-header">
-                <h2>Editar Lançamento</h2>
+                <h2>Editar Pagamentos</h2>
             </div>
             <form @submit.prevent="submitEditarLancamento()">
                 <div class="card-body FuncionarioForm">
