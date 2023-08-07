@@ -25,7 +25,7 @@ class LancamentoRequest extends FormRequest
             'tipo_pagamento' => 'required',
             'fornecedor_id' => 'required_if:tipo_pagamento,1',
             'funcionario_id' => 'required_if:tipo_pagamento,2',
-            'pagamento_id' => 'required_if:tipo_pagamento,3',
+            'pago_para' => 'string|required_if:tipo_pagamento,3',
             'descricao' => 'string|nullable',
             'valor' => 'required',
             'vencimento' => 'required',
@@ -56,7 +56,7 @@ class LancamentoRequest extends FormRequest
             $this->merge([
                 'fornecedor_id' => null,
                 'funcionario_id' => null,
-                'pagamento_id' => $this->input('pagamento_id'),
+                'pago_para' => $this->input('pago_para'),
             ]);
         }
     }

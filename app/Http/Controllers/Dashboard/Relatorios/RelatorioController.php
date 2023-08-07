@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Dashboard\Relatorios;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
 use App\Services\RelatorioService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class RelatorioController extends Controller
@@ -38,9 +40,25 @@ class RelatorioController extends Controller
         return Inertia::render('Dashboard/Relatorios/EvolucaoFinanceira', compact('evolucao_receita', 'categorias_analise', 'evolucao_pagamentos'));
     }
 
-    public function rankingClientes()
+    public function rankingClientes(Request $request)
     {
-        return Inertia::render('Dashboard/Relatorios/RankingClientes');
+        $mes = $request->query('mes', date('m'));
+        $ano = $request->query('ano', date('Y'));
+        $clientes = Clientes::select(
+            'labs_customer.name as nome',
+            DB::raw('SUM(labs_analyze.price) as total'),
+            DB::raw('COUNT(DISTINCT labs_petrequest.id) as total_services')
+        )
+            ->join('labs_petrequest', 'labs_customer.id', '=', 'labs_petrequest.customer_id')
+            ->join('labs_petrequest_analyse', 'labs_petrequest.id', '=', 'labs_petrequest_analyse.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyse.analyze_id', '=', 'labs_analyze.id')
+            ->whereMonth('labs_petrequest.collected_date', $mes)
+            ->whereYear('labs_petrequest.collected_date', $ano)
+            ->groupBy('nome')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        return Inertia::render('Dashboard/Relatorios/RankingClientes', compact('clientes', 'mes', 'ano'));
     }
 
     public function servicos()
