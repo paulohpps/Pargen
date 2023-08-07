@@ -19,7 +19,7 @@ class DREMensalController extends Controller
             ->where('status', 'pago')
             ->whereYear('vencimento', $ano)
             ->whereMonth('vencimento', $mes)
-            ->join('pagamentos', 'lancamentos.pagamento_id', '=', 'pagamentos.id')
+            ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
             ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
             ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
             ->select(
@@ -66,7 +66,7 @@ class DREMensalController extends Controller
 
             $categorias[$categoria]['valores_por_dia'][$dia] += $valor_total;
         }
-        
+
         return Inertia::render('Dashboard/DRE/Mensal/Home', compact('categorias', 'ano', 'mes'));
     }
 }

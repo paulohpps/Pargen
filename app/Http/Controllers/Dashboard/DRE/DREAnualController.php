@@ -16,7 +16,7 @@ class DREAnualController extends Controller
         $resultado = Lancamento::query()
             ->where('status', 'pago')
             ->whereYear('vencimento', $ano)
-            ->join('pagamentos', 'lancamentos.pagamento_id', '=', 'pagamentos.id')
+            ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
             ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
             ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
             ->select(
