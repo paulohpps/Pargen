@@ -67,10 +67,13 @@ class ServicosController extends Controller
 
     public function ajax(Request $request)
     {
-        $servicos = Servicos::select('id', DB::raw("CONCAT(pet,' - ' ,   tutor ) as texto"))
+        $servicos = Servicos::with('faturaServico')
             ->where('pet', 'like', '%' . $request->input('termo') . '%')
             ->where('customer_id', $request->input('cliente_id'))
-            ->take(10)->get();
+            ->get()
+            ->filter(function ($servico) {
+                return $servico->fatura == null;
+            });
 
         return response()->json($servicos);
     }
