@@ -87,7 +87,6 @@ class FaturaController extends Controller
     public function faturaServico(int $id)
     {
         $fatura = Fatura::find($id);
-        $fatura->append('servicos');
         $analises_servicos = AnaliseServicos::with('analise')
             ->where('petrequest_id', $fatura->servicos[0]->id)
             ->get();
