@@ -29,7 +29,6 @@ function faturar() {
         form.errors.servicos = 'Selecione pelo menos um serviço';
         return;
     }
-    form.servicos = servicos.value;
     form.post('/dashboard/fatura/faturar/gerar');
 }
 
