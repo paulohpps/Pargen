@@ -50,7 +50,7 @@ class FaturaController extends Controller
         $fatura->append('servicos');
         $pdf = Pdf::loadView('fatura', compact('fatura'));
         $pdf = $pdf->setPaper('a4', 'landscape');
-        return $pdf->download("fatura.pdf");
+        return $pdf->download("fatura-$fatura->id.pdf");
     }
 
     public function faturar()
