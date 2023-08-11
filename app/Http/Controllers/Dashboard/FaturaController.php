@@ -28,12 +28,12 @@ class FaturaController extends Controller
 
     public function faturas(Request $request)
     {
-        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico']);
+        $faturas = Fatura::query();
 
-        if($request->status != null){
+        if ($request->status != null) {
             $faturas->where('status', $request->status);
         }
-        if($request->cliente_id ){
+        if ($request->cliente_id) {
             $faturas->where('cliente_id', $request->cliente_id);
         }
 
@@ -87,10 +87,10 @@ class FaturaController extends Controller
     public function faturaServico(int $id)
     {
         $fatura = Fatura::find($id);
-        $fatura->append('servicos');
         $analises_servicos = AnaliseServicos::with('analise')
-            ->where('petrequest_id', $fatura->fatura_servico[0]->servico->id)
+            ->where('petrequest_id', $fatura->servicos[0]->id)
             ->get();
+
         $analises = Analises::with('categoriaAnalise')->get();
 
         return Inertia::render('Dashboard/Fatura/Faturas/Servicos', compact('fatura', 'analises_servicos', 'analises'));
@@ -127,7 +127,7 @@ class FaturaController extends Controller
 
     public function faturasBaixa()
     {
-        $faturas = Fatura::with(['fatura_servico', 'fatura_servico.servico'])->paginate(10);
+        $faturas = Fatura::with(['faturaServico', 'faturaServico.servico'])->paginate(10);
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }

@@ -2,7 +2,7 @@
 
 namespace App\Models\Imports;
 
-use App\Models\AnaliseServicos;
+use App\Models\Faturas\FaturaServico;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -54,9 +54,18 @@ class Servicos extends Model
         );
     }
 
-    public function faturas()
+    protected $hidden = [
+        'faturaServico'
+    ];
+
+    public function faturaServico()
     {
-        return $this->belongsToMany(Fatura::class, 'mysql.fatura_servicos', 'servico_id', 'fatura_id');
+        return $this->hasOne(FaturaServico::class, 'servico_id', 'id');
+    }
+
+    public function getFaturaAttribute()
+    {
+        return optional($this->faturaServico)->fatura;
     }
 
     public function cliente()

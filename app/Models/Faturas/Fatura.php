@@ -28,10 +28,6 @@ class Fatura extends Model
         'valor_pago',
     ];
 
-    protected $appends = [
-        'servicos',
-    ];
-
     protected $casts = [
         'data_vencimento' => 'date:d/m/Y',
         'data_emissao' => 'date:d/m/Y',
@@ -43,15 +39,22 @@ class Fatura extends Model
         'fatura_servico'
     ];
 
-    public function fatura_servico()
+    protected $appends = [
+        'servicos'
+    ];
+
+    public function faturaServico()
     {
-        return $this->hasMany(FaturaServico::class);
+        return $this->hasMany(FaturaServico::class, 'fatura_id', 'id');
     }
 
     public function getServicosAttribute()
     {
-        return $this->fatura_servico()->with(['servico', 'servico.cliente', 'servico.analises'])->get()->map(function ($faturaServico) {
-            return $faturaServico->servico;
-        });
+        return $this->faturaServico()
+            ->with(['servico', 'servico.cliente', 'servico.analises'])
+            ->get()
+            ->map(function ($faturaServico) {
+                return $faturaServico->servico;
+            });
     }
 }
