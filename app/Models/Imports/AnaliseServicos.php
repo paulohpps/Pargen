@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Imports;
 
 use App\Models\Imports\Analises;
 use App\Models\Imports\Servicos;

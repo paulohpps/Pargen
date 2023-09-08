@@ -2,7 +2,6 @@
 
 namespace App\Models\Imports;
 
-use App\Models\AnaliseServicos;
 use App\Models\CategoriaAnalise;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
