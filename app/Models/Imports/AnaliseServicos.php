@@ -11,7 +11,7 @@ class AnaliseServicos extends Model
 {
     use HasFactory;
 
-    protected $table = 'labs_petrequest_analyse';
+    protected $table = 'labs_petrequest_analyze';
 
     public $timestamps = false;
 
