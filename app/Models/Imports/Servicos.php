@@ -15,7 +15,7 @@ class Servicos extends Model
     protected $fillable = [
         'id',
         'is_active',
-        'create_at',
+        'created_at',
         'updated_at',
         'collect_date',
         'collect_hour',
@@ -36,11 +36,12 @@ class Servicos extends Model
         'collected_date',
     ];
 
-    /*protected $casts = [
+    protected $casts = [
         'create_at' => 'date:d/m/Y',
         'updated_at' => 'date:d/m/Y',
         'collect_date' => 'date:d/m/Y',
-    ];*/
+        'collected_date' => 'date:d/m/Y',
+    ];
 
     public function analises()
     {
