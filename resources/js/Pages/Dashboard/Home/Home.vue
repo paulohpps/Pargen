@@ -11,10 +11,3 @@ import Graficos from './Components/Graficos.vue';
         </div>
     </DashboardLayout>
 </template>
-<style>
-.grafico-servicos,
-.grafico-faturamento {
-    width: 500px;
-    height: 500px;
-}
-</style>

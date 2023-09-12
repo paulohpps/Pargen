@@ -37,40 +37,40 @@ function translate(array) {
     let meses = [];
     array.forEach(item => {
         switch (item.month) {
-            case "1":
+            case 1:
                 meses.push('Janeiro');
                 break;
-            case "2":
+            case 2:
                 meses.push('Fevereiro');
                 break;
-            case "3":
+            case 3:
                 meses.push('Março');
                 break;
-            case "4":
+            case 4:
                 meses.push('Abril');
                 break;
-            case "5":
+            case 5:
                 meses.push('Maio');
                 break;
-            case "6":
+            case 6:
                 meses.push('Junho');
                 break;
-            case "7":
+            case 7:
                 meses.push('Julho');
                 break;
-            case "8":
+            case 8:
                 meses.push('Agosto');
                 break;
-            case "9":
+            case 9:
                 meses.push('Setembro');
                 break;
-            case "10":
+            case 10:
                 meses.push('Outubro');
                 break;
-            case "11":
+            case 11:
                 meses.push('Novembro');
                 break;
-            case "12":
+            case 12:
                 meses.push('Dezembro');
                 break;
         }
@@ -87,7 +87,7 @@ function translate(array) {
 </template>
 <style>
 .grafico {
-    width: 500px;
-    height: 500px;
+    width: 50%;
+    height: 50%;
 }
 </style>
