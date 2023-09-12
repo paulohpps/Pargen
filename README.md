@@ -16,3 +16,7 @@ php artisan usuario:admin
 ```
 composer install && npm i && npm run build && php artisan migrate
 ```
+### Sincronizar OnTrace
+```
+php artisan update:database
+```
