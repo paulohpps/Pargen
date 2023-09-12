@@ -10,8 +10,6 @@ class Clientes extends Model
 {
     use HasFactory;
 
-    protected $connection = 'pgsql';
-
     protected $table = 'labs_customer';
 
     protected $fillable = [
@@ -31,7 +29,7 @@ class Clientes extends Model
         'state',
         'complement',
         'obs',
-        'lab_id',
+        'lab',
         'state_registration_rg',
         'customer_type',
         'birthday',
@@ -39,10 +37,12 @@ class Clientes extends Model
         'oficial_depart_number',
         'oficial_service_vet',
         'trading_name',
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [
-        'create_at' => 'date:d/m/Y',
+        'created_at' => 'date:d/m/Y',
         'updated_at' => 'date:d/m/Y',
     ];
 

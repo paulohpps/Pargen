@@ -34,7 +34,7 @@ const props = defineProps({
                     <tbody>
                         <tr v-for="fatura in faturas.data">
                             <td>{{ fatura.data_vencimento }}</td>
-                            <td>{{ fatura.servicos[0]?.cliente.name }}</td>
+                            <td>{{ fatura.servicos[0]?.cliente?.name }}</td>
                             <td>R${{ fatura.valor }}</td>
                             <td>R${{ fatura.valor_pago ?? '0,00' }}</td>
                             <td>{{ status[fatura.status] }}</td>

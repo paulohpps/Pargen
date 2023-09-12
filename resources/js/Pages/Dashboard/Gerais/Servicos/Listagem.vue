@@ -33,8 +33,8 @@ const props = defineProps({
                             <td>{{ servico.collect_date }}</td>
                             <td>{{ servico.pet }}</td>
                             <td>{{ servico.analises.map(analise => analise.name).join(', ') }}</td>
-                            <td>{{ servico.cliente.name }}</td>
-                            <td>{{ categorias[servico.cliente.cliente_categoria[0]?.categoria] ?? 'Nenhum Tipo cadastrado'
+                            <td>{{ servico?.cliente?.name }}</td>
+                            <td>{{ categorias[servico?.cliente?.cliente_categoria[0]?.categoria] ?? 'Nenhum Tipo cadastrado'
                             }}</td>
                             <td>R${{ servico.analises.reduce((accumulator, analise) => {
                                 return accumulator + analise.price;

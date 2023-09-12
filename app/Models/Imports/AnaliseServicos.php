@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Imports;
 
 use App\Models\Imports\Analises;
 use App\Models\Imports\Servicos;
@@ -11,9 +11,9 @@ class AnaliseServicos extends Model
 {
     use HasFactory;
 
-    protected $connection = 'pgsql';
+    protected $table = 'labs_petrequest_analyze';
 
-    protected $table = 'labs_petrequest_analyse';
+    public $timestamps = false;
 
     protected $fillable = [
         'id',

@@ -38,6 +38,13 @@ class RelatorioController extends Controller
         $ano = $request->query('ano', date('Y'));
 
         $evolucao_receita = $this->relatorioService->getEvolucaoReceita($ano);
+        if (!$evolucao_receita) {
+            return redirect()->route('dashboard.analises')->with('mensagem', [
+                'tipo' => 'error',
+                'class' => 'text-danger',
+                'conteudo' => 'Nem todas analises tem categoria definida!'
+            ]);
+        }
 
         $categorias_analise = CategoriaAnaliseEnum::toArray();
 
@@ -55,9 +62,9 @@ class RelatorioController extends Controller
             DB::raw('SUM(labs_analyze.price) as total'),
             DB::raw('COUNT(DISTINCT labs_petrequest.id) as total_services')
         )
-            ->join('labs_petrequest', 'labs_customer.id', '=', 'labs_petrequest.customer_id')
-            ->join('labs_petrequest_analyse', 'labs_petrequest.id', '=', 'labs_petrequest_analyse.petrequest_id')
-            ->join('labs_analyze', 'labs_petrequest_analyse.analyze_id', '=', 'labs_analyze.id')
+            ->join('labs_petrequest', 'labs_customer.id', '=', 'labs_petrequest.customer')
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
             ->whereMonth('labs_petrequest.collected_date', $mes)
             ->whereYear('labs_petrequest.collected_date', $ano)
             ->groupBy('nome')
@@ -70,9 +77,10 @@ class RelatorioController extends Controller
     public function servicos()
     {
         $faturamentos = Servicos::selectRaw('count(*) as total')
-            ->selectRaw('extract(month from created_at) as month')
-            ->selectRaw("trim(to_char(created_at, 'month')) as month_name")
-            ->where('created_at', '>', now()->subMonths(6))
+            ->selectRaw('extract(month from updated_at) as month')
+            ->selectRaw("TRIM(DATE_FORMAT(updated_at, '%M')) as month_name")
+            ->where('updated_at', '>', now()->subMonths(5))
+            ->whereBetween('updated_at', [now()->subMonths(6), now()])
             ->groupBy('month', 'month_name')
             ->orderBy('month', 'asc')
             ->get();
@@ -82,12 +90,13 @@ class RelatorioController extends Controller
 
     public function servicosFaturamento()
     {
-        $lastSixMonthsRevenue = Servicos::selectRaw('extract(month from labs_petrequest.created_at) as month')
-            ->selectRaw("trim(to_char(labs_petrequest.created_at, 'month')) as month_name")
+        $lastSixMonthsRevenue = Servicos::selectRaw('extract(month from labs_petrequest.updated_at) as month')
+            ->selectRaw("trim(DATE_FORMAT(labs_petrequest.updated_at, '%M')) as month_name")
             ->selectRaw('sum(labs_analyze.price) as total')
-            ->join('labs_petrequest_analyse', 'labs_petrequest.id', '=', 'labs_petrequest_analyse.petrequest_id')
-            ->join('labs_analyze', 'labs_petrequest_analyse.analyze_id', '=', 'labs_analyze.id')
-            ->where('labs_petrequest.created_at', '>', now()->subMonths(6))
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->where('labs_petrequest.updated_at', '>', now()->subMonths(5))
+            ->whereBetween('labs_petrequest.updated_at', [now()->subMonths(6), now()])
             ->groupBy('month', 'month_name')
             ->orderBy('month', 'asc')
             ->get();
