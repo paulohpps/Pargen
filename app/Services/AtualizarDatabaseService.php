@@ -6,6 +6,7 @@ use App\Models\Imports\Analises;
 use App\Models\Imports\AnaliseServicos;
 use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class AtualizarDatabaseService
@@ -55,6 +56,9 @@ class AtualizarDatabaseService
 
         $requisicoes = $response->json();
         foreach ($requisicoes as $requisicao) {
+
+            $requisicao['collected_date'] = Carbon::parse($requisicao['collected_date'])->format('Y-m-d');
+
             Servicos::updateOrCreate(
                 ['id' => $requisicao['id']],
                 $requisicao
