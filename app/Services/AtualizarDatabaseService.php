@@ -12,18 +12,16 @@ class AtualizarDatabaseService
 {
     public static function atualizar()
     {
-        //AtualizarDatabaseService::atualizarClientes();
-        //AtualizarDatabaseService::atualizarAnalises();
+        AtualizarDatabaseService::atualizarClientes();
+        AtualizarDatabaseService::atualizarAnalises();
         AtualizarDatabaseService::atualizarServicos();
     }
 
     private static function atualizarClientes()
     {
-        echo "Buscando clientes\n";
         $response = Http::withHeaders(['Token' => env('TOKEN_API_ON_TRACE')])
             ->timeout(-1)
             ->get('https://app.ontrace.com.br/api/v1/clientes/');
-        echo "Atualizando clientes\n";
 
         $clientes = $response->json();
         foreach ($clientes as $cliente) {
@@ -51,13 +49,11 @@ class AtualizarDatabaseService
 
     private static function atualizarServicos()
     {
-        echo "Buscando servicos\n";
         $response = Http::withHeaders(['Token' => env('TOKEN_API_ON_TRACE')])
             ->timeout(-1)
             ->get('https://app.ontrace.com.br/api/v1/requisicoes/');
 
         $requisicoes = $response->json();
-        echo $response->status() . "\n";
         foreach ($requisicoes as $requisicao) {
             Servicos::updateOrCreate(
                 ['id' => $requisicao['id']],
