@@ -12,23 +12,21 @@ class Servicos extends Model
 
     protected $table = 'labs_petrequest';
 
-    protected $connection = 'pgsql';
-
-    protected  $fillable = [
+    protected $fillable = [
         'id',
         'is_active',
         'create_at',
         'updated_at',
         'collect_date',
         'collect_hour',
-        'customer_id',
-        'lab_id',
+        'customer',
+        'lab',
         'pet',
         'tutor',
-        'requester_id',
+        'requester',
         'request_number',
         'status',
-        'specie_id',
+        'specie',
         'collected',
         'vet_requester',
         'age_month',
@@ -38,17 +36,17 @@ class Servicos extends Model
         'collected_date',
     ];
 
-    protected $casts = [
+    /*protected $casts = [
         'create_at' => 'date:d/m/Y',
         'updated_at' => 'date:d/m/Y',
         'collect_date' => 'date:d/m/Y',
-    ];
+    ];*/
 
     public function analises()
     {
         return $this->belongsToMany(
             Analises::class,
-            'labs_petrequest_analyse',
+            'labs_petrequest_analyze',
             'petrequest_id',
             'analyze_id'
         );
@@ -70,6 +68,6 @@ class Servicos extends Model
 
     public function cliente()
     {
-        return $this->belongsTo(Clientes::class, 'customer_id', 'id');
+        return $this->belongsTo(Clientes::class, 'customer', 'id');
     }
 }

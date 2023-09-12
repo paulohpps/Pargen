@@ -10,14 +10,23 @@ class Analises extends Model
 {
     use HasFactory;
 
-    protected $connection = 'pgsql';
-
     protected $table = 'labs_analyze';
 
     protected $fillable = [
         'id',
+        'is_active',
+        'created_at',
+        'updated_at',
         'name',
+        'slug',
         'price',
+        'deadline',
+        'description',
+        'reference',
+        'default',
+        'order',
+        'lab',
+        'category'
     ];
 
     public function getPriceAttribute($value)

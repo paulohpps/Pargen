@@ -97,11 +97,7 @@ class RelatorioService
             foreach ($fatura->servicos as $servico) {
                 foreach ($servico->analises as $analise) {
                     if (!$analise->categoriaAnalise) {
-                        return redirect()->back()->with('mensagem', [
-                            'tipo' => 'error',
-                            'class' => 'text-danger',
-                            'conteudo' => 'Nem todas analises tem categoria definida!'
-                        ]);
+                        return null;
                     }
                     $category = $analise->categoriaAnalise->categoria;
                     $month = $fatura->data_emissao->format('m');

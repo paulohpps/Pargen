@@ -11,9 +11,9 @@ class AnaliseServicos extends Model
 {
     use HasFactory;
 
-    protected $connection = 'pgsql';
-
     protected $table = 'labs_petrequest_analyse';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'id',

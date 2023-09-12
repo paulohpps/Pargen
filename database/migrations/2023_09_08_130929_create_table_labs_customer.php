@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('labs_customer', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_active');
-            $table->datetime('create_at');
+            $table->datetime('created_at');
             $table->datetime('updated_at');
             $table->string('name');
-            $table->string('sexo');
             $table->string('cnpj_cpf');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('address');
-            $table->string('number');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('number')->nullable();
             $table->string('area')->nullable();
             $table->string('city')->nullable();
             $table->string('state');

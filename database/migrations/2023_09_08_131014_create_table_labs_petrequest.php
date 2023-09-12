@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('labs_petrequest', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_active');
-            $table->datetime('create_at');
+            $table->datetime('created_at');
             $table->datetime('updated_at');
             $table->string('pet');
             $table->string('gender');
@@ -22,12 +22,12 @@ return new class extends Migration
             $table->string('age_year');
             $table->string('age_month');
             $table->string('tutor');
-            $table->string('vet_requester');
-            $table->date('collect_date');
-            $table->time('collect_hour');
+            $table->string('vet_requester')->nullable();
+            $table->date('collect_date')->nullable();
+            $table->time('collect_hour')->nullable();
             $table->string('request_number');
             $table->string('status');
-            $table->datetime('collected_date');
+            $table->datetime('collected_date')->nullable();
             $table->boolean('collected');
             $table->string('observation')->nullable();
             $table->string('source')->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->integer('specie');
             $table->integer('requester');
             $table->integer('customer');
-            
+
         });
     }
 

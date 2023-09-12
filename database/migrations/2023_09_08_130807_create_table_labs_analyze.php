@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('labs_analyze', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_active');
-            $table->datetime('create_at');
+            $table->datetime('created_at');
             $table->datetime('updated_at');
             $table->string('name');
             $table->string('slug');
@@ -26,8 +26,6 @@ return new class extends Migration
             $table->integer('order')->nullable();
             $table->integer('lab');
             $table->integer('category');
-            $table->integer('type');
-
         });
     }
 
