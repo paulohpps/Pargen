@@ -32,13 +32,13 @@
             <p>E-mail</p>
         </th>
         <th style="text-align: left; font-weight: normal; margin-left: 0px;">
-            <p>{{ $fatura->servicos[0]->cliente->name }}</p>
-            <p>{{ $fatura->servicos[0]->cliente->cnpj_cpf }}</p>
-            <p>{{ $fatura->servicos[0]->cliente->address }}, {{ $fatura->servicos[0]->cliente->number }},
-                {{ $fatura->servicos[0]->cliente->area }}, {{ $fatura->servicos[0]->cliente->city }} -
-                {{ $fatura->servicos[0]->cliente->state }}, {{ $fatura->servicos[0]->cliente->zip_code }}</p>
-            <p>{{ $fatura->servicos[0]->cliente->phone }}</p>
-            <p>{{ $fatura->servicos[0]->cliente->email }}</p>
+            <p>{{ $fatura->cliente->name }}</p>
+            <p>{{ $fatura->cliente->cnpj_cpf }}</p>
+            <p>{{ $fatura->cliente->address }}, {{ $fatura->cliente->number }},
+                {{ $fatura->cliente->area }}, {{ $fatura->cliente->city }} -
+                {{ $fatura->cliente->state }}, {{ $fatura->cliente->zip_code }}</p>
+            <p>{{ $fatura->cliente->phone }}</p>
+            <p>{{ $fatura->cliente->email }}</p>
         </th>
         <table style="margin-top: 1rem">
             <tr class="bg-blue text-white">

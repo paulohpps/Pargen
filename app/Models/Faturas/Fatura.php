@@ -3,6 +3,7 @@
 namespace App\Models\Faturas;
 
 use App\Enums\Financeiro\FaturaEnum;
+use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,8 +15,6 @@ class Fatura extends Model
     use HasFactory;
 
     protected $table = 'faturas';
-
-    protected $connection = 'mysql';
 
     protected $fillable = [
         'data_vencimento',
@@ -46,6 +45,11 @@ class Fatura extends Model
     public function faturaServico()
     {
         return $this->hasMany(FaturaServico::class, 'fatura_id', 'id');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Clientes::class, 'cliente_id', 'id');
     }
 
     public function getServicosAttribute()

@@ -69,7 +69,7 @@ class ServicosController extends Controller
     {
         $servicos = Servicos::with('faturaServico')
             ->where('pet', 'like', '%' . $request->input('termo') . '%')
-            ->where('customer_id', $request->input('cliente_id'))
+            ->where('customer', $request->input('cliente_id'))
             ->get()
             ->filter(function ($servico) {
                 return $servico->fatura == null;

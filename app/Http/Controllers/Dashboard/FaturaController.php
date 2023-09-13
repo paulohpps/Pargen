@@ -46,7 +46,7 @@ class FaturaController extends Controller
 
     public function fatura(int $id)
     {
-        $fatura = Fatura::find($id);
+        $fatura = Fatura::with('cliente')->find($id);
         $fatura->append('servicos');
         $pdf = Pdf::loadView('fatura', compact('fatura'));
         $pdf = $pdf->setPaper('a4', 'landscape');
@@ -87,6 +87,7 @@ class FaturaController extends Controller
     public function faturaServico(int $id)
     {
         $fatura = Fatura::find($id);
+        $fatura->append('servicos');
         $analises_servicos = AnaliseServicos::with('analise')
             ->where('petrequest_id', $fatura->servicos[0]->id)
             ->get();
