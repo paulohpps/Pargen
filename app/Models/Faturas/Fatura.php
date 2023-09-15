@@ -34,31 +34,13 @@ class Fatura extends Model
         'status' => FaturaEnum::class,
     ];
 
-    protected $hidden = [
-        'fatura_servico'
-    ];
-
-    protected $appends = [
-        'servicos'
-    ];
-
-    public function faturaServico()
+    public function servicos()
     {
-        return $this->hasMany(FaturaServico::class, 'fatura_id', 'id');
+        return $this->hasMany(Servicos::class, 'fatura_id', 'id');
     }
 
     public function cliente()
     {
         return $this->belongsTo(Clientes::class, 'cliente_id', 'id');
-    }
-
-    public function getServicosAttribute()
-    {
-        return $this->faturaServico()
-            ->with(['servico', 'servico.cliente', 'servico.analises'])
-            ->get()
-            ->map(function ($faturaServico) {
-                return $faturaServico->servico;
-            });
     }
 }

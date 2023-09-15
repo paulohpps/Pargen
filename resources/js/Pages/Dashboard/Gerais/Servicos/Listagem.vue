@@ -5,8 +5,8 @@ import Paginacao from '../../../../Componentes/Paginacao.vue';
 
 const props = defineProps({
     servicos: Array,
-    analises: Array,
-    categorias: Array,
+    categorias_analise: Array,
+    categorias_cliente: Array,
 });
 
 </script>
@@ -23,9 +23,15 @@ const props = defineProps({
                             <th scope="col">Data Coleta</th>
                             <th scope="col">Paciente</th>
                             <th scope="col">Analise</th>
+                            <th scope="col">Amostra</th>
                             <th scope="col">Cliente</th>
+                            <th scope="col">Valor Unit.</th>
+                            <th scope="col">Categoria Analise</th>
                             <th scope="col">Tipo Cliente</th>
-                            <th scope="col">Valor Total</th>
+                            <th scope="col">N° Fatura</th>
+                            <th scope="col">Data Vencimento</th>
+                            <th scope="col">Forma de Recebimento</th>
+                            <th scope="col">Data Recebimento</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,9 +39,16 @@ const props = defineProps({
                             <td>{{ servico.collect_date }}</td>
                             <td>{{ servico.pet }}</td>
                             <td>{{ servico.analises.map(analise => analise.name).join(', ') }}</td>
+                            <td>{{ servico.request_number }}</td>
                             <td>{{ servico?.cliente?.name }}</td>
-                            <td>{{ categorias[servico?.cliente?.cliente_categoria[0]?.categoria] ?? 'Nenhum Tipo cadastrado'
-                            }}</td>
+                            <td>R${{ servico.analises.reduce((accumulator, analise) => {
+                                return accumulator + analise.price;
+                            }, 0) }}</td>
+                            <td>{{ servico.analises.map(analise =>
+                                categorias_analise[analise?.categoria_analise?.categoria]).join(', ') || 'Nenhuma categoria' }}</td>
+                            <td>{{ categorias_cliente[servico.cliente?.cliente_categoria?.categoria] }}</td>
+                            <td>{{ servico.fatura_id }}</td>
+                            <td>{{ servico?.fatura?.data_vencimento }}</td>
                             <td>R${{ servico.analises.reduce((accumulator, analise) => {
                                 return accumulator + analise.price;
                             }, 0) }}</td>

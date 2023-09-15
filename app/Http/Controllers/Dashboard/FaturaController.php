@@ -6,7 +6,6 @@ use App\Enums\Financeiro\ClienteCategoriaEnum;
 use App\Enums\Financeiro\FaturaEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Faturas\Fatura;
-use App\Models\Faturas\FaturaServico;
 use App\Models\Imports\Analises;
 use App\Models\Imports\AnaliseServicos;
 use App\Models\Imports\Clientes;
@@ -20,9 +19,14 @@ class FaturaController extends Controller
 {
     public function home()
     {
-        $servicos = Servicos::with(['analises', 'cliente', 'cliente.clienteCategoria'])->paginate(10);
+        $servicos = Servicos::with(['analises', 'cliente', 'cliente.clienteCategoria'])
+            ->where('fatura_id', null)
+            ->orderBy('collect_date', 'desc')
+            ->paginate(10);
+
         $analises = Analises::with('categoriaAnalise')->get();
         $categorias = ClienteCategoriaEnum::toArray();
+
         return Inertia::render('Dashboard/Fatura/Geracoes/Listagem', compact('servicos', 'analises', 'categorias'));
     }
 
@@ -37,7 +41,7 @@ class FaturaController extends Controller
             $faturas->where('cliente_id', $request->cliente_id);
         }
 
-        $faturas = $faturas->paginate(10);
+        $faturas = $faturas->with(['servicos'])->paginate(10);
 
         $status = FaturaEnum::toArray();
 
@@ -46,8 +50,8 @@ class FaturaController extends Controller
 
     public function fatura(int $id)
     {
-        $fatura = Fatura::with('cliente')->find($id);
-        $fatura->append('servicos');
+        $fatura = Fatura::with(['cliente', 'servicos'])->find($id);
+
         $pdf = Pdf::loadView('fatura', compact('fatura'));
         $pdf = $pdf->setPaper('a4', 'landscape');
         return $pdf->download("fatura-$fatura->id.pdf");
@@ -55,8 +59,15 @@ class FaturaController extends Controller
 
     public function faturar()
     {
-        $clientes = Clientes::all();
-        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes'));
+        $clientes = Clientes::whereHas('servicos', function ($query) {
+            $query->whereNull('fatura_id');
+        })->get();
+
+        $chave_pix = Fatura::whereNotNull('chave_pix')
+            ->orderBy('created_at', 'desc')
+            ->value('chave_pix');
+
+        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix'));
     }
 
     public function gerarFatura(Request $request)
@@ -71,10 +82,10 @@ class FaturaController extends Controller
         ]);
         $valor = 0;
         for ($i = 0; $i < count($request->servicos); $i++) {
-            FaturaServico::create([
+            Servicos::find($request->servicos[$i]['id'])->update([
                 'fatura_id' => $fatura->id,
-                'servico_id' => $request->servicos[$i]['id'],
             ]);
+
             $servicos = Servicos::with('analises')->find($request->servicos[$i]['id']);
             $valor += $servicos->analises->sum('price');
         }
@@ -86,26 +97,22 @@ class FaturaController extends Controller
 
     public function faturaServico(int $id)
     {
-        $fatura = Fatura::find($id);
-        $fatura->append('servicos');
-        $analises_servicos = AnaliseServicos::with('analise')
+        $fatura = Fatura::with(['servicos', 'cliente', 'servicos.analises', 'servicos.analises.categoriaAnalise'])->find($id);
+
+        /*$analises_servicos = AnaliseServicos::with('analise')
             ->where('petrequest_id', $fatura->servicos[0]->id)
             ->get();
 
-        $analises = Analises::with('categoriaAnalise')->get();
+        $analises = Analises::with('categoriaAnalise')->get();*/
 
-        return Inertia::render('Dashboard/Fatura/Faturas/Servicos', compact('fatura', 'analises_servicos', 'analises'));
+        return Inertia::render('Dashboard/Fatura/Faturas/Servicos', compact('fatura'));
     }
 
     public function baixarFatura(int $id)
     {
-        $fatura = Fatura::find($id);
-        $fatura->append('servicos');
-        $analises_servicos = AnaliseServicos::with('analise')
-            ->where('petrequest_id', $fatura->fatura_servico[0]->servico->id)
-            ->get();
+        $fatura = Fatura::with(['servicos', 'cliente'])->find($id);
 
-        return Inertia::render('Dashboard/Fatura/Faturas/Baixa', compact('fatura', 'analises_servicos'));
+        return Inertia::render('Dashboard/Fatura/Faturas/Baixa', compact('fatura'));
     }
 
     public function baixar(Request $request)
@@ -128,7 +135,7 @@ class FaturaController extends Controller
 
     public function faturasBaixa()
     {
-        $faturas = Fatura::with(['faturaServico', 'faturaServico.servico'])->paginate(10);
+        $faturas = Fatura::with(['servicos', 'cliente'])->paginate(10);
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }

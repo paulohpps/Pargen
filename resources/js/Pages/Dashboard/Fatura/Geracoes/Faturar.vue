@@ -7,13 +7,14 @@ import axios from 'axios';
 
 const props = defineProps({
     clientes: Array,
+    chave_pix: String,
 });
 
 const form = useForm({
     servicos: [],
     cliente_id: props.clientes[0]?.id,
     vencimento: '',
-    chave_pix: "27.755.310/0001-72",
+    chave_pix: props.chave_pix,
 });
 
 const servicos = ref([]);

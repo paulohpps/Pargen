@@ -14,66 +14,24 @@ class ServicosController extends Controller
 {
     public function servicos()
     {
-        $servicos = Servicos::with('analises', 'cliente', 'cliente.clienteCategoria')->paginate(10);
-        $analises = Analises::with('categoriaAnalise')->get();
-        $categorias = ClienteCategoriaEnum::toArray();
+        $servicos = Servicos::with('analises', 'fatura', 'analises.categoriaAnalise', 'cliente', 'cliente.clienteCategoria')
+            ->orderBy('collect_date', 'desc')
+            ->paginate(10);
 
-        return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'analises', 'categorias'));
-    }
+        $categorias_analise = ClienteCategoriaEnum::toArray();
+        $categorias_cliente = ClienteCategoriaEnum::toArray();
 
-    public function detalhes($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        return Inertia::render('Dashboard/Gerais/Servicos/Detalhes', compact('servicos'));
-    }
-
-    public function criar()
-    {
-        return Inertia::render('Dashboard/Gerais/Servicos/Criar');
-    }
-
-    public function salvar()
-    {
-        Servicos::create(request()->all());
-
-        return redirect()->route('servicos');
-    }
-
-    public function editar($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        return Inertia::render('Dashboard/Gerais/Servicos/Editar', compact('servicos'));
-    }
-
-    public function atualizar($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        $servicos->update(request()->all());
-
-        return redirect()->route('servicos.detalhes', $id);
-    }
-
-    public function deletar($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        $servicos->delete();
-
-        return redirect()->route('servicos');
+        return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'categorias_analise', 'categorias_cliente'));
     }
 
     public function ajax(Request $request)
     {
-        $servicos = Servicos::with('faturaServico')
+        $servicos = Servicos::with('fatura')
             ->where('pet', 'like', '%' . $request->input('termo') . '%')
             ->where('customer', $request->input('cliente_id'))
-            ->get()
-            ->filter(function ($servico) {
-                return $servico->fatura == null;
-            });
+            ->orderBy('collect_date', 'desc')
+            ->where('fatura_id', null)
+            ->get();
 
         return response()->json($servicos);
     }
