@@ -7,9 +7,9 @@ use App\Enums\Financeiro\FaturaEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Faturas\Fatura;
 use App\Models\Imports\Analises;
-use App\Models\Imports\AnaliseServicos;
 use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
+use App\Services\FaturaService;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -33,6 +33,8 @@ class FaturaController extends Controller
 
     public function faturas(Request $request)
     {
+        FaturaService::AtualizarStatus();
+
         $faturas = Fatura::query();
 
         if ($request->status != null) {
@@ -45,8 +47,6 @@ class FaturaController extends Controller
         $faturas = $faturas->with(['servicos'])->paginate(10);
 
         $status = FaturaEnum::toArray();
-
-        Artisan::call('atualizar:faturas');
 
         return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
     }
@@ -135,6 +135,8 @@ class FaturaController extends Controller
 
     public function faturasBaixa()
     {
+        FaturaService::AtualizarStatus();
+
         $faturas = Fatura::with(['servicos', 'cliente'])->paginate(10);
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
