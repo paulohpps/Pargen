@@ -12,6 +12,8 @@ class Servicos extends Model
 
     protected $table = 'labs_petrequest';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id',
         'is_active',

@@ -20,3 +20,7 @@ composer install && npm i && npm run build && php artisan migrate
 ```
 php artisan update:database
 ```
+### Atualizar Status Fatura
+```
+php artisan atualizar:faturas
+```

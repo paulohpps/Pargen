@@ -8,6 +8,8 @@ import axios from 'axios';
 const props = defineProps({
     clientes: Array,
     chave_pix: String,
+    data_inicial: String,
+    data_final: String,
 });
 
 const form = useForm({
@@ -19,9 +21,15 @@ const form = useForm({
 
 const servicos = ref([]);
 
+let form_filtro = {
+    data_inicial: props.data_inicial,
+    data_final: props.data_final,
+};
+
 async function atualizarServicos() {
-    let response = await axios.get(`/dashboard/servicos/ajax?cliente_id=${form.cliente_id}`);
+    let response = await axios.get(`/dashboard/servicos/ajax?cliente_id=${form.cliente_id}&data_inicial=${form_filtro.data_inicial}&data_final=${form_filtro.data_final}`);
     servicos.value = response.data;
+    form.servicos = servicos.value;
 }
 atualizarServicos();
 
@@ -79,6 +87,18 @@ function checkServico(event, id) {
                         </div>
                     </div>
                     <div>
+                        <div class="d-flex">
+                            <div class="mb-3">
+                                <label class="mb-2">Data Inicial</label>
+                                <input type="date" class="form-control" v-model="form_filtro.data_inicial"
+                                    @input="atualizarServicos" />
+                            </div>
+                            <div class="mb-3 ms-3">
+                                <label class="mb-2">Data Final</label>
+                                <input type="date" class="form-control" v-model="form_filtro.data_final"
+                                    @input="atualizarServicos" />
+                            </div>
+                        </div>
                         <h3>Serviços não faturados de {{ clientes.find(p => p.id == form.cliente_id).name }}</h3>
                         <table class="table table-hover">
                             <thead>
@@ -93,7 +113,7 @@ function checkServico(event, id) {
                             <tbody>
                                 <tr v-for="servico in servicos">
                                     <th scope="row"><input class="form-check-input" type="checkbox"
-                                            @change="checkServico($event, servico.id)" /></th>
+                                            @change="checkServico($event, servico.id)" checked="true" /></th>
                                     <td>{{ servico.pet }}</td>
                                     <td>{{ servico.tutor }}</td>
                                     <td>{{ servico.status }}</td>
@@ -101,6 +121,7 @@ function checkServico(event, id) {
                                 </tr>
                                 <tr v-if="servicos.length === 0">
                                     <td class="text-center" colspan="5">Esse cliente não contem nenhum servico não faturado
+                                        no periodo selecionado
                                     </td>
                                 </tr>
                             </tbody>
@@ -113,5 +134,5 @@ function checkServico(event, id) {
                 </div>
             </form>
         </div>
-</DashboardLayout>
+    </DashboardLayout>
 </template>

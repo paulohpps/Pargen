@@ -13,6 +13,7 @@ use App\Models\Imports\Servicos;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Inertia\Inertia;
 
 class FaturaController extends Controller
@@ -45,6 +46,8 @@ class FaturaController extends Controller
 
         $status = FaturaEnum::toArray();
 
+        Artisan::call('atualizar:faturas');
+
         return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
     }
 
@@ -67,7 +70,10 @@ class FaturaController extends Controller
             ->orderBy('created_at', 'desc')
             ->value('chave_pix');
 
-        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix'));
+        $data_inicial = Carbon::now()->subDays(30)->format('Y-m-d');
+        $data_final = Carbon::now()->format('Y-m-d');
+
+        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final'));
     }
 
     public function gerarFatura(Request $request)
@@ -98,12 +104,6 @@ class FaturaController extends Controller
     public function faturaServico(int $id)
     {
         $fatura = Fatura::with(['servicos', 'cliente', 'servicos.analises', 'servicos.analises.categoriaAnalise'])->find($id);
-
-        /*$analises_servicos = AnaliseServicos::with('analise')
-            ->where('petrequest_id', $fatura->servicos[0]->id)
-            ->get();
-
-        $analises = Analises::with('categoriaAnalise')->get();*/
 
         return Inertia::render('Dashboard/Fatura/Faturas/Servicos', compact('fatura'));
     }

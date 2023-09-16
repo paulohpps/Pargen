@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\Lancamentos;
 
 use App\Enums\Financeiro\ClienteCategoriaEnum;
+use App\Enums\Financeiro\FaturaEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Imports\Analises;
 use App\Models\Imports\Servicos;
@@ -20,8 +21,9 @@ class ServicosController extends Controller
 
         $categorias_analise = ClienteCategoriaEnum::toArray();
         $categorias_cliente = ClienteCategoriaEnum::toArray();
+        $fatura_status = FaturaEnum::toArray();
 
-        return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'categorias_analise', 'categorias_cliente'));
+        return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'categorias_analise', 'categorias_cliente', 'fatura_status'));
     }
 
     public function ajax(Request $request)
@@ -29,6 +31,8 @@ class ServicosController extends Controller
         $servicos = Servicos::with('fatura')
             ->where('pet', 'like', '%' . $request->input('termo') . '%')
             ->where('customer', $request->input('cliente_id'))
+            ->where('created_at', '>=', $request->input('data_inicial'))
+            ->where('created_at', '<=', $request->input('data_final'))
             ->orderBy('collect_date', 'desc')
             ->where('fatura_id', null)
             ->get();
