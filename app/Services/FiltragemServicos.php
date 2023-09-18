@@ -55,7 +55,7 @@ class FiltragemServicos
     public static function filtraPorCliente($servicos, $nome_cliente)
     {
         $clientes = Clientes::where('name', $nome_cliente)
-            ->orWhere('name', 'like', '%' . $nome_cliente . '%')->get();
+            ->orWhere('name', 'like', '%' . $nome_cliente . '%')->first();
 
         return $servicos->whereIn('customer', $clientes);
     }
