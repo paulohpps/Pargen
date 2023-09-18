@@ -127,10 +127,13 @@ function submitFiltrarServicos() {
                         </div>
                         <div class=" col mb-2">
                             <label class="mb-2">Data Recebimento</label>
-                            <input v-model="form.data_recebimento" type="date" class="form-control"/>
+                            <div class="d-flex">
+
+                                <input v-model="form.data_recebimento" type="date" class="form-control"/>
+                                <button type="submit" class="ms-3 btn btn-primary">Filtrar</button>
+                            </div>
                         </div>
                     </div>
-                    <button type="submit" class="mt-1 btn btn-primary">Filtrar</button>
                 </form>
             </div>
             <div class="card-body">
@@ -172,7 +175,7 @@ function submitFiltrarServicos() {
                             <td>{{ fatura_status[servico?.fatura?.status] ?? '-' }}</td>
                         </tr>
                         <tr v-if="servicos.data.length === 0">
-                            <td colspan="8" class="text-center">Nenhum Serviço Cadastrado</td>
+                            <td colspan="12" class="text-center">Nenhum Serviço Cadastrado</td>
                         </tr>
                     </tbody>
                 </table>

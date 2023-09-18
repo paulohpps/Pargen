@@ -13,7 +13,7 @@ class FiltragemServicos
 {
     public static function filtrarServicos($servicos, $request)
     {
-        if($request->input('paciente')) {
+        if ($request->input('paciente')) {
             $servicos = self::filtraPorPaciente($servicos, $request->input('paciente'));
         }
         if ($request->input('cliente')) {
@@ -54,10 +54,13 @@ class FiltragemServicos
 
     public static function filtraPorCliente($servicos, $nome_cliente)
     {
-        $clientes = Clientes::where('name', $nome_cliente)
-            ->orWhere('name', 'like', '%' . $nome_cliente . '%')->first();
-
-        return $servicos->whereIn('customer', $clientes);
+        return $servicos->join('labs_customer', 'labs_petrequest.customer', '=', 'labs_customer.id')
+            ->where(function ($query) use ($nome_cliente) {
+                $query->where('labs_customer.name', $nome_cliente)
+                    ->orWhere('labs_customer.name', 'like', '%' . $nome_cliente . '%');
+            })
+            ->select('labs_petrequest.*')
+            ->distinct();
     }
 
     public static function filtraPorNumeroFatura($servicos, $numero_fatura)
@@ -72,23 +75,29 @@ class FiltragemServicos
 
     public static function filtraPorAnalise($servicos, $analise)
     {
-        $analise_servico = AnaliseServicos::where('id', $analise)->first();
-        return $servicos->where('id', $analise_servico->petrequest_id);
+        return $servicos->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->where('labs_petrequest_analyze.analyze_id', $analise)
+            ->select('labs_petrequest.*')
+            ->distinct();
     }
 
     public static function filtraPorCategoriaAnalise($servicos, $categoria_analise)
     {
-        $categoria = CategoriaAnalise::where('categoria', $categoria_analise)->first();
-        $analise = Analises::where('id', $categoria->id_analise)->first();
-        $analise_servico = AnaliseServicos::where('analyze_id', $analise->id)->first();
-        return $servicos->whereIn('id', $analise_servico->petrequest_id);
+        return $servicos->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+            ->where('categoria_analises.categoria', $categoria_analise)
+            ->select('labs_petrequest.*')
+            ->distinct();
     }
 
     public static function filtraPorTipoCliente($servicos, $tipo_cliente)
     {
-        $categoria_cliente = ClienteCategoria::where('categoria', $tipo_cliente)->get();
-        $clientes = Clientes::whereIn('id', $categoria_cliente->id_cliente)->get();
-        return $servicos->whereIn('customer', $clientes);
+        return $servicos->join('labs_customer', 'labs_petrequest.customer', '=', 'labs_customer.id')
+            ->join('cliente_categorias', 'labs_customer.id', '=', 'cliente_categorias.id_cliente')
+            ->where('cliente_categorias.categoria', $tipo_cliente)
+            ->select('labs_petrequest.*')
+            ->distinct();
     }
 
     public static function filtraPorDataColeta($servicos, $data_coleta)
@@ -98,14 +107,17 @@ class FiltragemServicos
 
     public static function filtraPorDataVencimento($servicos, $data_vencimento)
     {
-        $fatura = Fatura::where('data_vencimento', $data_vencimento)->first();
-        return $servicos->where('fatura_id', $fatura->id);
+        return $servicos->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
+            ->where('faturas.data_vencimento', $data_vencimento)
+            ->select('labs_petrequest.*')
+            ->distinct();
     }
 
-    public static function filtraPorDataRecebimento($servicos, $data_recebimento)
+    public static function filtraPorDataRecebimento($servicos, $data_baixa)
     {
-        $fatura = Fatura::where('data_baixa', $data_recebimento)->first();
-        return $servicos->where('fatura_id', $fatura->id);
+        return $servicos->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
+            ->where('faturas.data_baixa', $data_baixa)
+            ->select('labs_petrequest.*')
+            ->distinct();
     }
-
 }
