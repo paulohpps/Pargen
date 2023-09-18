@@ -44,7 +44,7 @@ class FaturaController extends Controller
             $faturas->where('cliente_id', $request->cliente_id);
         }
 
-        $faturas = $faturas->with(['servicos'])->paginate(10);
+        $faturas = $faturas->with(['servicos', 'cliente'])->paginate(10);
 
         $status = FaturaEnum::toArray();
 
