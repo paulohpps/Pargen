@@ -48,11 +48,11 @@ class Clientes extends Model
 
     public function clienteCategoria()
     {
-        return $this->hasMany(ClienteCategoria::class, 'id_cliente');
+        return $this->hasOne(ClienteCategoria::class, 'id_cliente');
     }
 
     public function servicos()
     {
-        return $this->hasMany(Servicos::class, 'customer_id', 'id');
+        return $this->hasMany(Servicos::class, 'customer', 'id');
     }
 }

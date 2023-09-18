@@ -23,6 +23,7 @@ const props = defineProps({
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th scope="col">N°</th>
                             <th scope="col">Data de Vencimento</th>
                             <th scope="col">Cliente</th>
                             <th scope="col">Valor Total</th>
@@ -33,8 +34,9 @@ const props = defineProps({
                     </thead>
                     <tbody>
                         <tr v-for="fatura in faturas.data">
+                            <th scope="row">{{ fatura.id }}</th>
                             <td>{{ fatura.data_vencimento }}</td>
-                            <td>{{ fatura.servicos[0]?.cliente?.name }}</td>
+                            <td>{{ fatura.cliente?.name }}</td>
                             <td>R${{ fatura.valor }}</td>
                             <td>R${{ fatura.valor_pago ?? '0,00' }}</td>
                             <td>{{ status[fatura.status] }}</td>

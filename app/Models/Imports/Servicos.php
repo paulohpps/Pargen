@@ -2,7 +2,7 @@
 
 namespace App\Models\Imports;
 
-use App\Models\Faturas\FaturaServico;
+use App\Models\Faturas\Fatura;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,8 @@ class Servicos extends Model
     use HasFactory;
 
     protected $table = 'labs_petrequest';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -34,10 +36,11 @@ class Servicos extends Model
         'breed',
         'gender',
         'collected_date',
+        'fatura_id'
     ];
 
     protected $casts = [
-        'create_at' => 'date:d/m/Y',
+        'created_at' => 'date:d/m/Y',
         'updated_at' => 'date:d/m/Y',
         'collect_date' => 'date:d/m/Y',
         'collected_date' => 'date:d/m/Y',
@@ -53,18 +56,9 @@ class Servicos extends Model
         );
     }
 
-    protected $hidden = [
-        'faturaServico'
-    ];
-
-    public function faturaServico()
+    public function fatura()
     {
-        return $this->hasOne(FaturaServico::class, 'servico_id', 'id');
-    }
-
-    public function getFaturaAttribute()
-    {
-        return optional($this->faturaServico)->fatura;
+        return $this->belongsTo(Fatura::class, 'fatura_id', 'id');
     }
 
     public function cliente()

@@ -41,7 +41,7 @@ const submitBaixarFatura = () => {
                     </div>
                     <div style="width: 64%;">
                         <label for="cliente">Cliente</label>
-                        <input class="form-control" name="cliente" type="text" disabled v-model="fatura.servicos[0].cliente.name">
+                        <input class="form-control" name="cliente" type="text" disabled v-model="fatura.cliente.name">
                     </div>
                 </div>
                 <h4>Baixa</h4>

@@ -65,12 +65,9 @@ class AtualizarDatabaseService
             );
 
             foreach ($requisicao['analyse'] as $analise) {
-                AnaliseServicos::updateOrCreate(
-                    ['petrequest_id' => $requisicao['id']],
-                    [
-                        'analyze_id' => $analise,
-                        'petrequest_id' => $requisicao['id'],
-                    ]
+                AnaliseServicos::firstOrCreate(
+                    ['analyze_id' => $analise, 'petrequest_id' => $requisicao['id']],
+                    ['analyze_id' => $analise, 'petrequest_id' => $requisicao['id']]
                 );
             }
         }

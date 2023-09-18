@@ -2,78 +2,47 @@
 
 namespace App\Http\Controllers\Dashboard\Lancamentos;
 
+use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Enums\Financeiro\ClienteCategoriaEnum;
+use App\Enums\Financeiro\FaturaEnum;
 use App\Http\Controllers\Controller;
+use App\Models\CategoriaAnalise;
 use App\Models\Imports\Analises;
 use App\Models\Imports\Servicos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use App\Services\FiltragemServicos;
 
 class ServicosController extends Controller
 {
     public function servicos()
     {
-        $servicos = Servicos::with('analises', 'cliente', 'cliente.clienteCategoria')->paginate(10);
-        $analises = Analises::with('categoriaAnalise')->get();
-        $categorias = ClienteCategoriaEnum::toArray();
+        $servicos = Servicos::with('analises', 'fatura', 'analises.categoriaAnalise', 'cliente', 'cliente.clienteCategoria')
+            ->orderBy('collect_date', 'desc');
 
-        return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'analises', 'categorias'));
-    }
+        $servicos = FiltragemServicos::filtrarServicos($servicos, request())->paginate(10);
 
-    public function detalhes($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
+        $filtros = request()->all();
 
-        return Inertia::render('Dashboard/Gerais/Servicos/Detalhes', compact('servicos'));
-    }
+        $analises = Analises::all();
+        $categorias_analise = CategoriaAnaliseEnum::toArray();
+        $categorias_cliente = ClienteCategoriaEnum::toArray();
+        $fatura_status = FaturaEnum::toArray();
 
-    public function criar()
-    {
-        return Inertia::render('Dashboard/Gerais/Servicos/Criar');
-    }
-
-    public function salvar()
-    {
-        Servicos::create(request()->all());
-
-        return redirect()->route('servicos');
-    }
-
-    public function editar($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        return Inertia::render('Dashboard/Gerais/Servicos/Editar', compact('servicos'));
-    }
-
-    public function atualizar($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        $servicos->update(request()->all());
-
-        return redirect()->route('servicos.detalhes', $id);
-    }
-
-    public function deletar($id)
-    {
-        $servicos = Servicos::where('id', $id)->first();
-
-        $servicos->delete();
-
-        return redirect()->route('servicos');
+        return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'analises', 'filtros', 'categorias_analise', 'categorias_cliente', 'fatura_status'));
     }
 
     public function ajax(Request $request)
     {
-        $servicos = Servicos::with('faturaServico')
+        $servicos = Servicos::with('fatura')
             ->where('pet', 'like', '%' . $request->input('termo') . '%')
             ->where('customer', $request->input('cliente_id'))
-            ->get()
-            ->filter(function ($servico) {
-                return $servico->fatura == null;
-            });
+            ->where('created_at', '>=', $request->input('data_inicial'))
+            ->where('created_at', '<=', $request->input('data_final'))
+            ->orderBy('collect_date', 'desc')
+            ->where('fatura_id', null)
+            ->get();
 
         return response()->json($servicos);
     }

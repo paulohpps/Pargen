@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import SelectAjax from '@/Componentes/Forms/SelectAjax.vue';
 
 const form = useForm({
-    cliente_id: 0,
+    cliente_id: parseInt(new URL(document.URL).searchParams.get('cliente_id') ?? 0),
     status: parseInt(new URL(document.URL).searchParams.get('status') ?? 0),
 });
 
@@ -22,7 +22,7 @@ function optionSelected(option) {
             <div class="m-2">
                 <p>Cliente:</p>
                 <SelectAjax @optionSelected="optionSelected" class="seletor" href="/dashboard/clientes/pesquisar" preBusca
-                    placeholder="Selecione um cliente" />
+                    placeholder="Selecione um cliente" :modelValue="form.cliente_id" />
             </div>
             <div class="m-2">
                 <p>Status:</p>

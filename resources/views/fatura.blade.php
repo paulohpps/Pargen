@@ -54,8 +54,8 @@
                 <td class="p-10 text-center">R$ {{ $fatura->valor }}</td>
             </tr>
             <tr>
-                <td class="pix text-white" colspan="2">Chave Pix NUBANK
-                </td>
+                <th class="pix bg-blue text-white" colspan="2">Chave Pix
+                </th>
             </tr>
             <tr>
                 <td class="bg-bege p-10 text-center" colspan="2 ">{{ $fatura->chave_pix }}
@@ -86,11 +86,8 @@
         <td class="text-center">Total Geral</td>
         <td colspan="3"></td>
         <td class="text-center">R$
-            {{ $fatura->valor}}
+            {{ $fatura->valor }}
         </td>
-
-
-
     </tr>
 </table>
 
@@ -140,7 +137,6 @@
 
     .pix {
         text-align: center;
-        background-color: #7030a0;
         padding: 10;
     }
 

@@ -49,7 +49,7 @@ function editar(id) {
                             <td>{{ cliente.address }}</td>
                             <td>{{ cliente.city }} - {{ cliente.state }}</td>
                             <td>{{ cliente.zip_code }}</td>
-                            <td>{{ categorias[cliente.cliente_categoria[0]?.categoria] }}</td>
+                            <td>{{ categorias[cliente.cliente_categoria?.categoria] }}</td>
                             <td>
                                 <button class="btn btn-primary" @click="editar(cliente.id)">
                                     Editar
