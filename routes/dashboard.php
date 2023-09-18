@@ -36,7 +36,7 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
     });
 
     Route::prefix('servicos')->name('.servicos')->group(function () {
-        Route::get('', [ServicosController::class, 'servicos'])->name('');
+        Route::any('', [ServicosController::class, 'servicos'])->name('');
         Route::post('/criar', [ServicosController::class, 'criarServico'])->name('.criar');
         Route::get('/editar/{id}', [ServicosController::class, 'editarServico'])->name('.editar');
         Route::post('/salvar/{id}', [ServicosController::class, 'salvarServico'])->name('.salvar');

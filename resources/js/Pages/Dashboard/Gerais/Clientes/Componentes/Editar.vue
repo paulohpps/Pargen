@@ -13,7 +13,7 @@ let modalEl = ref(null);
 let emit = null;
 
 const form = useForm({
-    categoria: props.cliente.cliente_categoria[0]?.categoria,
+    categoria: props.cliente.cliente_categoria?.categoria,
     usuario_id: props.cliente.id,
 });
 
