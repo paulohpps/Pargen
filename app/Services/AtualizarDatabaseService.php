@@ -58,6 +58,8 @@ class AtualizarDatabaseService
         foreach ($requisicoes as $requisicao) {
 
             $requisicao['collected_date'] = Carbon::parse($requisicao['collected_date'])->format('Y-m-d');
+            $requisicao['created_at'] = Carbon::parse($requisicao['created_at'])->format('Y-m-d');
+            $requisicao['updated_at'] = Carbon::parse($requisicao['updated_at'])->format('Y-m-d');
 
             Servicos::updateOrCreate(
                 ['id' => $requisicao['id']],
