@@ -79,8 +79,7 @@ class RelatorioController extends Controller
         $faturamentos = Servicos::selectRaw('count(*) as total')
             ->selectRaw('extract(month from updated_at) as month')
             ->selectRaw("TRIM(DATE_FORMAT(updated_at, '%M')) as month_name")
-            ->where('updated_at', '>', now()->subMonths(5))
-            ->whereBetween('updated_at', [now()->subMonths(6), now()])
+            ->where('updated_at', '>', now()->subMonths(5)->startOfMonth())
             ->groupBy('month', 'month_name')
             ->orderBy('month', 'asc')
             ->get();
@@ -95,8 +94,7 @@ class RelatorioController extends Controller
             ->selectRaw('sum(labs_analyze.price) as total')
             ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
             ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
-            ->where('labs_petrequest.updated_at', '>', now()->subMonths(5))
-            ->whereBetween('labs_petrequest.updated_at', [now()->subMonths(6), now()])
+            ->where('labs_petrequest.updated_at', '>', now()->subMonths(5)->startOfMonth())
             ->groupBy('month', 'month_name')
             ->orderBy('month', 'asc')
             ->get();
