@@ -60,6 +60,15 @@ class FaturaController extends Controller
         return $pdf->download("fatura-$fatura->id.pdf");
     }
 
+    public function recibo(int $id)
+    {
+        $fatura = Fatura::with(['cliente', 'servicos'])->find($id);
+
+        $pdf = Pdf::loadView('recibo', compact('fatura'));
+        $pdf = $pdf->setPaper('a4', 'landscape');
+        return $pdf->download("recibo-$fatura->id.pdf");
+    }
+
     public function faturar()
     {
         $data_inicial = "2023-09-01";

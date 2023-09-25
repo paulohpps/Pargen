@@ -45,7 +45,7 @@ const props = defineProps({
                                     <Link :href="`/dashboard/fatura/faturas/${fatura.id}/servicos`"
                                         class="btn btn-primary btn-sm">Serviços</Link>
                                     <a :href="`/dashboard/fatura/faturas/${fatura.id}/download`"
-                                        class="btn btn-primary btn-sm ms-2">Download</a>
+                                        class="btn btn-primary btn-sm ms-2">Download Fatura</a>
                                 </div>
                             </td>
                         </tr>
