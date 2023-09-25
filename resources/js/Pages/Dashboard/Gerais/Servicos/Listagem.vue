@@ -81,7 +81,7 @@ function submitFiltrarServicos() {
                             <th scope="col">Cliente</th>
                             <th scope="col">Valor Unit.</th>
                             <th scope="col">Categoria Analise</th>
-                            <th scope="col">Tipo Cliente</th>
+                            <th scope="col">Forma Pagamento</th>
                             <th scope="col">N° Fatura</th>
                             <th scope="col">Data Vencimento</th>
                             <th scope="col">Data Recebimento</th>

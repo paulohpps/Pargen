@@ -46,7 +46,7 @@ function filtrarAte(data) {
                     </div>
                     <div>
                         <div class="mb-2">
-                            <label for="tipo" class="form-label">Recebimentos</label>
+                            <label for="tipo" class="form-label">Faturamentos</label>
                             <input type="text" id="tipo" disabled class="form-control" :value="'R$' + receitas.total_geral">
                         </div>
                         <div class="mb-2">

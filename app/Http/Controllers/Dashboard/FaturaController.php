@@ -20,8 +20,11 @@ class FaturaController extends Controller
 {
     public function home()
     {
+        $data_inicial = "2023-09-01";
+
         $servicos = Servicos::with(['analises', 'cliente', 'cliente.clienteCategoria'])
             ->where('fatura_id', null)
+            ->where('created_at', '>=', $data_inicial)
             ->orderBy('collect_date', 'desc')
             ->paginate(10);
 
