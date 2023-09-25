@@ -28,6 +28,8 @@ class ServicosController extends Controller
         $categorias_cliente = ClienteCategoriaEnum::toArray();
         $fatura_status = FaturaEnum::toArray();
 
+        $servicos->appends(request()->all());
+
         return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'analises', 'filtros', 'categorias_analise', 'categorias_cliente', 'fatura_status'));
     }
 

@@ -85,6 +85,15 @@ class FaturaController extends Controller
         return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final'));
     }
 
+    public function cancelarFatura(int $id)
+    {
+        $fatura = Fatura::find($id);
+        $fatura->status = FaturaEnum::Cancelada;
+        $fatura->save();
+
+        return redirect()->back();
+    }
+
     public function gerarFatura(Request $request)
     {
         $fatura = Fatura::create([
@@ -146,7 +155,7 @@ class FaturaController extends Controller
     {
         FaturaService::AtualizarStatus();
 
-        $faturas = Fatura::with(['servicos', 'cliente'])->paginate(10);
+        $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)->paginate(10);
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }

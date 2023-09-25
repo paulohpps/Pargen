@@ -117,6 +117,7 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
         Route::get('faturas/{id}/recibo', [FaturaController::class, 'recibo'])->name('.recibo');
         Route::get('faturas/{id}/servicos', [FaturaController::class, 'faturaServico'])->name('.faturas.servicos');
         Route::get('faturas/{id}/baixa', [FaturaController::class, 'baixarFatura'])->name('.baixa');
+        Route::get('faturas/{id}/cancelar', [FaturaController::class, 'cancelarFatura'])->name('.cancelar');
         Route::post('faturas/baixar', [FaturaController::class, 'baixar'])->name('.baixar');
     });
 
