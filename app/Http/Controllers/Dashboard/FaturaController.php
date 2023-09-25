@@ -62,16 +62,16 @@ class FaturaController extends Controller
 
     public function faturar()
     {
-        $clientes = Clientes::whereHas('servicos', function ($query) {
-            $query->whereNull('fatura_id');
+        $data_inicial = "2023-09-01";
+        $data_final = Carbon::now()->format('Y-m-d');
+
+        $clientes = Clientes::whereHas('servicos', function ($query) use ($data_inicial) {
+            $query->whereNull('fatura_id')->where('created_at', '>=', $data_inicial);
         })->get();
 
         $chave_pix = Fatura::whereNotNull('chave_pix')
             ->orderBy('created_at', 'desc')
             ->value('chave_pix');
-
-        $data_inicial = Carbon::now()->subDays(30)->format('Y-m-d');
-        $data_final = Carbon::now()->format('Y-m-d');
 
         return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final'));
     }

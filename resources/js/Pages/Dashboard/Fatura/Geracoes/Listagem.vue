@@ -33,7 +33,11 @@ const props = defineProps({
                         <tr v-for="servico in servicos.data">
                             <td>{{ servico.collect_date }}</td>
                             <td>{{ servico.pet }}</td>
-                            <td>{{ servico.analises.map(analise => analise.name).join(', ') }}</td>
+                            <td>
+                                <p class="m-0" v-for="(analise, index) in servico.analises">
+                                    {{ index + 1 }} - {{ analise.name }}
+                                </p>
+                            </td>
                             <td>{{ servico?.cliente?.name }}</td>
                             <td>{{ categorias[servico?.cliente?.cliente_categoria?.categoria] ?? 'Nenhuma categoria cadastrada' }}</td>
                             <td>{{ servico.analises.reduce((acumulador, analise) => acumulador + analise.price, 0) }}</td>

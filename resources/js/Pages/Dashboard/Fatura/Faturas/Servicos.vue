@@ -26,7 +26,11 @@ const props = defineProps({
                         <tr v-for="servico in fatura.servicos">
                             <td>{{ servico.collect_date }}</td>
                             <td>{{ servico.pet }}</td>
-                            <td>{{ servico.analises.map(analise => analise?.name).join(', ') }}</td>
+                            <td>
+                                <p class="m-0" v-for="(analise, index) in servico.analises">
+                                    {{ index + 1 }} - {{ analise.name }}
+                                </p>
+                            </td>
                             <td>{{ fatura.cliente?.name }}</td>
                             <td>R$ {{ servico.analises.reduce((accumulator, analise) => {
                                 return accumulator + analise.price;

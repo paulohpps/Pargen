@@ -9,3 +9,7 @@
 body {
     background-color: #F4F5FA !important;
 }
+
+* {
+    white-space: nowrap;
+}

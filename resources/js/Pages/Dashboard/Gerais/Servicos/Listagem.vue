@@ -15,16 +15,16 @@ const props = defineProps({
 });
 
 let form = useForm({
-    paciente : props.filtros.paciente ?? '',
-    cliente : props.filtros.cliente ?? '',
-    numero_fatura : props.filtros.numero_fatura ?? '',
-    numero_amostra : props.filtros.numero_amostra ?? '',
-    analise : props.filtros.analise ?? '',
-    categoria_analise : props.filtros.categoria_analise ?? '',
-    tipo_cliente : props.filtros.tipo_cliente ?? '',
-    data_coleta : props.filtros.data_coleta ?? '',
-    data_vencimento : props.filtros.data_vencimento ?? '',
-    data_recebimento : props.filtros.data_recebimento ?? '',
+    paciente: props.filtros.paciente ?? '',
+    cliente: props.filtros.cliente ?? '',
+    numero_fatura: props.filtros.numero_fatura ?? '',
+    numero_amostra: props.filtros.numero_amostra ?? '',
+    analise: props.filtros.analise ?? '',
+    categoria_analise: props.filtros.categoria_analise ?? '',
+    tipo_cliente: props.filtros.tipo_cliente ?? '',
+    data_coleta: props.filtros.data_coleta ?? '',
+    data_vencimento: props.filtros.data_vencimento ?? '',
+    data_recebimento: props.filtros.data_recebimento ?? '',
 });
 
 function submitFiltrarServicos() {
@@ -66,25 +66,25 @@ function submitFiltrarServicos() {
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="me-3">
                     <h2 class="card-title">Serviços</h2>
-                    <h6>{{ servicos.total }} {{servicos.total == 1 ? 'resultado' : 'resultados'}}</h6>
+                    <h6>{{ servicos.total }} {{ servicos.total == 1 ? 'resultado' : 'resultados' }}</h6>
                 </div>
                 <form @submit.prevent="submitFiltrarServicos" class="w-100">
                     <div class="row">
                         <div class="col mb-2">
                             <label class="mb-2">Paciente</label>
-                            <input v-model="form.paciente" type="text" class="form-control"/>
+                            <input v-model="form.paciente" type="text" class="form-control" />
                         </div>
                         <div class="col mb-2">
                             <label class="mb-2">Cliente</label>
-                            <input v-model="form.cliente" type="text" class="form-control"/>
+                            <input v-model="form.cliente" type="text" class="form-control" />
                         </div>
                         <div class="col mb-2">
                             <label class="mb-2">N°Fatura</label>
-                            <input v-model="form.numero_fatura" type="text" class="form-control"/>
+                            <input v-model="form.numero_fatura" type="text" class="form-control" />
                         </div>
                         <div class="col mb-2">
                             <label class="mb-2">N°Amostra</label>
-                            <input v-model="form.numero_amostra" type="text" class="form-control"/>
+                            <input v-model="form.numero_amostra" type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="row">
@@ -119,17 +119,17 @@ function submitFiltrarServicos() {
                     <div class="row">
                         <div class="col mb-2">
                             <label class="mb-2">Data Coleta</label>
-                            <input v-model="form.data_coleta" type="date" class="form-control"/>
+                            <input v-model="form.data_coleta" type="date" class="form-control" />
                         </div>
                         <div class="col mb-2">
                             <label class="mb-2">Data Vencimento</label>
-                            <input v-model="form.data_vencimento" type="date" class="form-control"/>
+                            <input v-model="form.data_vencimento" type="date" class="form-control" />
                         </div>
                         <div class=" col mb-2">
                             <label class="mb-2">Data Recebimento</label>
                             <div class="d-flex">
 
-                                <input v-model="form.data_recebimento" type="date" class="form-control"/>
+                                <input v-model="form.data_recebimento" type="date" class="form-control" />
                                 <button type="submit" class="ms-3 btn btn-primary">Filtrar</button>
                             </div>
                         </div>
@@ -158,21 +158,31 @@ function submitFiltrarServicos() {
                         <tr v-for="servico in servicos.data">
                             <td>{{ servico.collect_date }}</td>
                             <td>{{ servico.pet }}</td>
-                            <td>{{ servico.analises.map(analise => analise.name).join(', ') }}</td>
+                            <td>
+                                <p class="m-0" v-for="(analise, index) in servico.analises">
+                                    {{ index + 1 }} - {{ analise.name }}
+                                </p>
+                            </td>
                             <td>{{ servico.request_number }}</td>
                             <td>{{ servico?.cliente?.name }}</td>
                             <td>R${{ servico.analises.reduce((accumulator, analise) => {
                                 return accumulator + analise.price;
                             }, 0) }}</td>
-                            <td>{{ servico.analises.map(analise =>
-                                categorias_analise[analise?.categoria_analise?.categoria]).join(', ') || 'Nenhuma categoria'
-                            }}</td>
+                            <td>
+                                <p class="m-0"
+                                    v-for="categoria in [...new Set(servico.analises.map(analise => analise.categoria_analise?.categoria))]">
+                                    {{
+                                        categorias_analise[categoria] || 'Sem categoria' }}
+                                    ({{ servico.analises.filter(analise => analise.categoria_analise?.categoria ===
+                                        categoria).length }})
+                                </p>
+                            </td>
                             <td>{{ categorias_cliente[servico.cliente?.cliente_categoria?.categoria] ?? 'Não cadastrado' }}
                             </td>
                             <td>{{ servico.fatura_id ?? 'Não Faturado' }}</td>
-                            <td>{{ servico?.fatura?.data_vencimento ?? '-' }}</td>
-                            <td>{{ servico?.fatura?.data_baixa ?? '-' }}</td>
-                            <td>{{ fatura_status[servico?.fatura?.status] ?? '-' }}</td>
+                            <td>{{ servico?.fatura?.data_vencimento ?? '--/--/----' }}</td>
+                            <td>{{ servico?.fatura?.data_baixa ?? '--/--/----' }}</td>
+                            <td>{{ fatura_status[servico?.fatura?.status] ?? '--/--/----' }}</td>
                         </tr>
                         <tr v-if="servicos.data.length === 0">
                             <td colspan="12" class="text-center">Nenhum Serviço Cadastrado</td>

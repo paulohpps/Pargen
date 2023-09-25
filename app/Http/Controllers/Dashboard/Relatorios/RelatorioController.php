@@ -38,13 +38,6 @@ class RelatorioController extends Controller
         $ano = $request->query('ano', date('Y'));
 
         $evolucao_receita = $this->relatorioService->getEvolucaoReceita($ano);
-        if (!$evolucao_receita) {
-            return redirect()->route('dashboard.analises')->with('mensagem', [
-                'tipo' => 'error',
-                'class' => 'text-danger',
-                'conteudo' => 'Nem todas analises tem categoria definida!'
-            ]);
-        }
 
         $categorias_analise = CategoriaAnaliseEnum::toArray();
 
