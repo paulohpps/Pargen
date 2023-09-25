@@ -88,28 +88,18 @@ class RelatorioService
 
     public function getEvolucaoReceita($year)
     {
-        $query = Fatura::query()
-            ->whereYear('data_emissao', $year)
-            ->get();
+        $evolucao_receita = Fatura::selectRaw('categoria_analises.categoria, MONTH(faturas.data_emissao) as month, SUM(labs_analyze.price) as total')
+            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+            ->whereYear('faturas.data_emissao', $year)
+            ->groupBy('categoria_analises.categoria', 'month')
+            ->orderBy('categoria_analises.categoria', 'asc')
+            ->orderBy('month', 'asc')
+            ->get()
+            ->groupBy('categoria');
 
-        $evolucao_receita = [];
-        foreach ($query as $fatura) {
-            foreach ($fatura->servicos as $servico) {
-                foreach ($servico->analises as $analise) {
-                    if (!$analise->categoriaAnalise) {
-                        return null;
-                    }
-                    $category = $analise->categoriaAnalise->categoria;
-                    $month = $fatura->data_emissao->format('m');
-
-                    if (!isset($evolucao_receita[$category])) {
-                        $evolucao_receita[$category] = array_fill(1, 12, 0);
-                    }
-
-                    $evolucao_receita[$category][(int)$month] += $analise->price;
-                }
-            }
-        }
         return $evolucao_receita;
     }
 

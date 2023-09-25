@@ -25,7 +25,7 @@ class LancamentoRequest extends FormRequest
             'tipo_pagamento' => 'required',
             'fornecedor_id' => 'required_if:tipo_pagamento,1',
             'funcionario_id' => 'required_if:tipo_pagamento,2',
-            'pago_para' => 'string|required_if:tipo_pagamento,3',
+            'pago_para' => 'required_if:tipo_pagamento,3',
             'descricao' => 'string|nullable',
             'valor' => 'required',
             'vencimento' => 'required',

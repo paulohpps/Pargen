@@ -60,20 +60,38 @@ class FaturaController extends Controller
         return $pdf->download("fatura-$fatura->id.pdf");
     }
 
+    public function recibo(int $id)
+    {
+        $fatura = Fatura::with(['cliente', 'servicos'])->find($id);
+
+        $pdf = Pdf::loadView('recibo', compact('fatura'));
+        $pdf = $pdf->setPaper('a4', 'landscape');
+        return $pdf->download("recibo-$fatura->id.pdf");
+    }
+
     public function faturar()
     {
-        $clientes = Clientes::whereHas('servicos', function ($query) {
-            $query->whereNull('fatura_id');
+        $data_inicial = "2023-09-01";
+        $data_final = Carbon::now()->format('Y-m-d');
+
+        $clientes = Clientes::whereHas('servicos', function ($query) use ($data_inicial) {
+            $query->whereNull('fatura_id')->where('created_at', '>=', $data_inicial);
         })->get();
 
         $chave_pix = Fatura::whereNotNull('chave_pix')
             ->orderBy('created_at', 'desc')
             ->value('chave_pix');
 
-        $data_inicial = Carbon::now()->subDays(30)->format('Y-m-d');
-        $data_final = Carbon::now()->format('Y-m-d');
-
         return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final'));
+    }
+
+    public function cancelarFatura(int $id)
+    {
+        $fatura = Fatura::find($id);
+        $fatura->status = FaturaEnum::Cancelada;
+        $fatura->save();
+
+        return redirect()->back();
     }
 
     public function gerarFatura(Request $request)
@@ -137,7 +155,7 @@ class FaturaController extends Controller
     {
         FaturaService::AtualizarStatus();
 
-        $faturas = Fatura::with(['servicos', 'cliente'])->paginate(10);
+        $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)->paginate(10);
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }

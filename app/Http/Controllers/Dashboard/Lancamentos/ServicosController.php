@@ -6,11 +6,9 @@ use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Enums\Financeiro\ClienteCategoriaEnum;
 use App\Enums\Financeiro\FaturaEnum;
 use App\Http\Controllers\Controller;
-use App\Models\CategoriaAnalise;
 use App\Models\Imports\Analises;
 use App\Models\Imports\Servicos;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use App\Services\FiltragemServicos;
 
@@ -29,6 +27,8 @@ class ServicosController extends Controller
         $categorias_analise = CategoriaAnaliseEnum::toArray();
         $categorias_cliente = ClienteCategoriaEnum::toArray();
         $fatura_status = FaturaEnum::toArray();
+
+        $servicos->appends(request()->all());
 
         return Inertia::render('Dashboard/Gerais/Servicos/Listagem', compact('servicos', 'analises', 'filtros', 'categorias_analise', 'categorias_cliente', 'fatura_status'));
     }
