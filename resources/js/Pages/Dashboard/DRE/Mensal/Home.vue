@@ -37,12 +37,14 @@ const props = defineProps({
                         <tr>
                             <th scope="col">Descrição</th>
                             <th scope="col" v-for="(a, index) in Array(31)">{{ index + 1 }}</th>
+                            <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody v-for="categoria in categorias">
                         <tr>
-                            <th class="text-nowrap" scope=" row">Categoria teste</th>
+                            <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_dia">R${{ valores }}</td>
+                            <td>EM DESENVOLVIMENTO</td>
                         </tr>
                         <tr v-for="subcategoria in categoria.subcategorias">
                             <th class="text-nowrap" scope=" row"><i
@@ -50,11 +52,14 @@ const props = defineProps({
                                         subcategoria.nome
                                     }}</th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_dia">R${{ valores }}</td>
+                            <td>EM DESENVOLVIMENTO</td>
                         </tr>
+
+
                     </tbody>
                     <tbody v-if="categorias.length === 0">
                         <tr>
-                            <td colspan="32" class="text-center">Nenhum dado encontrado</td>
+                            <td colspan="33" class="text-center">Nenhum dado encontrado</td>
                         </tr>
                     </tbody>
                 </table>

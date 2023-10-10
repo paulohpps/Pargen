@@ -29,7 +29,7 @@ const form = useForm({
 });
 
 function submitEditarFuncionario() {
-    form.post(`/dashboard/funcionarios/${props.funcionario.id}/salvar/`);
+    form.post(`/dashboard/funcionarios/${props.funcionario.id}/salvar`);
 }
 
 </script>

@@ -25,6 +25,7 @@ class Fatura extends Model
         'chave_pix',
         'valor',
         'valor_pago',
+        'observacao'
     ];
 
     protected $casts = [

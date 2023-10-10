@@ -28,7 +28,9 @@
             <p>Recebemos de:</p>
             <p>Cliente</p>
             <p>CNPJ/CPF</p>
+            <p>Cidade</p>
             <p>Endereço</p>
+            <p>CEP</p>
             <p>Telefone</p>
             <p>E-mail</p>
         </th>
@@ -36,9 +38,9 @@
             <p></p>
             <p>{{ $fatura->cliente->name }}</p>
             <p>{{ $fatura->cliente->cnpj_cpf }}</p>
-            <p>{{ $fatura->cliente->address }}, {{ $fatura->cliente->number }},
-                {{ $fatura->cliente->area }}, {{ $fatura->cliente->city }} -
-                {{ $fatura->cliente->state }}, {{ $fatura->cliente->zip_code }}</p>
+            <p>{{ $fatura->cliente->city }} - {{ $fatura->cliente->state }}</p>
+            <p>{{ $fatura->cliente->address }}, {{ $fatura->cliente->number }}, {{ $fatura->cliente->area }}</p>
+            <p>{{ $fatura->cliente->zip_code }}</p>
             <p>{{ $fatura->cliente->phone }}</p>
             <p>{{ $fatura->cliente->email }}</p>
         </th>

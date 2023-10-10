@@ -72,6 +72,8 @@ class AtualizarDatabaseService
                     ['analyze_id' => $analise, 'petrequest_id' => $requisicao['id']]
                 );
             }
+
+            AnaliseServicos::where('petrequest_id', $requisicao['id'])->whereNotIn('analyze_id', $requisicao['analyse'])->delete();
         }
     }
 }

@@ -23,14 +23,16 @@ class RelatorioController extends Controller
 
         $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
         $pagamentos = $this->relatorioService->getAnalisePagamentos($startDate, $endDate);
+        $recebimento_total = $this->relatorioService->getRecebimentoTotal($startDate, $endDate);
 
 
         $totalReceitas = str_replace(',', '', $receitas['total_geral']);
         $totalPagamentos = str_replace(',', '', $pagamentos['total_geral']);
+        $totalRecebimentos = str_replace(',', '', $recebimento_total);
 
-        $lucro_total = number_format(floatval($totalReceitas) - floatval($totalPagamentos), 2);
+        $lucro_total = number_format(floatval($totalRecebimentos) - floatval($totalPagamentos), 2);
 
-        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos', 'lucro_total']));
+        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos', 'lucro_total', 'recebimento_total']));
     }
 
     public function evolucaoFinanceira(Request $request)
@@ -58,8 +60,8 @@ class RelatorioController extends Controller
             ->join('labs_petrequest', 'labs_customer.id', '=', 'labs_petrequest.customer')
             ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
             ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
-            ->whereMonth('labs_petrequest.collected_date', $mes)
-            ->whereYear('labs_petrequest.collected_date', $ano)
+            ->whereMonth('labs_petrequest.collect_date', $mes)
+            ->whereYear('labs_petrequest.collect_date', $ano)
             ->groupBy('nome')
             ->orderBy('total', 'desc')
             ->get();
