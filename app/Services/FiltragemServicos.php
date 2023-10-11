@@ -107,16 +107,16 @@ class FiltragemServicos
 
     public static function filtraPorDataVencimento($servicos, $data_vencimento)
     {
-        return $servicos->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
-            ->where('faturas.data_vencimento', $data_vencimento)
+        return $servicos->join('faturas as f1', 'labs_petrequest.fatura_id', '=', 'f1.id')
+            ->where('f1.data_vencimento', $data_vencimento)
             ->select('labs_petrequest.*')
             ->distinct();
     }
 
     public static function filtraPorDataRecebimento($servicos, $data_baixa)
     {
-        return $servicos->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
-            ->where('faturas.data_baixa', $data_baixa)
+        return $servicos->join('faturas as f2', 'labs_petrequest.fatura_id', '=', 'f2.id')
+            ->where('f2.data_baixa', $data_baixa)
             ->select('labs_petrequest.*')
             ->distinct();
     }

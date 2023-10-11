@@ -37,12 +37,14 @@ const props = defineProps({
                         <tr>
                             <th scope="col">Descrição</th>
                             <th scope="col" v-for="(a, index) in Array(31)">{{ index + 1 }}</th>
+                            <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody v-for="categoria in categorias">
                         <tr>
                             <th class="text-nowrap" scope=" row">Categoria teste</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_dia">R${{ valores }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(categoria.valores_por_dia).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
                         <tr v-for="subcategoria in categoria.subcategorias">
                             <th class="text-nowrap" scope=" row"><i
@@ -50,6 +52,7 @@ const props = defineProps({
                                         subcategoria.nome
                                     }}</th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_dia">R${{ valores }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(subcategoria.valores_por_dia).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
                     </tbody>
                     <tbody v-if="categorias.length === 0">
