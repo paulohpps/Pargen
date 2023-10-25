@@ -89,6 +89,10 @@
             {{ $fatura->valor }}
         </td>
     </tr>
+
+    <tr>
+        <td>Observação: {{ $fatura->observacao }}</td>
+    </tr>
 </table>
 
 
