@@ -12,7 +12,7 @@ const props = defineProps({
 const form = useForm({
     descricao: '',
     categoria_id: props.categorias[0]?.id,
-    subcategoria_id: props.categorias[0]?.subcategorias[0].id,
+    subcategoria_id: props.categorias[0]?.subcategorias[0]?.id,
 })
 
 let subcategorias = ref(props.categorias[0]?.subcategorias);

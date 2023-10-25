@@ -28,12 +28,14 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                         <tr>
                             <th scope="col">Descrição</th>
                             <th scope="col" v-for="(a, index) in Array(12)">{{ index + 1 }}</th>
+                            <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody v-for="categoria in categorias">
                         <tr>
                             <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_mes">R${{ valores }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(categoria.valores_por_mes).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
                         <tr v-for="subcategoria in categoria.subcategorias">
                             <th class="text-nowrap" scope=" row"><i
@@ -41,6 +43,7 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                                         subcategoria.nome
                                     }}</th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_mes">R${{ valores }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(subcategoria.valores_por_mes).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
                     </tbody>
                     <tbody v-if="categorias.length === 0">

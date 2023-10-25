@@ -62,9 +62,9 @@ class DREAnualController extends Controller
                 }
             }
 
-            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total;
+            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = ($valor_total + 0);
 
-            $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '');
+            $categorias[$categoria]['valores_por_mes'][$mes] = (number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '') + 0);
         }
 
         return Inertia::render('Dashboard/DRE/Anual/Home', compact('categorias', 'ano'));

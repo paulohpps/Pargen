@@ -62,7 +62,7 @@ class DREMensalController extends Controller
                 ];
             }
 
-            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_dia'][$dia] = $valor_total;
+            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_dia'][$dia] = ($valor_total + 0);
 
             $categorias[$categoria]['valores_por_dia'][$dia] += $valor_total;
         }
