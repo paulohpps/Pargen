@@ -48,7 +48,7 @@ const submitBaixarFatura = () => {
                 <form @submit.prevent="submitBaixarFatura">
                     <label for="valorBaixar">Valor da Baixa</label>
                     <div class="d-flex">
-                        <input type="number" min="0" :max="fatura.valor - fatura.valor_pago" v-model="form.valorBaixar" class="form-control w-25" name="valorBaixar" id="valorBaixar">
+                        <input type="number" min="0" step=".01" :max="fatura.valor - fatura.valor_pago" v-model="form.valorBaixar" class="form-control w-25" name="valorBaixar" id="valorBaixar">
                         <button type="submit" class="btn btn-primary ms-3">Baixar</button>
                     </div>
                 </form>
