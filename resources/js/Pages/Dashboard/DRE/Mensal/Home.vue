@@ -6,6 +6,7 @@ const props = defineProps({
     receitas: Array,
     ano: Number,
     mes: Number,
+    resultados_final: Array,
 })
 
 </script>
@@ -54,8 +55,11 @@ const props = defineProps({
                                 <i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{ receita.nome }}
                             </th>
                             <td class="text-nowrap" v-for="dia in receita.dias">R${{ dia.valor_total }}</td>
+                            <td class="text-nowrap">R${{ Object.values(receita.dias).reduce((total, dia) => total + dia.valor_total, 0).toFixed(2) }}</td>
+
                         </tr>
                     </tbody>
+                    <br/>
                     <tbody v-for="categoria in categorias">
                         <tr>
                             <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
@@ -74,6 +78,14 @@ const props = defineProps({
                         </tr>
 
 
+                    </tbody>
+                    <br/>
+                    <tbody>
+                        <tr>
+                            <th class="text-nowrap">RESULTADO FINAL</th>
+                            <td class="text-nowrap" v-for="valor in resultados_final"> R${{ valor.toFixed(2) }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(resultados_final).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
+                        </tr>
                     </tbody>
                     <tbody v-if="categorias.length === 0">
                         <tr>

@@ -58,9 +58,9 @@ class DREService
                 ];
             }
 
-            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_dia'][$dia] = $valor_total;
+            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_dia'][$dia] = $valor_total + 0;
 
-            $categorias[$categoria]['valores_por_dia'][$dia] += $valor_total;
+            $categorias[$categoria]['valores_por_dia'][$dia] += $valor_total + 0;
         }
 
         return $categorias;
@@ -117,9 +117,9 @@ class DREService
             }
         }
 
-        $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total;
+        $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total + 0;
 
-        $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '');
+        $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '') + 0;
         }
 
         return $categorias;
@@ -159,7 +159,7 @@ class DREService
 
             $categorias[$categoria]['dias'][$dia] = [
                 'dia' => $dia,
-                'valor_total' => $valor_total
+                'valor_total' => $valor_total + 0
             ];
         }
 
