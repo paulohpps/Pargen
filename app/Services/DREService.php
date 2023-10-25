@@ -66,6 +66,65 @@ class DREService
         return $categorias;
     }
 
+    public static function GetCategoriasDreAnual($ano)
+    {
+        $resultado = Lancamento::query()
+        ->where('status', 'pago')
+        ->whereYear('vencimento', $ano)
+        ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
+        ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
+        ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+        ->select(
+            'categorias.nome as categoria',
+            'subcategorias.nome as subcategoria',
+            DB::raw('MONTH(lancamentos.vencimento) as mes'),
+            DB::raw('SUM(lancamentos.valor) as valor_total') // Removed FORMAT
+        )
+        ->groupBy('categorias.nome', 'subcategorias.nome', DB::raw('MONTH(lancamentos.vencimento)'))
+        ->orderBy('categorias.nome')
+        ->orderBy('subcategorias.nome')
+        ->orderBy(DB::raw('MONTH(lancamentos.vencimento)'))
+        ->get();
+
+    $categorias = [];
+
+    foreach ($resultado as $item) {
+        $categoria = $item->categoria;
+        $subcategoria = $item->subcategoria;
+        $mes = $item->mes;
+        $valor_total = $item->valor_total;
+
+        if (!isset($categorias[$categoria])) {
+            $categorias[$categoria] = [
+                'nome' => $categoria,
+                'valores_por_mes' => [],
+                'subcategorias' => [],
+            ];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $categorias[$categoria]['valores_por_mes'][$i] = 0.00;
+            }
+        }
+
+        if (!isset($categorias[$categoria]['subcategorias'][$subcategoria])) {
+            $categorias[$categoria]['subcategorias'][$subcategoria] = [
+                'nome' => $subcategoria,
+                'valores_por_mes' => [],
+            ];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$i] = 0.00;
+            }
+        }
+
+        $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total;
+
+        $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '');
+        }
+
+        return $categorias;
+    }
+
     public static function GetReceitasDreMensal($ano, $mes)
     {
         $resultado = DB::table('categoria_analises as ca')
@@ -98,15 +157,50 @@ class DREService
                 ];
             }
 
-            /*for ($dia = 1; $dia <= 31; $dia++) {
-                $categorias[$categoria]['dias'][$dia] = [
-                    'dia' => $dia,
-                    'valor_total' => 0
-                ];
-            }*/
-
             $categorias[$categoria]['dias'][$dia] = [
                 'dia' => $dia,
+                'valor_total' => $valor_total
+            ];
+        }
+
+        $categorias = array_values($categorias);
+
+        return $categorias;
+    }
+
+    public static function GetReceitasDreAnual($ano)
+    {
+        $resultado = DB::table('categoria_analises as ca')
+            ->select(DB::raw('MONTH(lpr.created_at) AS mes, ca.categoria AS categoria, SUM(a.price) AS valor_total'))
+            ->join('labs_analyze', 'ca.id_analise', '=', 'labs_analyze.id')
+            ->join('labs_petrequest_analyze', 'labs_analyze.id', '=', 'labs_petrequest_analyze.analyze_id')
+            ->join('labs_petrequest as lpr', 'labs_petrequest_analyze.petrequest_id', '=', 'lpr.id')
+            ->join('labs_analyze as a', 'labs_petrequest_analyze.analyze_id', '=', 'a.id')
+            ->whereYear('lpr.created_at', $ano)
+            ->groupBy('mes', 'categoria')
+            ->orderBy('mes', 'asc')
+            ->orderBy('categoria', 'asc')
+            ->get();
+
+        $categorias = [];
+
+        foreach ($resultado as $item) {
+            $categoria = $item->categoria;
+            $mes = $item->mes;
+            $valor_total = $item->valor_total;
+
+            if (!isset($categorias[$categoria])) {
+                $categorias[$categoria] = [
+                    'nome' => CategoriaAnaliseEnum::names()[$categoria],
+                    'meses' => array_fill(1, 12, [
+                        'mes' => 0,
+                        'valor_total' => 0
+                    ])
+                ];
+            }
+
+            $categorias[$categoria]['meses'][$mes] = [
+                'mes' => $mes,
                 'valor_total' => $valor_total
             ];
         }
