@@ -60,11 +60,7 @@ const props = defineProps({
                         <tr>
                             <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_dia">R${{ valores }}</td>
-<<<<<<< HEAD
-                            <td>EM DESENVOLVIMENTO</td>
-=======
                             <td class="text-nowrap">R${{ Number(Object.values(categoria.valores_por_dia).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
->>>>>>> origin/main
                         </tr>
 
                         <tr v-for="subcategoria in categoria.subcategorias">
@@ -74,11 +70,7 @@ const props = defineProps({
                                 }}
                             </th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_dia">R${{ valores }}</td>
-<<<<<<< HEAD
-                            <td>EM DESENVOLVIMENTO</td>
-=======
                             <td class="text-nowrap">R${{ Number(Object.values(subcategoria.valores_por_dia).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
->>>>>>> origin/main
                         </tr>
 
 
