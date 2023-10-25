@@ -3,6 +3,7 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 
 const props = defineProps({
     categorias: Array,
+    receitas: Array,
     ano: Number,
     mes: Number,
 })
@@ -39,16 +40,33 @@ const props = defineProps({
                             <th scope="col" v-for="(a, index) in Array(31)">{{ index + 1 }}</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-nowrap">RECEITAS</th>
+                            <td class="text-nowrap" v-for=" dia in Array(31)">-</td>
+                        </tr>
+                    </tbody>
+                    <tbody v-for="receita in receitas">
+
+                        <tr>
+                            <th class="text-nowrap" scope=" row">
+                                <i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{ receita.nome }}
+                            </th>
+                            <td class="text-nowrap" v-for="dia in receita.dias">R${{ dia.valor_total }}</td>
+                        </tr>
+                    </tbody>
                     <tbody v-for="categoria in categorias">
                         <tr>
-                            <th class="text-nowrap" scope=" row">Categoria teste</th>
+                            <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_dia">R${{ valores }}</td>
                         </tr>
+
                         <tr v-for="subcategoria in categoria.subcategorias">
-                            <th class="text-nowrap" scope=" row"><i
-                                    class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
-                                        subcategoria.nome
-                                    }}</th>
+                            <th class="text-nowrap" scope=" row">
+                                <i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
+                                    subcategoria.nome
+                                }}
+                            </th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_dia">R${{ valores }}</td>
                         </tr>
                     </tbody>

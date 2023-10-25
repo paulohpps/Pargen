@@ -15,7 +15,7 @@
         </th>
         <th>
             <div class="font-blue">
-                <h1>FATURA</h1>
+                <h1>RECIBO</h1>
                 <p class="text-center font-50"> {{ $fatura->id }} </p>
             </div>
         </th>
