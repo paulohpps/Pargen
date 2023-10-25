@@ -17,6 +17,7 @@ const form = useForm({
     cliente_id: props.clientes[0]?.id,
     vencimento: '',
     chave_pix: props.chave_pix,
+    observacao: '',
 });
 
 const servicos = ref([]);
@@ -97,6 +98,10 @@ function checkServico(event, id) {
                                 <label class="mb-2">Data Final</label>
                                 <input type="date" class="form-control" v-model="form_filtro.data_final"
                                     @input="atualizarServicos" />
+                            </div>
+                            <div class="mb-3 ms-3 w-100">
+                                <label class="mb-2">Observação</label>
+                                <input type="text" class="form-control" v-model="form.observacao" />
                             </div>
                         </div>
                         <h3>Serviços não faturados de {{ clientes.find(p => p.id == form.cliente_id).name }}</h3>
