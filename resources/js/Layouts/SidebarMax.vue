@@ -24,7 +24,7 @@ const props = defineProps({
                         <button class="accordion-button " type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapseOne" :aria-expanded="categoriaPagina == 'geral'"
                             aria-controls="flush-collapseOne" :class="{ 'collapsed': categoriaPagina != 'geral' }">
-                            <i class="fa-solid fa-book me-2"></i> CADASTRO
+                            <i class="fa-solid fa-book me-2"></i> CADASTROS
                         </button>
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse"

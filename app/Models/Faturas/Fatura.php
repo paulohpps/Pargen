@@ -7,8 +7,6 @@ use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 
 class Fatura extends Model
 {
@@ -25,6 +23,7 @@ class Fatura extends Model
         'chave_pix',
         'valor',
         'valor_pago',
+        'observacao'
     ];
 
     protected $casts = [

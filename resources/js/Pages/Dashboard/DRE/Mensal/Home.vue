@@ -3,8 +3,10 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 
 const props = defineProps({
     categorias: Array,
+    receitas: Array,
     ano: Number,
     mes: Number,
+    resultados_final: Array,
 })
 
 </script>
@@ -40,24 +42,54 @@ const props = defineProps({
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-nowrap">RECEITAS</th>
+                            <td class="text-nowrap" v-for=" dia in Array(31)">-</td>
+                        </tr>
+                    </tbody>
+                    <tbody v-for="receita in receitas">
+
+                        <tr>
+                            <th class="text-nowrap" scope=" row">
+                                <i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{ receita.nome }}
+                            </th>
+                            <td class="text-nowrap" v-for="dia in receita.dias">R${{ dia.valor_total }}</td>
+                            <td class="text-nowrap">R${{ Object.values(receita.dias).reduce((total, dia) => total + dia.valor_total, 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </tbody>
+                    <br/>
                     <tbody v-for="categoria in categorias">
                         <tr>
-                            <th class="text-nowrap" scope=" row">Categoria teste</th>
+                            <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_dia">R${{ valores }}</td>
                             <td class="text-nowrap">R${{ Number(Object.values(categoria.valores_por_dia).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
+
                         <tr v-for="subcategoria in categoria.subcategorias">
-                            <th class="text-nowrap" scope=" row"><i
-                                    class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
-                                        subcategoria.nome
-                                    }}</th>
+                            <th class="text-nowrap" scope=" row">
+                                <i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{
+                                    subcategoria.nome
+                                }}
+                            </th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_dia">R${{ valores }}</td>
                             <td class="text-nowrap">R${{ Number(Object.values(subcategoria.valores_por_dia).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
+                        </tr>
+
+
+                    </tbody>
+                    <br/>
+                    <tbody>
+                        <tr>
+                            <th class="text-nowrap">RESULTADO FINAL</th>
+                            <td class="text-nowrap" v-for="valor in resultados_final"> R${{ valor.toFixed(2) }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(resultados_final).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
                     </tbody>
                     <tbody v-if="categorias.length === 0">
                         <tr>
-                            <td colspan="32" class="text-center">Nenhum dado encontrado</td>
+                            <td colspan="33" class="text-center">Nenhum dado encontrado</td>
                         </tr>
                     </tbody>
                 </table>

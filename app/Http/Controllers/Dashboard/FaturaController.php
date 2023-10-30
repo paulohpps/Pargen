@@ -106,6 +106,7 @@ class FaturaController extends Controller
             'chave_pix' => $request->chave_pix,
             'status' => FaturaEnum::Aberta,
             'cliente_id' => $request->cliente_id,
+            'observacao' => $request->observacao,
         ]);
         $valor = 0;
         for ($i = 0; $i < count($request->servicos); $i++) {

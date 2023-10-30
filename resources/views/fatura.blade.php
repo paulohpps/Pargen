@@ -27,16 +27,18 @@
         <th style="text-align: left">
             <p>Nome Cliente</p>
             <p>CNPJ Empresa</p>
+            <p>Cidade</p>
             <p>Endereço</p>
+            <p>CEP</p>
             <p>Telefone</p>
             <p>E-mail</p>
         </th>
         <th style="text-align: left; font-weight: normal; margin-left: 0px;">
             <p>{{ $fatura->cliente->name }}</p>
             <p>{{ $fatura->cliente->cnpj_cpf }}</p>
-            <p>{{ $fatura->cliente->address }}, {{ $fatura->cliente->number }},
-                {{ $fatura->cliente->area }}, {{ $fatura->cliente->city }} -
-                {{ $fatura->cliente->state }}, {{ $fatura->cliente->zip_code }}</p>
+            <p>{{ $fatura->cliente->city }} - {{ $fatura->cliente->state }}</p>
+            <p>{{ $fatura->cliente->address }}, {{ $fatura->cliente->number }}, {{ $fatura->cliente->area }}</p>
+            <p>{{ $fatura->cliente->zip_code }}</p>
             <p>{{ $fatura->cliente->phone }}</p>
             <p>{{ $fatura->cliente->email }}</p>
         </th>
@@ -88,6 +90,10 @@
         <td class="text-center">R$
             {{ $fatura->valor }}
         </td>
+    </tr>
+
+    <tr>
+        <td>Observação: {{ $fatura->observacao }}</td>
     </tr>
 </table>
 

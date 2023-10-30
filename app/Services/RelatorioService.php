@@ -86,6 +86,14 @@ class RelatorioService
         return $pagamentos;
     }
 
+    public function getRecebimentoTotal($startDate, $endDate)
+    {
+        $recebimento_total = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
+            ->sum('valor_pago');
+
+        return number_format($recebimento_total, 2);
+    }
+
     public function getEvolucaoReceita($year)
     {
         $evolucao_receita = Fatura::selectRaw('categoria_analises.categoria, MONTH(faturas.data_emissao) as month, SUM(labs_analyze.price) as total')
