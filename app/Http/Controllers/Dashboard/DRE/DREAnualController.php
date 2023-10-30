@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Dashboard\DRE;
 
 use App\Http\Controllers\Controller;
+use App\Models\Financeiro\Categorias\Categoria;
 use App\Models\Lancamentos\Lancamento;
+use App\Services\DREService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -13,60 +15,34 @@ class DREAnualController extends Controller
     public function home(Request $request)
     {
         $ano = $request->ano ?? date('Y');
-        $resultado = Lancamento::query()
-            ->where('status', 'pago')
-            ->whereYear('vencimento', $ano)
-            ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
-            ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
-            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
-            ->select(
-                'categorias.nome as categoria',
-                'subcategorias.nome as subcategoria',
-                DB::raw('MONTH(lancamentos.vencimento) as mes'),
-                DB::raw('SUM(lancamentos.valor) as valor_total') // Removed FORMAT
-            )
-            ->groupBy('categorias.nome', 'subcategorias.nome', DB::raw('MONTH(lancamentos.vencimento)'))
-            ->orderBy('categorias.nome')
-            ->orderBy('subcategorias.nome')
-            ->orderBy(DB::raw('MONTH(lancamentos.vencimento)'))
-            ->get();
 
-        $categorias = [];
+        $categorias = DREService::GetCategoriasDreAnual($ano);
+        $receitas = DREService::GetReceitasDreAnual($ano);
 
-        foreach ($resultado as $item) {
-            $categoria = $item->categoria;
-            $subcategoria = $item->subcategoria;
-            $mes = $item->mes;
-            $valor_total = $item->valor_total;
+        $resultadosCategoria = array_fill(1, 12, 0);
+        $resultadosReceita = array_fill(1, 12, 0);
 
-            if (!isset($categorias[$categoria])) {
-                $categorias[$categoria] = [
-                    'nome' => $categoria,
-                    'valores_por_mes' => [],
-                    'subcategorias' => [],
-                ];
-
-                for ($i = 1; $i <= 12; $i++) {
-                    $categorias[$categoria]['valores_por_mes'][$i] = 0.00;
-                }
+        foreach ($categorias as $categoria) {
+            foreach ($categoria['valores_por_mes'] as $mes => $valor) {
+                $resultadosCategoria[$mes] += $valor;
             }
-
-            if (!isset($categorias[$categoria]['subcategorias'][$subcategoria])) {
-                $categorias[$categoria]['subcategorias'][$subcategoria] = [
-                    'nome' => $subcategoria,
-                    'valores_por_mes' => [],
-                ];
-
-                for ($i = 1; $i <= 12; $i++) {
-                    $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$i] = 0.00;
-                }
-            }
-
-            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total;
-
-            $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '');
         }
 
-        return Inertia::render('Dashboard/DRE/Anual/Home', compact('categorias', 'ano'));
+        foreach ($receitas as $receita) {
+          foreach ($receita['meses'] as $mes) {
+                if($mes['mes'] == 0)
+                    continue;
+                $resultadosReceita[$mes['mes']] += $mes['valor_total'];
+            }
+        }
+
+        $resultados_final = [];
+
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $resultado_mes = $resultadosReceita[$mes] - $resultadosCategoria[$mes] ;
+            $resultados_final[$mes] = $resultado_mes;
+        }
+
+        return Inertia::render('Dashboard/DRE/Anual/Home', compact('categorias', 'receitas', 'resultados_final', 'ano'));
     }
 }

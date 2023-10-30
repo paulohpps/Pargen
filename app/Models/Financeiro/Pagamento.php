@@ -6,10 +6,12 @@ use App\Models\Financeiro\Categorias\Categoria;
 use App\Models\Financeiro\Categorias\Subcategoria;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pagamento extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'pagamentos';
 

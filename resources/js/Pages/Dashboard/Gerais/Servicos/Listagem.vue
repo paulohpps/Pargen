@@ -73,7 +73,7 @@ function submitFiltrarServicos() {
             <div class="card-body">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th scope="col">Data Coleta</th>
                             <th scope="col">Paciente</th>
                             <th scope="col">Analise</th>
@@ -98,7 +98,7 @@ function submitFiltrarServicos() {
                             </td>
                             <td class="col mb-2">
                                 <select v-model="form.analise" class="form-control">
-                                    <option value="">Selecione</option>
+                                    <option selected value=" ">Todas</option>
                                     <option v-for="analise, in analises" :value="analise.id">
                                         {{ analise.name }}
                                     </option>
@@ -113,7 +113,7 @@ function submitFiltrarServicos() {
                             <td></td>
                             <td class="col mb-2">
                                 <select v-model="form.categoria_analise" class="form-control">
-                                    <option value="">Selecione</option>
+                                    <option value=" ">Todas</option>
                                     <option v-for="(categoria_analise, index) in categorias_analise" :value="index">
                                         {{ categoria_analise }}
                                     </option>
@@ -121,7 +121,7 @@ function submitFiltrarServicos() {
                             </td>
                             <td class="col mb-2">
                                 <select v-model="form.tipo_cliente" class="form-control">
-                                    <option value="">Selecione</option>
+                                    <option value=" ">Todos</option>
                                     <option v-for="(categoria_cliente, index) in categorias_cliente" :value="index">
                                         {{ categoria_cliente }}
                                     </option>

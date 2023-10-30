@@ -3,6 +3,8 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 
 const props = defineProps({
     categorias: Array,
+    receitas: Array,
+    resultados_final: Array,
     ano: Number
 })
 
@@ -31,11 +33,27 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-nowrap">RECEITAS</th>
+                            <td class="text-nowrap" v-for=" mes in Array(13)">-</td>
+                        </tr>
+                    </tbody>
+                    <tbody v-for="receita in receitas">
+                        <tr>
+                            <th class="text-nowrap" scope=" row">
+                                <i class="fa-solid fa-arrow-turn-up fa-rotate-90 me-2"></i>{{ receita.nome }}
+                            </th>
+                            <td class="text-nowrap" v-for="mes in receita.meses">R${{ mes.valor_total }}</td>
+                            <td class="text-nowrap">R${{ Object.values(receita.meses).reduce((total, mes) => total + mes.valor_total, 0).toFixed(2) }}</td>
+                        </tr>
+                    </tbody>
+                    <br/>
                     <tbody v-for="categoria in categorias">
                         <tr>
                             <th class="text-nowrap" scope=" row">{{ categoria.nome }}</th>
                             <td class="text-nowrap" v-for="valores in categoria.valores_por_mes">R${{ valores }}</td>
-                            <td class="text-nowrap">EM DESENVOLVIMENTO</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(categoria.valores_por_mes).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
                         <tr v-for="subcategoria in categoria.subcategorias">
                             <th class="text-nowrap" scope=" row"><i
@@ -43,8 +61,18 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                                         subcategoria.nome
                                     }}</th>
                             <td class="text-nowrap" v-for="valores in subcategoria.valores_por_mes">R${{ valores }}</td>
-                            <td class="text-nowrap">EM DESENVOLVIMENTO</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(subcategoria.valores_por_mes).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
                         </tr>
+                    </tbody>
+                    <br/>
+                    <tbody>
+                        <tr>
+                            <th class="text-nowrap">RESULTADO FINAL</th>
+                            <td class="text-nowrap" v-for="valor in resultados_final"> R${{ valor.toFixed(2) }}</td>
+                            <td class="text-nowrap">R${{ Number(Object.values(resultados_final).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
+                        </tr>
+
+
                     </tbody>
                     <tbody v-if="categorias.length === 0">
                         <tr>
