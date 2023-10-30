@@ -52,7 +52,7 @@ class AtualizarDatabaseService
     {
         $response = Http::withHeaders(['Token' => env('TOKEN_API_ON_TRACE')])
             ->timeout(-1)
-            ->get('https://app.ontrace.com.br/api/v1/requisicoes/');
+            ->get('https://app.ontrace.com.br/api/v1/requisicoes/pets/');
 
         $requisicoes = $response->json();
         foreach ($requisicoes as $requisicao) {
