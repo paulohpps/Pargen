@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
-use App\Models\CategoriaAnalise;
+use App\Enums\Financeiro\FaturaEnum;
+use App\Models\Faturas\Fatura;
 use App\Models\Lancamentos\Lancamento;
 use Illuminate\Support\Facades\DB;
 
@@ -69,57 +70,57 @@ class DREService
     public static function GetCategoriasDreAnual($ano)
     {
         $resultado = Lancamento::query()
-        ->where('status', 'pago')
-        ->whereYear('vencimento', $ano)
-        ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
-        ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
-        ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
-        ->select(
-            'categorias.nome as categoria',
-            'subcategorias.nome as subcategoria',
-            DB::raw('MONTH(lancamentos.vencimento) as mes'),
-            DB::raw('SUM(lancamentos.valor) as valor_total') // Removed FORMAT
-        )
-        ->groupBy('categorias.nome', 'subcategorias.nome', DB::raw('MONTH(lancamentos.vencimento)'))
-        ->orderBy('categorias.nome')
-        ->orderBy('subcategorias.nome')
-        ->orderBy(DB::raw('MONTH(lancamentos.vencimento)'))
-        ->get();
+            ->where('status', 'pago')
+            ->whereYear('vencimento', $ano)
+            ->join('pagamentos', 'lancamentos.pagamento_lancamento_id', '=', 'pagamentos.id')
+            ->join('subcategorias', 'pagamentos.subcategoria_id', '=', 'subcategorias.id')
+            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+            ->select(
+                'categorias.nome as categoria',
+                'subcategorias.nome as subcategoria',
+                DB::raw('MONTH(lancamentos.vencimento) as mes'),
+                DB::raw('SUM(lancamentos.valor) as valor_total') // Removed FORMAT
+            )
+            ->groupBy('categorias.nome', 'subcategorias.nome', DB::raw('MONTH(lancamentos.vencimento)'))
+            ->orderBy('categorias.nome')
+            ->orderBy('subcategorias.nome')
+            ->orderBy(DB::raw('MONTH(lancamentos.vencimento)'))
+            ->get();
 
-    $categorias = [];
+        $categorias = [];
 
-    foreach ($resultado as $item) {
-        $categoria = $item->categoria;
-        $subcategoria = $item->subcategoria;
-        $mes = $item->mes;
-        $valor_total = $item->valor_total;
+        foreach ($resultado as $item) {
+            $categoria = $item->categoria;
+            $subcategoria = $item->subcategoria;
+            $mes = $item->mes;
+            $valor_total = $item->valor_total;
 
-        if (!isset($categorias[$categoria])) {
-            $categorias[$categoria] = [
-                'nome' => $categoria,
-                'valores_por_mes' => [],
-                'subcategorias' => [],
-            ];
+            if (!isset($categorias[$categoria])) {
+                $categorias[$categoria] = [
+                    'nome' => $categoria,
+                    'valores_por_mes' => [],
+                    'subcategorias' => [],
+                ];
 
-            for ($i = 1; $i <= 12; $i++) {
-                $categorias[$categoria]['valores_por_mes'][$i] = 0.00;
+                for ($i = 1; $i <= 12; $i++) {
+                    $categorias[$categoria]['valores_por_mes'][$i] = 0.00;
+                }
             }
-        }
 
-        if (!isset($categorias[$categoria]['subcategorias'][$subcategoria])) {
-            $categorias[$categoria]['subcategorias'][$subcategoria] = [
-                'nome' => $subcategoria,
-                'valores_por_mes' => [],
-            ];
+            if (!isset($categorias[$categoria]['subcategorias'][$subcategoria])) {
+                $categorias[$categoria]['subcategorias'][$subcategoria] = [
+                    'nome' => $subcategoria,
+                    'valores_por_mes' => [],
+                ];
 
-            for ($i = 1; $i <= 12; $i++) {
-                $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$i] = 0.00;
+                for ($i = 1; $i <= 12; $i++) {
+                    $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$i] = 0.00;
+                }
             }
-        }
 
-        $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total + 0;
+            $categorias[$categoria]['subcategorias'][$subcategoria]['valores_por_mes'][$mes] = $valor_total + 0;
 
-        $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '') + 0;
+            $categorias[$categoria]['valores_por_mes'][$mes] = number_format($categorias[$categoria]['valores_por_mes'][$mes] + $valor_total, 2, '.', '') + 0;
         }
 
         return $categorias;
@@ -127,17 +128,22 @@ class DREService
 
     public static function GetReceitasDreMensal($ano, $mes)
     {
-        $resultado = DB::table('categoria_analises as ca')
-            ->select(DB::raw('DAY(lpr.created_at) AS dia, ca.categoria AS categoria, SUM(a.price) AS valor_total'))
-            ->join('labs_analyze', 'ca.id_analise', '=', 'labs_analyze.id')
-            ->join('labs_petrequest_analyze', 'labs_analyze.id', '=', 'labs_petrequest_analyze.analyze_id')
-            ->join('labs_petrequest as lpr', 'labs_petrequest_analyze.petrequest_id', '=', 'lpr.id')
-            ->join('labs_analyze as a', 'labs_petrequest_analyze.analyze_id', '=', 'a.id')
-            ->whereYear('lpr.created_at', $ano)
-            ->whereMonth('lpr.created_at', $mes)
-            ->groupBy('dia', 'categoria')
-            ->orderBy('dia', 'asc')
-            ->orderBy('categoria', 'asc')
+        $resultado = Fatura::query()
+            ->where('faturas.status', FaturaEnum::Paga)
+            ->whereYear('data_emissao', $ano)
+            ->whereMonth('data_emissao', $mes)
+            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+            ->select(
+                'categoria_analises.categoria as categoria',
+                DB::raw('DAY(labs_petrequest.created_at) as dia'),
+                DB::raw('SUM(labs_analyze.price) as valor_total')
+            )
+            ->groupBy('categoria_analises.categoria', DB::raw('DAY(labs_petrequest.created_at)'))
+            ->orderBy('categoria_analises.categoria')
+            ->orderBy(DB::raw('DAY(labs_petrequest.created_at)'))
             ->get();
 
         $categorias = [];
@@ -170,16 +176,21 @@ class DREService
 
     public static function GetReceitasDreAnual($ano)
     {
-        $resultado = DB::table('categoria_analises as ca')
-            ->select(DB::raw('MONTH(lpr.created_at) AS mes, ca.categoria AS categoria, SUM(a.price) AS valor_total'))
-            ->join('labs_analyze', 'ca.id_analise', '=', 'labs_analyze.id')
-            ->join('labs_petrequest_analyze', 'labs_analyze.id', '=', 'labs_petrequest_analyze.analyze_id')
-            ->join('labs_petrequest as lpr', 'labs_petrequest_analyze.petrequest_id', '=', 'lpr.id')
-            ->join('labs_analyze as a', 'labs_petrequest_analyze.analyze_id', '=', 'a.id')
-            ->whereYear('lpr.created_at', $ano)
-            ->groupBy('mes', 'categoria')
-            ->orderBy('mes', 'asc')
-            ->orderBy('categoria', 'asc')
+        $resultado = Fatura::query()
+            ->where('faturas.status', FaturaEnum::Paga)
+            ->whereYear('data_emissao', $ano)
+            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+            ->select(
+                'categoria_analises.categoria as categoria',
+                DB::raw('MONTH(labs_petrequest.created_at) as mes'),
+                DB::raw('SUM(labs_analyze.price) as valor_total')
+            )
+            ->groupBy('categoria_analises.categoria', DB::raw('MONTH(labs_petrequest.created_at)'))
+            ->orderBy('categoria_analises.categoria')
+            ->orderBy(DB::raw('MONTH(labs_petrequest.created_at)'))
             ->get();
 
         $categorias = [];
