@@ -62,6 +62,7 @@ class RelatorioController extends Controller
             ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
             ->whereMonth('labs_petrequest.collect_date', $mes)
             ->whereYear('labs_petrequest.collect_date', $ano)
+            ->take(15)
             ->groupBy('nome')
             ->orderBy('total', 'desc')
             ->get();
