@@ -32,6 +32,9 @@
             <p>CEP</p>
             <p>Telefone</p>
             <p>E-mail</p>
+            @if ($fatura->observacao)
+                <p>Observação</p>
+            @endif
         </th>
         <th style="text-align: left; font-weight: normal; margin-left: 0px;">
             <p>{{ $fatura->cliente->name }}</p>
@@ -41,6 +44,9 @@
             <p>{{ $fatura->cliente->zip_code }}</p>
             <p>{{ $fatura->cliente->phone }}</p>
             <p>{{ $fatura->cliente->email }}</p>
+            @if ($fatura->observacao)
+                <p>{{ $fatura->observacao }}</p>
+            @endif
         </th>
         <table style="margin-top: 1rem">
             <tr class="bg-blue text-white">
@@ -90,10 +96,6 @@
         <td class="text-center">R$
             {{ $fatura->valor }}
         </td>
-    </tr>
-
-    <tr>
-        <td>Observação: {{ $fatura->observacao }}</td>
     </tr>
 </table>
 

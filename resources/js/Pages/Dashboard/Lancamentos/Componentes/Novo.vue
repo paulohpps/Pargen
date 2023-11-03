@@ -10,7 +10,7 @@ const form = useForm({
     descricao: null,
     valor: null,
     vencimento: null,
-    status: 1,
+    status: "Aberto",
     repetir_parcelas: false,
     numero_parcelas: 0,
     fornecedor_id: 0,
@@ -104,7 +104,7 @@ function resetParcelas() {
                                     </option>
                                 </select>
                                 <input v-else-if="form.tipo_pagamento === 3" class="form-control"
-                                    v-model="form.pago_para"/>
+                                    v-model="form.pago_para" />
                                 <FormError :error="form.errors.nome" />
                             </div>
                             <div class="mb-3">
@@ -128,7 +128,8 @@ function resetParcelas() {
                         <div class="w-50 ms-2">
                             <div class="mb-3">
                                 <label for="valor" class="form-label">Valor</label>
-                                <input type="text" class="form-control" v-model="form.valor" id="valor" required>
+                                <input type="number" step="0.01" class="form-control" v-model="form.valor" id="valor"
+                                    required>
                                 <FormError :error="form.errors.cnpj" />
                             </div>
                             <div class="mb-3">
