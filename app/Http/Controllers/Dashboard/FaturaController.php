@@ -85,7 +85,9 @@ class FaturaController extends Controller
             ->orderBy('created_at', 'desc')
             ->value('chave_pix');
 
-        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final'));
+        $categorias = ClienteCategoriaEnum::toArray();
+
+        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final', 'categorias'));
     }
 
     public function cancelarFatura(int $id)

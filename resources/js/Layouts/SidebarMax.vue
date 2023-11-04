@@ -121,7 +121,7 @@ const props = defineProps({
                         <div class="accordion-body">
                             <ul class="btn-toggle-nav list-unstyled fw-normal mb-0 ms-4">
                                 <li>
-                                    <Link href="/dashboard/fatura" class="nav-link"
+                                    <Link href="/dashboard/fatura/faturar" class="nav-link"
                                         :class="{ 'text-primary': pagina == 'faturar' }">Faturar</Link>
                                 </li>
                                 <li>

@@ -10,6 +10,7 @@ const props = defineProps({
     chave_pix: String,
     data_inicial: String,
     data_final: String,
+    categorias: Array,
 });
 
 const form = useForm({
@@ -109,23 +110,32 @@ function checkServico(event, id) {
                             <thead>
                                 <tr>
                                     <th scope="col">Selecionar</th>
-                                    <th scope="col">Pet</th>
-                                    <th scope="col">Tutor</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Coletado</th>
+                                    <th scope="col">Data de coleta</th>
+                                    <th scope="col">Paciente</th>
+                                    <th scope="col">Analise</th>
+                                    <th scope="col">Cliente</th>
+                                    <th scope="col">Categoria Cliente</th>
+                                    <th scope="col">Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="servico in servicos">
                                     <th scope="row"><input class="form-check-input" type="checkbox"
                                             @change="checkServico($event, servico.id)" checked="true" /></th>
+                                    <td>{{ servico.collect_date }}</td>
                                     <td>{{ servico.pet }}</td>
-                                    <td>{{ servico.tutor }}</td>
-                                    <td>{{ servico.status }}</td>
-                                    <td>{{ servico.collected ? "Sim" : "Não" }}</td>
+                                    <td>
+                                        <p class="m-0" v-for="(analise, index) in servico.analises">
+                                            {{ index + 1 }} - {{ analise.name }}
+                                        </p>
+                                    </td>
+                                    <td>{{ servico?.cliente?.name }}</td>
+                                    <td>{{ categorias[servico?.cliente?.cliente_categoria?.categoria] ?? 'Nenhuma categoria cadastrada' }}</td>
+                                    <td>{{ servico.analises.reduce((acumulador, analise) => acumulador + analise.price, 0)
+                                    }}</td>
                                 </tr>
                                 <tr v-if="servicos.length === 0">
-                                    <td class="text-center" colspan="5">Esse cliente não contem nenhum servico não faturado
+                                    <td class="text-center" colspan="7">Esse cliente não contem nenhum servico não faturado
                                         no periodo selecionado
                                     </td>
                                 </tr>

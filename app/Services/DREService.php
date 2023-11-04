@@ -79,7 +79,7 @@ class DREService
                 'categorias.nome as categoria',
                 'subcategorias.nome as subcategoria',
                 DB::raw('MONTH(lancamentos.vencimento) as mes'),
-                DB::raw('SUM(lancamentos.valor) as valor_total') // Removed FORMAT
+                DB::raw('SUM(lancamentos.valor) as valor_total')
             )
             ->groupBy('categorias.nome', 'subcategorias.nome', DB::raw('MONTH(lancamentos.vencimento)'))
             ->orderBy('categorias.nome')
@@ -128,10 +128,28 @@ class DREService
 
     public static function GetReceitasDreMensal($ano, $mes)
     {
+        /*
+        SELECT
+            SUM(labs_analyze.price) as total, day(faturas.data_baixa) as dia, categoria_analises.categoria
+        FROM
+            labs_analyze
+            join labs_petrequest_analyze on labs_analyze.id = labs_petrequest_analyze.analyze_id
+            join labs_petrequest on labs_petrequest_analyze.petrequest_id = labs_petrequest.id
+            join faturas ON labs_petrequest.fatura_id = faturas.id
+            join categoria_analises on categoria_analises.id_analise = labs_analyze.id
+        WHERE
+            faturas.status = 1
+                AND YEAR(faturas.data_baixa) = 2023
+                AND MONTH(faturas.data_baixa) = 11
+
+        group by categoria_analises.categoria, day(faturas.data_baixa)
+        */
+
+
         $resultado = Fatura::query()
             ->where('faturas.status', FaturaEnum::Paga)
-            ->whereYear('data_emissao', $ano)
-            ->whereMonth('data_emissao', $mes)
+            ->whereYear('faturas.data_baixa', $ano)
+            ->whereMonth('faturas.data_baixa', $mes)
             ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
             ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
             ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
