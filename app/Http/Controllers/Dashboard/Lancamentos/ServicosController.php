@@ -35,7 +35,7 @@ class ServicosController extends Controller
 
     public function ajax(Request $request)
     {
-        $servicos = Servicos::with('fatura')
+        $servicos = Servicos::with(['fatura', 'analises', 'cliente', 'cliente.clienteCategoria'])
             ->where('pet', 'like', '%' . $request->input('termo') . '%')
             ->where('customer', $request->input('cliente_id'))
             ->where('created_at', '>=', $request->input('data_inicial'))

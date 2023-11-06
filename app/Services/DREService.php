@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\Financeiro\CategoriaAnaliseEnum;
 use App\Enums\Financeiro\FaturaEnum;
 use App\Models\Faturas\Fatura;
+use App\Models\Imports\Analises;
 use App\Models\Lancamentos\Lancamento;
 use Illuminate\Support\Facades\DB;
 
@@ -79,7 +80,7 @@ class DREService
                 'categorias.nome as categoria',
                 'subcategorias.nome as subcategoria',
                 DB::raw('MONTH(lancamentos.vencimento) as mes'),
-                DB::raw('SUM(lancamentos.valor) as valor_total') // Removed FORMAT
+                DB::raw('SUM(lancamentos.valor) as valor_total')
             )
             ->groupBy('categorias.nome', 'subcategorias.nome', DB::raw('MONTH(lancamentos.vencimento)'))
             ->orderBy('categorias.nome')
@@ -128,22 +129,20 @@ class DREService
 
     public static function GetReceitasDreMensal($ano, $mes)
     {
-        $resultado = Fatura::query()
-            ->where('faturas.status', FaturaEnum::Paga)
-            ->whereYear('data_emissao', $ano)
-            ->whereMonth('data_emissao', $mes)
-            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
-            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
-            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
-            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+        $resultado = DB::table('labs_analyze')
+            ->join('labs_petrequest_analyze', 'labs_analyze.id', '=', 'labs_petrequest_analyze.analyze_id')
+            ->join('labs_petrequest', 'labs_petrequest_analyze.petrequest_id', '=', 'labs_petrequest.id')
+            ->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
+            ->join('categoria_analises', 'categoria_analises.id_analise', '=', 'labs_analyze.id')
             ->select(
-                'categoria_analises.categoria as categoria',
-                DB::raw('DAY(labs_petrequest.created_at) as dia'),
-                DB::raw('SUM(labs_analyze.price) as valor_total')
+                DB::raw('sum(labs_analyze.price) as valor_total'),
+                DB::raw('day(faturas.data_baixa) as dia'),
+                'categoria_analises.categoria'
             )
-            ->groupBy('categoria_analises.categoria', DB::raw('DAY(labs_petrequest.created_at)'))
-            ->orderBy('categoria_analises.categoria')
-            ->orderBy(DB::raw('DAY(labs_petrequest.created_at)'))
+            ->where('faturas.status', 1)
+            ->whereYear('faturas.data_baixa', $ano)
+            ->whereMonth('faturas.data_baixa', $mes)
+            ->groupBy('categoria_analises.categoria', DB::raw('day(faturas.data_baixa)'))
             ->get();
 
         $categorias = [];
@@ -176,21 +175,19 @@ class DREService
 
     public static function GetReceitasDreAnual($ano)
     {
-        $resultado = Fatura::query()
-            ->where('faturas.status', FaturaEnum::Paga)
-            ->whereYear('data_emissao', $ano)
-            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
-            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
-            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
-            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+        $resultado = DB::table('labs_analyze')
+            ->join('labs_petrequest_analyze', 'labs_analyze.id', '=', 'labs_petrequest_analyze.analyze_id')
+            ->join('labs_petrequest', 'labs_petrequest_analyze.petrequest_id', '=', 'labs_petrequest.id')
+            ->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
+            ->join('categoria_analises', 'categoria_analises.id_analise', '=', 'labs_analyze.id')
             ->select(
-                'categoria_analises.categoria as categoria',
-                DB::raw('MONTH(labs_petrequest.created_at) as mes'),
-                DB::raw('SUM(labs_analyze.price) as valor_total')
+                DB::raw('sum(labs_analyze.price) as valor_total'),
+                DB::raw('MONTH(faturas.data_baixa) as mes'),
+                'categoria_analises.categoria'
             )
-            ->groupBy('categoria_analises.categoria', DB::raw('MONTH(labs_petrequest.created_at)'))
-            ->orderBy('categoria_analises.categoria')
-            ->orderBy(DB::raw('MONTH(labs_petrequest.created_at)'))
+            ->where('faturas.status', 1)
+            ->whereYear('faturas.data_baixa', 2023)
+            ->groupBy('categoria_analises.categoria', DB::raw('MONTH(faturas.data_baixa)'))
             ->get();
 
         $categorias = [];
