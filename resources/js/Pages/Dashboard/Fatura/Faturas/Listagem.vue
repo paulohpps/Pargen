@@ -42,15 +42,18 @@ const props = defineProps({
                             <td>{{ status[fatura.status] }}</td>
                             <td>
                                 <div class="d-flex">
-                                    <Link :href="`/dashboard/fatura/faturas/${fatura.id}/servicos`" class="btn btn-primary btn-sm">
-                                        Serviços
+                                    <Link :href="`/dashboard/fatura/faturas/${fatura.id}/servicos`"
+                                        class="btn btn-primary btn-sm">
+                                    Serviços
                                     </Link>
-                                    <a :href="`/dashboard/fatura/faturas/${fatura.id}/download`" class= "btn btn-primary btn-sm ms-2">
+                                    <a :href="`/dashboard/fatura/faturas/${fatura.id}/download`"
+                                        class="btn btn-primary btn-sm ms-2">
                                         Download Fatura
                                     </a>
                                     <a v-if="fatura.status === 3 || fatura.status === 0"
-                                    :href="`/dashboard/fatura/faturas/${fatura.id}/cancelar`" class="btn btn-danger btn-sm ms-2">
-                                        Cancelar Fatura
+                                        :href="`/dashboard/fatura/faturas/${fatura.id}/cancelar`"
+                                        class="btn btn-danger btn-sm ms-2">
+                                        Apagar Fatura
                                     </a>
                                 </div>
                             </td>
@@ -63,5 +66,4 @@ const props = defineProps({
             </div>
             <Paginacao :links="faturas.links" />
         </div>
-    </DashboardLayout>
-</template>
+    </DashboardLayout></template>

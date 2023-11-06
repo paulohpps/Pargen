@@ -47,7 +47,9 @@ class FaturaController extends Controller
             $faturas->where('cliente_id', $request->cliente_id);
         }
 
-        $faturas = $faturas->with(['servicos', 'cliente'])->paginate(10);
+        $faturas = $faturas->with(['servicos', 'cliente'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         $status = FaturaEnum::toArray();
 
@@ -93,8 +95,10 @@ class FaturaController extends Controller
     public function cancelarFatura(int $id)
     {
         $fatura = Fatura::find($id);
-        $fatura->status = FaturaEnum::Cancelada;
-        $fatura->save();
+
+        Servicos::where('fatura_id', $id)->update(['fatura_id' => null]);
+
+        $fatura->delete();
 
         return redirect()->back();
     }
