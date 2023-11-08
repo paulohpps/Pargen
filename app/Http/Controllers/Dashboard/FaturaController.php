@@ -48,7 +48,7 @@ class FaturaController extends Controller
         }
 
         $faturas = $faturas->with(['servicos', 'cliente'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('data_vencimento', 'desc')
             ->paginate(10);
 
         $status = FaturaEnum::toArray();
@@ -138,7 +138,8 @@ class FaturaController extends Controller
 
     public function baixarFatura(int $id)
     {
-        $fatura = Fatura::with(['servicos', 'cliente'])->find($id);
+        $fatura = Fatura::with(['servicos', 'cliente'])
+            ->find($id);
 
         return Inertia::render('Dashboard/Fatura/Faturas/Baixa', compact('fatura'));
     }
@@ -165,7 +166,10 @@ class FaturaController extends Controller
     {
         FaturaService::AtualizarStatus();
 
-        $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)->paginate(10);
+        $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)
+            ->orderBy('data_vencimento', 'desc')
+            ->paginate(10);
+            
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }

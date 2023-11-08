@@ -15,7 +15,7 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
     <DashboardLayout titulo="DRE Anual" categoriaPagina="dre" pagina="dre-anual">
         <div class="card tabela mt-3 w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-title">Análise financeira anual</h2>
+                <h2 class="card-title">DRE Anual</h2>
             </div>
             <div class="card-body overflow-auto">
                 <div class="mb-3">

@@ -14,8 +14,9 @@ class DREMensalController extends Controller
         $ano = $request->ano ?? date('Y');
         $mes = $request->mes ?? date('m');
 
-        $categorias = DREService::GetCategoriasDreMensal($ano, $mes);
         $receitas = DREService::GetReceitasDreMensal($ano, $mes);
+
+        $categorias = DREService::GetCategoriasDreMensal($ano, $mes);
 
         $resultadosCategoria = array_fill(1, 31, 0);
         $resultadosReceita = array_fill(1, 31, 0);
@@ -37,8 +38,12 @@ class DREMensalController extends Controller
         for ($dia = 1; $dia <= 31; $dia++) {
             $resultado_dia = $resultadosReceita[$dia] - $resultadosCategoria[$dia];
             $resultados_final[$dia] = $resultado_dia;
+
+            if ($dia > 1) {
+                //$resultados_final[$dia] += $resultados_final[$dia - 1];
+            }
         }
 
-        return Inertia::render('Dashboard/DRE/Mensal/Home', compact('categorias', 'receitas', 'ano', 'mes' , 'resultados_final'));
+        return Inertia::render('Dashboard/DRE/Mensal/Home', compact('categorias', 'receitas', 'ano', 'mes', 'resultados_final'));
     }
 }

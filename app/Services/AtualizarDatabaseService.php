@@ -7,6 +7,7 @@ use App\Models\Imports\AnaliseServicos;
 use App\Models\Imports\Clientes;
 use App\Models\Imports\Servicos;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class AtualizarDatabaseService
@@ -75,5 +76,13 @@ class AtualizarDatabaseService
 
             AnaliseServicos::where('petrequest_id', $requisicao['id'])->whereNotIn('analyze_id', $requisicao['analyse'])->delete();
         }
+        AnaliseServicos::whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('labs_petrequest')
+                    ->whereRaw('labs_petrequest.id = labs_petrequest_analyze.petrequest_id')
+                    ->where('labs_petrequest.status', 'CD');
+            })->delete();
+
+        Servicos::where('status', 'CD')->delete();
     }
 }
