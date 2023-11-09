@@ -47,7 +47,9 @@ class FaturaController extends Controller
             $faturas->where('cliente_id', $request->cliente_id);
         }
 
-        $faturas = $faturas->with(['servicos', 'cliente'])->paginate(10);
+        $faturas = $faturas->with(['servicos', 'cliente'])
+            ->orderBy('data_vencimento', 'desc')
+            ->paginate(10);
 
         $status = FaturaEnum::toArray();
 
@@ -85,14 +87,18 @@ class FaturaController extends Controller
             ->orderBy('created_at', 'desc')
             ->value('chave_pix');
 
-        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final'));
+        $categorias = ClienteCategoriaEnum::toArray();
+
+        return Inertia::render('Dashboard/Fatura/Geracoes/Faturar', compact('clientes', 'chave_pix', 'data_inicial', 'data_final', 'categorias'));
     }
 
     public function cancelarFatura(int $id)
     {
         $fatura = Fatura::find($id);
-        $fatura->status = FaturaEnum::Cancelada;
-        $fatura->save();
+
+        Servicos::where('fatura_id', $id)->update(['fatura_id' => null]);
+
+        $fatura->delete();
 
         return redirect()->back();
     }
@@ -132,7 +138,8 @@ class FaturaController extends Controller
 
     public function baixarFatura(int $id)
     {
-        $fatura = Fatura::with(['servicos', 'cliente'])->find($id);
+        $fatura = Fatura::with(['servicos', 'cliente'])
+            ->find($id);
 
         return Inertia::render('Dashboard/Fatura/Faturas/Baixa', compact('fatura'));
     }
@@ -159,7 +166,10 @@ class FaturaController extends Controller
     {
         FaturaService::AtualizarStatus();
 
-        $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)->paginate(10);
+        $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)
+            ->orderBy('data_vencimento', 'desc')
+            ->paginate(10);
+            
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }

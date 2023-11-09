@@ -67,7 +67,7 @@
         <td>Referente a: </td>
     </tr>
     <tr>
-        <td>Relatório de número : {{ $fatura->id }} </td>
+        <td>recibo de número : {{ $fatura->id }} </td>
     </tr>
 </table>
 

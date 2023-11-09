@@ -30,7 +30,7 @@ if (props.resultados_final) {
     <DashboardLayout titulo="DRE Mensal" categoriaPagina="dre" pagina="dre-mensal">
         <div class="card tabela mt-3 w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-title">Análise financeira mensal</h2>
+                <h2 class="card-title">DRE Mensal</h2>
             </div>
             <div class="card-body overflow-auto">
                 <div class="mb-3">
