@@ -33,7 +33,7 @@ class DREService
             ->orderBy(DB::raw('DAY(lancamentos.vencimento)'))
             ->get();
 
-        $daysInMonth = date('t', mktime(0, 0, 0, $mes, 1, $ano));
+        $daysInMonth = now()->daysInMonth;
 
         $categorias = [];
 
@@ -147,6 +147,7 @@ class DREService
             ->get();
 
         $categorias = [];
+        $daysInMonth = now()->daysInMonth;
 
         foreach ($resultado as $item) {
             $categoria = $item->categoria;
@@ -156,7 +157,7 @@ class DREService
             if (!isset($categorias[$categoria])) {
                 $categorias[$categoria] = [
                     'nome' => CategoriaAnaliseEnum::names()[$categoria],
-                    'dias' => array_fill(1, 31, [
+                    'dias' => array_fill(1, $daysInMonth, [
                         'dia' => 0,
                         'valor_total' => 0
                     ])
