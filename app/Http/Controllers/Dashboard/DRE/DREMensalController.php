@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\DRE;
 
 use App\Http\Controllers\Controller;
 use App\Services\DREService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,13 +14,12 @@ class DREMensalController extends Controller
     {
         $ano = $request->ano ?? date('Y');
         $mes = $request->mes ?? date('m');
+        $diasMeses = now()->daysInMonth;
 
         $receitas = DREService::GetReceitasDreMensal($ano, $mes);
 
-        $categorias = DREService::GetCategoriasDreMensal($ano, $mes);
-
-        $resultadosCategoria = array_fill(1, 31, 0);
-        $resultadosReceita = array_fill(1, 31, 0);
+        $resultadosCategoria = array_fill(1, $diasMeses, 0);
+        $resultadosReceita = array_fill(1, $diasMeses, 0);
 
         foreach ($categorias as $categoria) {
             foreach ($categoria['valores_por_dia'] as $dia => $valor) {
@@ -35,7 +35,7 @@ class DREMensalController extends Controller
 
         $resultados_final = [];
 
-        for ($dia = 1; $dia <= 31; $dia++) {
+        for ($dia = 1; $dia <= $diasMeses; $dia++) {
             $resultado_dia = $resultadosReceita[$dia] - $resultadosCategoria[$dia];
             $resultados_final[$dia] = $resultado_dia;
 
@@ -44,6 +44,6 @@ class DREMensalController extends Controller
             }
         }
 
-        return Inertia::render('Dashboard/DRE/Mensal/Home', compact('categorias', 'receitas', 'ano', 'mes', 'resultados_final'));
+        return Inertia::render('Dashboard/DRE/Mensal/Home', compact('categorias', 'receitas', 'ano', 'mes' , 'resultados_final', "diasMeses"));
     }
 }
