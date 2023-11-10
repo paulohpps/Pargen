@@ -1,5 +1,6 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import { onMounted } from 'vue';
 
 const props = defineProps({
     categorias: Array,
@@ -7,6 +8,20 @@ const props = defineProps({
     resultados_final: Array,
     ano: Number
 })
+
+let resultados_acumulados = {};
+    if (props.resultados_final) {
+        let entradas = Object.entries(props.resultados_final);
+        if (entradas.length > 0) {
+            let [primeira_chave, primeiro_valor] = entradas[0];
+            resultados_acumulados[primeira_chave] = primeiro_valor;
+            for (let i = 1; i < entradas.length; i++) {
+                let [chave, valor] = entradas[i];
+                resultados_acumulados[chave] = resultados_acumulados[entradas[i - 1][0]] + valor;
+            }
+        }
+    }
+
 
 let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYear();
 
@@ -68,8 +83,7 @@ let ano = new URL(document.URL).searchParams.get('ano') ?? new Date().getFullYea
                     <tbody>
                         <tr>
                             <th class="text-nowrap">RESULTADO FINAL</th>
-                            <td class="text-nowrap" v-for="valor in resultados_final"> R${{ valor.toFixed(2) }}</td>
-                            <td class="text-nowrap">R${{ Number(Object.values(resultados_final).reduce((total, numero) => total + numero, 0)).toFixed(2) }}</td>
+                            <td class="text-nowrap" v-for="valor in resultados_acumulados">R${{ valor.toFixed(2) }}</td>
                         </tr>
 
 
