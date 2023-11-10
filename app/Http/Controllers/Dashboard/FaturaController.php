@@ -62,7 +62,9 @@ class FaturaController extends Controller
 
         $pdf = Pdf::loadView('fatura', compact('fatura'));
         $pdf = $pdf->setPaper('a4', 'landscape');
-        return $pdf->download("fatura-$fatura->id.pdf");
+
+        $fatura_name = $fatura->cliente->name . '-' . $fatura->id;
+        return $pdf->download("fatura-$fatura_name.pdf");
     }
 
     public function recibo(int $id)
@@ -71,7 +73,9 @@ class FaturaController extends Controller
 
         $pdf = Pdf::loadView('recibo', compact('fatura'));
         $pdf = $pdf->setPaper('a4', 'landscape');
-        return $pdf->download("recibo-$fatura->id.pdf");
+
+        $fatura_name = $fatura->cliente->name . '-' . $fatura->id;
+        return $pdf->download("recibo-$fatura_name.pdf");
     }
 
     public function faturar()
@@ -169,7 +173,7 @@ class FaturaController extends Controller
         $faturas = Fatura::with(['servicos', 'cliente'])->whereNot('status', FaturaEnum::Cancelada)
             ->orderBy('data_vencimento', 'desc')
             ->paginate(10);
-            
+
         $status = FaturaEnum::toArray();
         return Inertia::render('Dashboard/Fatura/Faturas/BaixaFatura', compact('faturas', 'status'));
     }
