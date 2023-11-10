@@ -16,6 +16,7 @@ class DREMensalController extends Controller
         $mes = $request->mes ?? date('m');
         $diasMeses = now()->daysInMonth;
 
+        $categorias = DREService::GetCategoriasDreMensal($ano, $mes);
         $receitas = DREService::GetReceitasDreMensal($ano, $mes);
 
         $resultadosCategoria = array_fill(1, $diasMeses, 0);
