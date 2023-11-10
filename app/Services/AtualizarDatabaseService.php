@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Faturas\Fatura;
 use App\Models\Imports\Analises;
 use App\Models\Imports\AnaliseServicos;
 use App\Models\Imports\Clientes;
@@ -76,13 +77,29 @@ class AtualizarDatabaseService
 
             AnaliseServicos::where('petrequest_id', $requisicao['id'])->whereNotIn('analyze_id', $requisicao['analyse'])->delete();
         }
+
+        AtualizarDatabaseService::CorrigirServicosApagados();
+    }
+
+    private static function CorrigirServicosApagados()
+    {
         AnaliseServicos::whereExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('labs_petrequest')
-                    ->whereRaw('labs_petrequest.id = labs_petrequest_analyze.petrequest_id')
-                    ->where('labs_petrequest.status', 'CD');
-            })->delete();
+            $query->select(DB::raw(1))
+                ->from('labs_petrequest')
+                ->whereRaw('labs_petrequest.id = labs_petrequest_analyze.petrequest_id')
+                ->where('labs_petrequest.status', 'CD');
+        })->delete();
 
         Servicos::where('status', 'CD')->delete();
+
+        $faturas = Fatura::all();
+
+        foreach ($faturas as $fatura) {
+            $novoValor = 0;
+            foreach ($fatura->servicos as $servico) {
+                $novoValor += $servico->analises()->sum('price');
+            }
+            $fatura->update(['valor' => $novoValor]);
+        }
     }
 }
