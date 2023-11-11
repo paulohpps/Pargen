@@ -11,30 +11,29 @@ class RelatorioService
 {
     public function getAnaliseReceitas($start, $end)
     {
-        $receitas = [];
+        $receitas = Fatura::query()
+            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+            ->whereBetween('faturas.data_emissao', [$start, $end])
+            ->select(
+                'categoria_analises.categoria',
+                DB::raw('SUM(DISTINCT faturas.valor_pago) as total'),
+                DB::raw('categoria_analises.categoria as nome')
+            )
+            ->groupBy('categoria_analises.categoria', 'faturas.id')
+            ->get()
+            ->toArray();
 
-        $faturas = Fatura::whereBetween('data_emissao', [$start, $end])
-            ->get();
+        $totalRevenueAllCategories = array_sum(array_column($receitas, 'total'));
 
-        foreach ($faturas->flatMap->servicos->flatMap->analises as $analise) {
-            if ($analise->categoriaAnalise) {
-                $categoryName = $analise->categoriaAnalise->categoria;
-                if (!isset($receitas['categorias'][$categoryName]['total'])) {
-                    $receitas['categorias'][$categoryName]['total'] = 0;
-                }
-                $receitas['categorias'][$categoryName]['total'] += $analise->price;
-                $receitas['categorias'][$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
-            }
-        }
-        $totalRevenueAllCategories = 0;
-        if (isset($receitas['categorias'])) {
+        $receitas['categorias'] = array_map(function ($item) use ($totalRevenueAllCategories) {
+            $item['impacto'] = round(($item['total'] / $totalRevenueAllCategories) * 100, 2);
+            $item['nome'] = CategoriaAnaliseEnum::names()[$item['categoria']];
+            return $item;
+        }, $receitas);
 
-            $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
-            foreach ($receitas['categorias'] as &$categoryData) {
-                $categoryData['impacto'] = round(($categoryData['total'] / $totalRevenueAllCategories) * 100, 2);
-                $categoryData['impacto'] = round($categoryData['impacto'], 2);
-            }
-        }
         $receitas['total_geral'] = number_format($totalRevenueAllCategories, 2);
 
         return $receitas;

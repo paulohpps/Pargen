@@ -18,10 +18,11 @@ class RelatorioController extends Controller
     }
     public function analiseFinanceira(Request $request)
     {
-        $startDate = $request->query('inicio', date('Y-m-d', strtotime('first day of january')));
-        $endDate = $request->query('ate', date('Y-m-d', strtotime('last day of december')));
+        $startDate = $request->query('inicio', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->query('ate', now()->endOfMonth()->format('Y-m-d'));
 
         $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
+
         $pagamentos = $this->relatorioService->getAnalisePagamentos($startDate, $endDate);
         $recebimento_total = $this->relatorioService->getRecebimentoTotal($startDate, $endDate);
 
