@@ -19,10 +19,10 @@ class RelatorioService
             ->whereBetween('faturas.data_emissao', [$start, $end])
             ->select(
                 'categoria_analises.categoria',
-                DB::raw('SUM(DISTINCT faturas.valor_pago) as total'),
+                DB::raw('SUM(labs_analyze.price) as total'),
                 DB::raw('categoria_analises.categoria as nome')
             )
-            ->groupBy('categoria_analises.categoria', 'faturas.id')
+            ->groupBy('categoria_analises.categoria')
             ->get()
             ->toArray();
 
