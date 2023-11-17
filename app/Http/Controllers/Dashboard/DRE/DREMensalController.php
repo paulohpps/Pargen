@@ -40,9 +40,6 @@ class DREMensalController extends Controller
             $resultado_dia = $resultadosReceita[$dia] - $resultadosCategoria[$dia];
             $resultados_final[$dia] = $resultado_dia;
 
-            if ($dia > 1) {
-                //$resultados_final[$dia] += $resultados_final[$dia - 1];
-            }
         }
 
         return Inertia::render('Dashboard/DRE/Mensal/Home', compact('categorias', 'receitas', 'ano', 'mes' , 'resultados_final', "diasMeses"));

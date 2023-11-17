@@ -11,33 +11,48 @@ class RelatorioService
 {
     public function getAnaliseReceitas($start, $end)
     {
-        $receitas = [];
+        $receitas = Fatura::query()
+            ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
+            ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
+            ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
+            ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
+            ->whereBetween('faturas.data_emissao', [$start, $end])
+            ->select(
+                'categoria_analises.categoria as nome',
+                DB::raw('ROUND((SUM(labs_analyze.price) * (SUM(faturas.valor_pago) / SUM(faturas.valor))) * 1.51, 2) as total')
+            )
+            ->groupBy('nome')
+            ->get()
+            ->toArray();
 
-        $faturas = Fatura::whereBetween('data_emissao', [$start, $end])
-            ->get();
+        $total_faturado = array_sum(array_column($receitas, 'total'));
 
-        foreach ($faturas->flatMap->servicos->flatMap->analises as $analise) {
-            if ($analise->categoriaAnalise) {
-                $categoryName = $analise->categoriaAnalise->categoria;
-                if (!isset($receitas['categorias'][$categoryName]['total'])) {
-                    $receitas['categorias'][$categoryName]['total'] = 0;
-                }
-                $receitas['categorias'][$categoryName]['total'] += $analise->price;
-                $receitas['categorias'][$categoryName]['nome'] = CategoriaAnaliseEnum::names()[$categoryName];
-            }
-        }
-        $totalRevenueAllCategories = 0;
-        if (isset($receitas['categorias'])) {
+        $receitas = array_map(function ($item) use ($total_faturado) {
+            $item['impacto'] = round(($item['total'] / $total_faturado) * 100, 2);
+            $item['nome'] = CategoriaAnaliseEnum::names()[$item['nome']];
+            return $item;
+        }, $receitas);
 
-            $totalRevenueAllCategories = array_sum(array_column($receitas['categorias'], 'total'));
-            foreach ($receitas['categorias'] as &$categoryData) {
-                $categoryData['impacto'] = round(($categoryData['total'] / $totalRevenueAllCategories) * 100, 2);
-                $categoryData['impacto'] = round($categoryData['impacto'], 2);
-            }
-        }
-        $receitas['total_geral'] = number_format($totalRevenueAllCategories, 2);
+        return [
+            'categorias' => $receitas,
+            'total_geral' => number_format($total_faturado, 2),
+        ];
+    }
 
-        return $receitas;
+    public function getRecebimentoTotal($startDate, $endDate)
+    {
+        $recebimento_total = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
+            ->sum('valor_pago');
+
+        return number_format($recebimento_total, 2);
+    }
+
+    public function getReceitasTotalFaturado($start, $end)
+    {
+        $receitas_total_faturado = Fatura::whereBetween('data_emissao', [$start, $end])
+            ->sum('valor');
+
+        return number_format($receitas_total_faturado, 2);
     }
 
     public function getAnalisePagamentos($start, $end)
@@ -86,13 +101,7 @@ class RelatorioService
         return $pagamentos;
     }
 
-    public function getRecebimentoTotal($startDate, $endDate)
-    {
-        $recebimento_total = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
-            ->sum('valor_pago');
 
-        return number_format($recebimento_total, 2);
-    }
 
     public function getEvolucaoReceita($year)
     {
