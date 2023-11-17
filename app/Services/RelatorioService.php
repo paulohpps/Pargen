@@ -19,7 +19,7 @@ class RelatorioService
             ->whereBetween('faturas.data_emissao', [$start, $end])
             ->select(
                 'categoria_analises.categoria as nome',
-                DB::raw('ROUND((SUM(labs_analyze.price) * (SUM(faturas.valor_pago) / SUM(faturas.valor))) * 1.51, 2) as total')
+                DB::raw('ROUND(SUM(labs_analyze.price * (faturas.valor_pago / faturas.valor)), 2) as total')
             )
             ->groupBy('nome')
             ->get()
