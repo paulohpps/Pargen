@@ -18,8 +18,8 @@ class RelatorioService
             ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
             ->whereBetween('faturas.data_emissao', [$start, $end])
             ->select(
-                DB::raw('ROUND(SUM(labs_analyze.price) * (SUM(faturas.valor_pago) / SUM(faturas.valor)), 2) as total'),
-                DB::raw('categoria_analises.categoria as nome')
+                'categoria_analises.categoria as nome',
+                DB::raw('ROUND((SUM(labs_analyze.price) * (SUM(faturas.valor_pago) / SUM(faturas.valor))) * 1.51, 2) as total')
             )
             ->groupBy('nome')
             ->get()
@@ -27,15 +27,16 @@ class RelatorioService
 
         $total_faturado = array_sum(array_column($receitas, 'total'));
 
-        $receitas['categorias'] = array_map(function ($item) use ($total_faturado) {
+        $receitas = array_map(function ($item) use ($total_faturado) {
             $item['impacto'] = round(($item['total'] / $total_faturado) * 100, 2);
             $item['nome'] = CategoriaAnaliseEnum::names()[$item['nome']];
             return $item;
         }, $receitas);
 
-        $receitas['total_geral'] = number_format($total_faturado, 2);
-
-        return $receitas;
+        return [
+            'categorias' => $receitas,
+            'total_geral' => number_format($total_faturado, 2),
+        ];
     }
 
     public function getRecebimentoTotal($startDate, $endDate)

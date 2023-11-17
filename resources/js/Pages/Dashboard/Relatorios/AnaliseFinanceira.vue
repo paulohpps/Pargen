@@ -6,7 +6,6 @@ const props = defineProps({
     pagamentos: Object,
     receitas: Object,
     lucro_total: String,
-    recebimento_total: String,
     receitas_total_faturado: String,
 })
 
@@ -53,7 +52,7 @@ function filtrarAte(data) {
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Recebimentos</label>
-                            <input type="text" id="tipo" disabled class="form-control" :value="'R$' + recebimento_total">
+                            <input type="text" id="tipo" disabled class="form-control" :value="'R$' + receitas.total_geral">
                         </div>
                         <div class="mb-2">
                             <label for="tipo" class="form-label">Pagamentos</label>
