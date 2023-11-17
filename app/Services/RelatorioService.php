@@ -18,25 +18,40 @@ class RelatorioService
             ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
             ->whereBetween('faturas.data_emissao', [$start, $end])
             ->select(
-                'categoria_analises.categoria',
-                DB::raw('SUM(labs_analyze.price) as total'),
+                DB::raw('ROUND(SUM(labs_analyze.price) * (SUM(faturas.valor_pago) / SUM(faturas.valor)), 2) as total'),
                 DB::raw('categoria_analises.categoria as nome')
             )
-            ->groupBy('categoria_analises.categoria')
+            ->groupBy('nome')
             ->get()
             ->toArray();
 
-        $totalRevenueAllCategories = array_sum(array_column($receitas, 'total'));
+        $total_faturado = array_sum(array_column($receitas, 'total'));
 
-        $receitas['categorias'] = array_map(function ($item) use ($totalRevenueAllCategories) {
-            $item['impacto'] = round(($item['total'] / $totalRevenueAllCategories) * 100, 2);
-            $item['nome'] = CategoriaAnaliseEnum::names()[$item['categoria']];
+        $receitas['categorias'] = array_map(function ($item) use ($total_faturado) {
+            $item['impacto'] = round(($item['total'] / $total_faturado) * 100, 2);
+            $item['nome'] = CategoriaAnaliseEnum::names()[$item['nome']];
             return $item;
         }, $receitas);
 
-        $receitas['total_geral'] = number_format($totalRevenueAllCategories, 2);
+        $receitas['total_geral'] = number_format($total_faturado, 2);
 
         return $receitas;
+    }
+
+    public function getRecebimentoTotal($startDate, $endDate)
+    {
+        $recebimento_total = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
+            ->sum('valor_pago');
+
+        return number_format($recebimento_total, 2);
+    }
+
+    public function getReceitasTotalFaturado($start, $end)
+    {
+        $receitas_total_faturado = Fatura::whereBetween('data_emissao', [$start, $end])
+            ->sum('valor');
+
+        return number_format($receitas_total_faturado, 2);
     }
 
     public function getAnalisePagamentos($start, $end)
@@ -85,13 +100,7 @@ class RelatorioService
         return $pagamentos;
     }
 
-    public function getRecebimentoTotal($startDate, $endDate)
-    {
-        $recebimento_total = Fatura::whereBetween('data_emissao', [$startDate, $endDate])
-            ->sum('valor_pago');
 
-        return number_format($recebimento_total, 2);
-    }
 
     public function getEvolucaoReceita($year)
     {

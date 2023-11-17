@@ -22,6 +22,7 @@ class RelatorioController extends Controller
         $endDate = $request->query('ate', now()->endOfMonth()->format('Y-m-d'));
 
         $receitas = $this->relatorioService->getAnaliseReceitas($startDate, $endDate);
+        $receitas_total_faturado = $this->relatorioService->getReceitasTotalFaturado($startDate, $endDate);
 
         $pagamentos = $this->relatorioService->getAnalisePagamentos($startDate, $endDate);
         $recebimento_total = $this->relatorioService->getRecebimentoTotal($startDate, $endDate);
@@ -33,7 +34,7 @@ class RelatorioController extends Controller
 
         $lucro_total = number_format(floatval($totalRecebimentos) - floatval($totalPagamentos), 2);
 
-        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'pagamentos', 'lucro_total', 'recebimento_total']));
+        return Inertia::render('Dashboard/Relatorios/AnaliseFinanceira', compact(['receitas', 'receitas_total_faturado', 'pagamentos', 'lucro_total', 'recebimento_total']));
     }
 
     public function evolucaoFinanceira(Request $request)
