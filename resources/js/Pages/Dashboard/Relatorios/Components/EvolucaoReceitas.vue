@@ -11,13 +11,16 @@ const props = defineProps({
 const dataLabels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function mapMesesValores(categoriaData) {
-    const valoresMeses = dataLabels.map((mes, index) => categoriaData[(index + 1)] || 0);
+    const valoresMeses = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0];
+    categoriaData.forEach((data) => {
+        const mes = parseInt(data.month);
+        valoresMeses[mes - 1] = data.total;
+    });
     return valoresMeses;
 }
 
 const datasets = Object.keys(props.evolucao_receita).map((categoria, index) => {
     const categoriaData = props.evolucao_receita[categoria];
-
     const data = mapMesesValores(categoriaData);
     return {
         label: props.categorias[categoria],

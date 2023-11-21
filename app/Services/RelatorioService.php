@@ -101,16 +101,18 @@ class RelatorioService
         return $pagamentos;
     }
 
-
-
     public function getEvolucaoReceita($year)
     {
-        $evolucao_receita = Fatura::selectRaw('categoria_analises.categoria, MONTH(faturas.data_emissao) as month, SUM(labs_analyze.price) as total')
+        $evolucao_receita = Fatura::query()
             ->join('labs_petrequest', 'faturas.id', '=', 'labs_petrequest.fatura_id')
             ->join('labs_petrequest_analyze', 'labs_petrequest.id', '=', 'labs_petrequest_analyze.petrequest_id')
             ->join('labs_analyze', 'labs_petrequest_analyze.analyze_id', '=', 'labs_analyze.id')
             ->join('categoria_analises', 'labs_analyze.id', '=', 'categoria_analises.id_analise')
             ->whereYear('faturas.data_emissao', $year)
+            ->selectRaw('
+            categoria_analises.categoria,
+            MONTH(faturas.data_emissao) as month,
+            ROUND(SUM(labs_analyze.price * (faturas.valor_pago / faturas.valor)), 2) as total')
             ->groupBy('categoria_analises.categoria', 'month')
             ->orderBy('categoria_analises.categoria', 'asc')
             ->orderBy('month', 'asc')

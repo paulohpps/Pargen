@@ -100,6 +100,7 @@ class AtualizarDatabaseService
                 $novoValor += $servico->analises()->sum('price');
             }
             $fatura->update(['valor' => $novoValor]);
+            $fatura->save();
         }
     }
 }
