@@ -135,7 +135,7 @@ class DREService
             ->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
             ->join('categoria_analises', 'categoria_analises.id_analise', '=', 'labs_analyze.id')
             ->select(
-                DB::raw('sum(faturas.valor_pago) as valor_total'),
+                DB::raw('ROUND(SUM(labs_analyze.price * (faturas.valor_pago / faturas.valor)), 2) as valor_total'),
                 DB::raw('day(faturas.data_baixa) as dia'),
                 'categoria_analises.categoria'
             )
@@ -182,12 +182,11 @@ class DREService
             ->join('faturas', 'labs_petrequest.fatura_id', '=', 'faturas.id')
             ->join('categoria_analises', 'categoria_analises.id_analise', '=', 'labs_analyze.id')
             ->select(
-                DB::raw('sum(labs_analyze.price) as valor_total'),
+                DB::raw('ROUND(SUM(labs_analyze.price * (faturas.valor_pago / faturas.valor)), 2) as valor_total'),
                 DB::raw('MONTH(faturas.data_baixa) as mes'),
                 'categoria_analises.categoria'
             )
-            ->where('faturas.status', 1)
-            ->whereYear('faturas.data_baixa', 2023)
+            ->whereYear('faturas.data_baixa', $ano)
             ->groupBy('categoria_analises.categoria', DB::raw('MONTH(faturas.data_baixa)'))
             ->get();
 
