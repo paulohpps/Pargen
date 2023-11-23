@@ -4,7 +4,7 @@ import SelectAjax from '@/Componentes/Forms/SelectAjax.vue';
 
 const form = useForm({
     cliente_id: parseInt(new URL(document.URL).searchParams.get('cliente_id') ?? 0),
-    status: parseInt(new URL(document.URL).searchParams.get('status') ?? 0),
+    status: new URL(document.URL).searchParams.get('status') ?? '',
 });
 
 function submitFiltrarFaturas() {
@@ -27,6 +27,7 @@ function optionSelected(option) {
             <div class="m-2">
                 <p>Status:</p>
                 <select v-model="form.status" class="form-control seletor2">
+                    <option value="">Todos</option>
                     <option :value="0">Aberto</option>
                     <option :value="1">Paga</option>
                     <option :value="2">Cancelado</option>

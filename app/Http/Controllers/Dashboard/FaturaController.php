@@ -143,6 +143,7 @@ class FaturaController extends Controller
     public function baixarFatura(int $id)
     {
         $fatura = Fatura::with(['servicos', 'cliente'])
+            ->orderBy('data_vencimento', 'desc')
             ->find($id);
 
         return Inertia::render('Dashboard/Fatura/Faturas/Baixa', compact('fatura'));
