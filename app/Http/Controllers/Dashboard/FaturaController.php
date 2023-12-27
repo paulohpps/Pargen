@@ -51,6 +51,8 @@ class FaturaController extends Controller
             ->orderBy('data_vencimento', 'desc')
             ->paginate(10);
 
+        $faturas->appends(request()->all());
+
         $status = FaturaEnum::toArray();
 
         return Inertia::render('Dashboard/Fatura/Faturas/Listagem', compact('faturas', 'status'));
@@ -164,7 +166,7 @@ class FaturaController extends Controller
         }
 
         $fatura->save();
-        return redirect()->route('dashboard.fatura.faturas.baixar');
+        return redirect()->route('dashboard.fatura.faturas');
     }
 
     public function faturasBaixa()

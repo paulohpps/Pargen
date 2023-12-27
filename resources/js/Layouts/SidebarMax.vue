@@ -126,16 +126,8 @@ const props = defineProps({
                                 </li>
                                 <li>
                                     <Link href="/dashboard/fatura/faturas" class="nav-link"
-                                        :class="{ 'text-primary': pagina == 'faturas' }">Faturas
-                                    emitidas</Link>
+                                        :class="{ 'text-primary': pagina == 'faturas' }">Faturas emitidas</Link>
                                 </li>
-                                <li>
-                                    <Link href="/dashboard/fatura/baixar" class="nav-link"
-                                        :class="{ 'text-primary': pagina == 'Baixa de faturas' }">
-                                    Baixa de faturas
-                                    </Link>
-                                </li>
-
                             </ul>
                         </div>
                     </div>
