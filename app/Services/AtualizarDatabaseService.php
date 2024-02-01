@@ -10,6 +10,7 @@ use App\Models\Imports\Servicos;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AtualizarDatabaseService
 {
@@ -33,6 +34,8 @@ class AtualizarDatabaseService
                 $cliente
             );
         }
+
+        Log::info('Clientes atualizados com sucesso');
     }
 
     private static function atualizarAnalises()
@@ -48,6 +51,8 @@ class AtualizarDatabaseService
                 $analise
             );
         }
+
+        Log::info('Análises atualizadas com sucesso');
     }
 
     private static function atualizarServicos()
@@ -78,6 +83,8 @@ class AtualizarDatabaseService
             AnaliseServicos::where('petrequest_id', $requisicao['id'])->whereNotIn('analyze_id', $requisicao['analyse'])->delete();
         }
 
+        Log::info('Serviços atualizados com sucesso');
+
         AtualizarDatabaseService::CorrigirServicosApagados();
     }
 
@@ -102,5 +109,7 @@ class AtualizarDatabaseService
             $fatura->update(['valor' => $novoValor]);
             $fatura->save();
         }
+
+        Log::info('Serviços apagados corrigidos com sucesso');
     }
 }
