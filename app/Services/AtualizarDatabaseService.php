@@ -25,7 +25,7 @@ class AtualizarDatabaseService
     {
         $response = Http::withHeaders(['Token' => env('TOKEN_API_ON_TRACE')])
             ->timeout(-1)
-            ->get('https://app.ontrace.com.br/api/v1/clientes/');
+            ->get(env('API_URL'));
 
         $clientes = $response->json();
         foreach ($clientes as $cliente) {
